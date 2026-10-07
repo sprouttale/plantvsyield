@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220"><defs>
+<linearGradient id="r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".45" stop-color="#f5b82e"/><stop offset="1" stop-color="#a8630a"/></linearGradient>
+<linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fd27a"/><stop offset="1" stop-color="#0d6b3a"/></linearGradient>
+<linearGradient id="l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7c8"/><stop offset="1" stop-color="#f2b52a"/></linearGradient>
+<filter id="s"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000" flood-opacity=".55"/></filter></defs>
+<g filter="url(#s)"><path d="M100 10 L178 38 V100 C178 152 144 190 100 210 C56 190 22 152 22 100 V38 Z" fill="url(#r)" stroke="#6b3c05" stroke-width="5" stroke-linejoin="round"/>
+<path d="M100 30 L160 52 V102 C160 142 134 172 100 189 C66 172 40 142 40 102 V52 Z" fill="url(#f)" stroke="#0a4426" stroke-width="3"/>
+<path d="M100 30 L160 52 V80 C130 70 70 70 40 86 V52 Z" fill="#fff" opacity=".14"/>
+<path d="M100 150 V105" stroke="#fff3b0" stroke-width="7" stroke-linecap="round"/>
+<path d="M100 112 C70 112 60 88 64 70 C88 70 102 88 100 112Z" fill="url(#l)" stroke="#8a5207" stroke-width="3"/>
+<path d="M100 104 C128 104 140 82 136 62 C112 62 98 80 100 104Z" fill="url(#l)" stroke="#8a5207" stroke-width="3"/>
+<circle cx="64" cy="48" r="5" fill="#fff" opacity=".8"/></g></svg>
