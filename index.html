@@ -144,6 +144,55 @@
     .sec h2{font-size:30px}
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+  /* ===== Masaüstü: gönderilen tasarım birebir sahne olarak (yazılar gerçek metin) ===== */
+  @media (min-width:901px) and (min-aspect-ratio:6/5){
+    :root{--sw:min(100vw,calc(100vh * 1.7768))}
+    .hero{height:100vh;min-height:0;padding:0;display:block;background:#050b1e}
+    .hero::before{content:"";position:absolute;inset:-40px;background:url(assets/stage.webp) center/cover;filter:blur(26px) brightness(.75);z-index:0}
+    .hero > .sky,.hero > .fire{display:none}
+    .stage{position:absolute;left:50%;top:50%;width:min(100%,calc(100vh * 1.7768));aspect-ratio:1672/941;transform:translate(-50%,-50%);background:url(assets/stage.webp) 0 0/100% 100% no-repeat;container-type:inline-size;z-index:1;
+           -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 2.5%,#000 97.5%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 2.5%,#000 97.5%,transparent 100%)}
+    @media (min-aspect-ratio:1672/941){.stage{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 2.5%,#000 97.5%,transparent 100%)}}
+    @media (max-aspect-ratio:1672/941){.stage{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 2%,#000 98%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 2%,#000 98%,transparent 100%)}}
+    /* üst bar: sahnedeki menü kutusunun içine */
+    .stage .top{position:absolute;inset:0;transform:none;width:auto;height:0;padding:0;border:0;background:none;backdrop-filter:none;box-shadow:none;display:block;z-index:30}
+    .stage .top .brand{display:none}
+    .stage .top .nav{position:absolute;left:32.6cqw;top:1.55cqw;width:25.4cqw;height:2.6cqw;margin:0;gap:0;justify-content:space-between;align-items:center}
+    .stage .top .nav a{gap:.55cqw;font-size:.98cqw}
+    .stage .top .nav svg{width:1.35cqw;height:1.35cqw}
+    .stage .top .langw{position:absolute;left:70cqw;top:1.4cqw;width:7.7cqw;height:2.65cqw}
+    .stage .top .lang{width:100%;height:100%;padding:0 1.8cqw 0 2.2cqw;font-size:.9cqw;border-radius:.7cqw;background-position:right .7cqw center}
+    .stage .top .langw svg{left:.7cqw;width:1cqw;height:1cqw}
+    .stage .top .startbtn{position:absolute;left:78.45cqw;top:1.25cqw;width:10.35cqw;height:3cqw;justify-content:center;padding:0;font-size:.98cqw;gap:.5cqw}
+    .stage .top .startbtn svg{width:1.05cqw;height:1.05cqw}
+    /* hero içerikleri */
+    .stage .card{position:absolute;inset:0;max-width:none;width:auto;z-index:5}
+    .stage .card h1{display:none}
+    .stage .tagline{position:absolute;left:0;right:0;top:19.98cqw;margin:0;font-size:2.05cqw;line-height:1.15;white-space:nowrap}
+    .stage .sub{position:absolute;left:31.2cqw;width:37.6cqw;top:23.24cqw;margin:0;font-size:1cqw;line-height:1.55}
+    .stage .chips{position:absolute;left:0;right:0;top:27.35cqw;margin:0;gap:.95cqw}
+    .stage .chip{font-size:.92cqw;padding:.62cqw 1.3cqw;gap:.5cqw;background:rgba(6,12,28,.92)}
+    .stage .chip svg{width:1.1cqw;height:1.1cqw}
+    .stage .btn{position:absolute;left:36.35cqw;top:31.21cqw;width:27.25cqw;height:4.2cqw;margin:0;padding:0;font-size:1.38cqw;border-radius:1cqw;gap:.8cqw}
+    .stage .btn svg{width:1.9cqw;height:1.9cqw}
+    #connectBtn::after{right:1.5cqw;font-size:2cqw}
+    .stage .note{position:absolute;left:0;right:0;top:36.13cqw;margin:0;font-size:.82cqw}
+    .stage .status{position:absolute;left:30cqw;right:30cqw;top:37.48cqw;margin:0;font-size:.85cqw;min-height:0}
+    .stage .who{position:absolute;left:36.35cqw;width:27.25cqw;top:39.06cqw;margin:0;font-size:.7cqw}
+    .stage .code{position:absolute;left:33cqw;width:34cqw;top:37.48cqw;margin:0;z-index:7}
+    /* kart yazıları: sahnedeki kutuların içine */
+    .feats{position:absolute;inset:0;margin:0;padding:0;width:auto;display:block;z-index:6;pointer-events:none}
+    .feat{position:absolute;top:46.94cqw;height:6.19cqw;display:flex;align-items:center;padding:0;background:none;border:0;box-shadow:none;backdrop-filter:none}
+    .feat img{display:none}
+    .feat b{font-size:1.02cqw;margin-bottom:.2cqw;line-height:1.25}
+    .feat span{font-size:.86cqw;line-height:1.35}
+    .feat:nth-child(1){left:11.1cqw;width:9.8cqw}
+    .feat:nth-child(2){left:28.7cqw;width:9.8cqw}
+    .feat:nth-child(3){left:46.2cqw;width:11.8cqw}
+    .feat:nth-child(4){left:65.9cqw;width:10.4cqw}
+    .feat:nth-child(5){left:83.7cqw;width:11cqw}
+  }
 </style>
 </head>
 <body>
@@ -161,6 +210,7 @@
 <section class="hero" id="top">
   <div class="sky" aria-hidden="true"><i class="s1"></i><i class="s2"></i><i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i><i class="shoot"></i></div>
   <div class="fire" aria-hidden="true"></div>
+  <div class="stage" id="stage">
   <div class="card">
     <h1 style="margin:0"><img class="logoimg" src="assets/logo.webp" alt="Plant vs. Yield"></h1>
     <div class="tagline" data-ih="tagline_html"></div>
@@ -185,6 +235,7 @@
     <div class="feat"><img src="assets/f_defend.webp" alt=""><div><b data-i="f3t"></b><span data-i="f3p"></span></div></div>
     <div class="feat"><img src="assets/f_market.webp" alt=""><div><b data-i="f4t"></b><span data-i="f4p"></span></div></div>
     <div class="feat"><img src="assets/f_rank.webp" alt=""><div><b data-i="f5t"></b><span data-i="f5p"></span></div></div>
+  </div>
   </div>
 </section>
 
@@ -243,7 +294,7 @@
 <script>
 /* ===== Settings (filled at build) ===== */
 const CHAIN = null;
-const ALLOW = ["0xadc8f313c7205d4def2545460037b3e4260e383f"];
+const ALLOW = ["0xadc8f313c7205d4def2545460037b3e4260e383f","0x89ce61c89f78274eb8d85ff9a455f6331765bdf9"];
 const SIGN_MSG = a => 'Plant vs. Yield access key\n\nWallet: ' + a.toLowerCase() + '\n\nThis signature is not a transaction and costs no fees.';
 
 /* ===== i18n ===== */
@@ -580,6 +631,9 @@ function scene() {}
   sel.value = lang; sel.addEventListener('change', () => setLang(sel.value));
   if (CHAIN) $('netChip').textContent = CHAIN.chainName;
   applyLang(); scene();
+  const mq = matchMedia('(min-width:901px) and (min-aspect-ratio:6/5)'), hdr = document.querySelector('header.top'), stg = $('stage');
+  const place = () => { if (mq.matches) { if (hdr.parentNode !== stg) stg.prepend(hdr); } else if (hdr.parentNode === stg) document.body.prepend(hdr); };
+  place(); (mq.addEventListener ? mq.addEventListener('change', place) : mq.addListener(place));
   $('connectBtn').addEventListener('click', connect);
   $('copyBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('codeTxt').value); $('copyBtn').textContent = t('copied'); setTimeout(() => $('copyBtn').textContent = t('copy'), 1500); } catch (e) { $('codeTxt').select(); } });
   $('startTop').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 300); });
