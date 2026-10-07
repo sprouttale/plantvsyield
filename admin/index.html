@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>PvY Admin</title>
+<link rel="icon" href="../assets/favicon.png">
+<style>
+:root{--bg:#0b0f1e;--card:#141a30;--line:#262f52;--tx:#e8ecff;--mut:#8b94b8;--g:#3ddc84;--y:#ffd23f;--r:#ff5d6c;--b:#5fb4ff;--o:#ff9f43}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,Segoe UI,Arial,sans-serif}
+header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,15,30,.95);z-index:5;flex-wrap:wrap}
+header img{height:26px}header h1{font-size:17px;margin:0}header .sp{flex:1}
+.pill{padding:4px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--mut);font-size:12px}
+button,select,input{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+button{cursor:pointer}button:hover{border-color:var(--b)}
+main{padding:20px 22px;max-width:1500px;margin:0 auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.st small{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.06em}.st b{display:block;font-size:26px;margin-top:4px}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px;min-width:0}
+.box h2{font-size:15px;margin:0 0 10px;display:flex;align-items:center;gap:8px}.box h2 .c{color:var(--mut);font-weight:400;font-size:13px}
+.tw{overflow:auto;max-height:560px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{position:sticky;top:0;background:var(--card);color:var(--mut);font-weight:500;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid rgba(38,47,82,.6);white-space:nowrap}tr.p{cursor:pointer}tr.p:hover td{background:rgba(95,180,255,.07)}tr.sel td{background:rgba(95,180,255,.13)}
+.num{text-align:right;font-variant-numeric:tabular-nums}.mono{font-family:ui-monospace,Consolas,monospace}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:#555}.dot.on{background:var(--g);box-shadow:0 0 8px var(--g)}.dot.idle{background:var(--o)}
+.al{display:flex;gap:10px;padding:9px 10px;border-radius:9px;margin-bottom:7px;background:rgba(255,93,108,.08);border:1px solid rgba(255,93,108,.3)}
+.al.w{background:rgba(255,159,67,.08);border-color:rgba(255,159,67,.3)}.al b{color:var(--r)}.al.w b{color:var(--o)}.al small{color:var(--mut)}
+.feed div{padding:6px 2px;border-bottom:1px solid rgba(38,47,82,.6);font-size:13px}.feed time{color:var(--mut);margin-right:8px;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;background:#222a4a;margin-right:6px}
+.t-wave{color:var(--b)}.t-crash{color:var(--r)}.t-session_start{color:var(--g)}.t-session_end{color:var(--mut)}.t-click{color:var(--y)}
+.mut{color:var(--mut)}.g{color:var(--g)}.y{color:var(--y)}.r{color:var(--r)}
+#login{max-width:380px;margin:12vh auto;text-align:center}#login img{width:240px}#login input{width:100%;margin:14px 0 10px;padding:11px}#login button{width:100%;padding:11px;background:var(--g);color:#06210f;border:0;font-weight:700}
+#err{color:var(--r);min-height:20px}
+svg.spark{width:100%;height:120px;display:block}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:10px}.kv div{background:#10162b;border-radius:8px;padding:8px}.kv small{color:var(--mut);display:block;font-size:11px}
+.hidden{display:none!important}
+</style></head><body>
+<div id="login"><img src="../assets/logo.webp" alt=""><h2>Admin Paneli</h2><input id="tok" type="password" placeholder="Admin anahtarı" autocomplete="off"><button id="go">Giriş</button><p id="err"></p></div>
+<div id="app" class="hidden">
+<header><img src="../assets/logo.webp" alt=""><h1>Admin</h1><span class="pill" id="upd">—</span><span class="sp"></span>
+<select id="hrs"><option value="1">Son 1 saat</option><option value="6">Son 6 saat</option><option value="24" selected>Son 24 saat</option><option value="72">Son 3 gün</option><option value="168">Son 7 gün</option></select>
+<button id="ref">Yenile</button><button id="out">Çıkış</button></header>
+<main>
+<div class="stats" id="stats"></div>
+<div class="grid"><div>
+<div class="box"><h2>Oyuncular <span class="c" id="pc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th>Son görülme</th><th class="num">Giriş</th><th class="num">Coin</th><th class="num">Kazanılan</th><th class="num">Dalga</th><th class="num">Bag</th><th class="num">Banka</th><th class="num">Havuz payı</th><th>NFT</th><th>Cihaz</th></tr></thead><tbody id="pl"></tbody></table></div></div>
+<div class="box hidden" id="det"></div>
+</div><div>
+<div class="box"><h2>⚠️ Şüpheli işlemler <span class="c" id="ac"></span></h2><div id="al"></div></div>
+<div class="box"><h2>Canlı akış <span class="c">kim ne yapıyor</span></h2><div class="feed tw" id="fd"></div></div>
+</div></div>
+</main></div>
+<script>
+const API = 'https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_admin', KEY = 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A';
+const ALLOW = ['0xadc8f313c7205d4def2545460037b3e4260e383f', '0x89ce61c89f78274eb8d85ff9a455f6331765bdf9'];
+const NAMES = { '0xadc8f313c7205d4def2545460037b3e4260e383f': 'sen', '0x89ce61c89f78274eb8d85ff9a455f6331765bdf9': 'Talha' };
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const F = v => { v = +v || 0; const a = Math.abs(v); return a >= 1e9 ? (v / 1e9).toFixed(2) + 'B' : a >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : a >= 1e3 ? (v / 1e3).toFixed(1) + 'K' : v.toFixed(a < 10 ? 1 : 0); };
+const short = a => a.slice(0, 6) + '…' + a.slice(-4);
+const who = a => short(a) + (NAMES[a] ? ' <span class="mut">(' + NAMES[a] + ')</span>' : '');
+const ago = ms => { const s = Math.max(0, ms / 1000 | 0); return s < 60 ? s + ' sn önce' : s < 3600 ? (s / 60 | 0) + ' dk önce' : s < 86400 ? (s / 3600 | 0) + ' sa önce' : (s / 86400 | 0) + ' gün önce'; };
+const hm = t => new Date(t).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+const dev = ua => !ua ? '—' : (/Mobile|Android|iPhone/.test(ua) ? '📱 ' : '💻 ') + (/Edg\//.test(ua) ? 'Edge' : /Chrome\//.test(ua) ? 'Chrome' : /Firefox/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'Diğer');
+let tok = ''; try { tok = localStorage.getItem('pvy_admin_tok') || ''; } catch (e) {}
+let D = null, sel = null, timer = null;
+
+async function load() {
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_hours: +$('hrs').value }) });
+  if (!r.ok) throw new Error(r.status === 400 || r.status === 401 ? 'unauthorized' : 'HTTP ' + r.status);
+  D = await r.json(); render();
+}
+async function start() {
+  $('err').textContent = '';
+  try { await load(); try { localStorage.setItem('pvy_admin_tok', tok); } catch (e) {} $('login').classList.add('hidden'); $('app').classList.remove('hidden'); clearInterval(timer); timer = setInterval(() => load().catch(() => {}), 15000); }
+  catch (e) { $('err').textContent = /unauth|400|401/.test(e.message) ? 'Anahtar yanlış.' : 'Bağlanılamadı: ' + e.message; }
+}
+
+function alerts() {
+  const out = [], now = Date.parse(D.now), by = {};
+  for (const s of D.snaps) (by[s.wallet] = by[s.wallet] || []).push(s);
+  for (const p of D.players) if (!ALLOW.includes(p.wallet)) out.push({ lv: 'r', w: p.wallet, t: p.last_seen, m: 'İzin listesinde olmayan cüzdan veri gönderdi', d: 'Kapıyı atlayıp oyuna girmiş ya da sunucuya doğrudan istek atmış olabilir.' });
+  for (const [w, list] of Object.entries(by)) {
+    const sids = {};
+    for (const s of list) (sids[s.sid] = sids[s.sid] || []).push(s);
+    // aynı anda birden fazla oturum
+    const ranges = Object.entries(sids).map(([k, v]) => [k, Date.parse(v[0].ts), Date.parse(v[v.length - 1].ts)]);
+    for (let i = 0; i < ranges.length; i++) for (let j = i + 1; j < ranges.length; j++) {
+      const a = ranges[i], b = ranges[j];
+      if (a[1] < b[2] - 30000 && b[1] < a[2] - 30000) { out.push({ lv: 'w', w, t: new Date(Math.min(a[2], b[2])).toISOString(), m: 'Aynı anda birden fazla sekme/cihaz', d: 'İki oturum aynı anda açık kalmış (kopyalama/birleştirme hilesi denemesi olabilir).' }); i = ranges.length; break; }
+    }
+    for (const v of Object.values(sids)) for (let i = 1; i < v.length; i++) {
+      const a = v[i - 1].snap || {}, b = v[i].snap || {}, dt = (Date.parse(v[i].ts) - Date.parse(v[i - 1].ts)) / 1000;
+      if (dt <= 0 || dt > 120 || b.wave < a.wave) continue;
+      const dc = (b.coins || 0) - (a.coins || 0), de = (b.earned || 0) - (a.earned || 0);
+      if (dc > Math.max(500, de * 1.5 + 200)) out.push({ lv: 'r', w, t: v[i].ts, m: 'Açıklanamayan coin artışı: +' + F(dc), d: dt.toFixed(0) + ' sn içinde coin ' + F(a.coins) + ' → ' + F(b.coins) + ', ama kazanılan sadece +' + F(de) + '. (Kutu ödülü de olabilir, kontrol et.)' });
+      const db = (b.bank || 0) - (a.bank || 0);
+      if (db > 1000 && db > (a.bank || 0) * 4) out.push({ lv: 'w', w, t: v[i].ts, m: 'Bankada ani artış: +' + F(db), d: F(a.bank) + ' → ' + F(b.bank) + ' (' + dt.toFixed(0) + ' sn). Günlük dağıtım saati değilse şüpheli.' });
+      if (b.wave - a.wave > 3) out.push({ lv: 'w', w, t: v[i].ts, m: 'Dalga atlaması: ' + a.wave + ' → ' + b.wave, d: dt.toFixed(0) + ' sn içinde.' });
+    }
+  }
+  // çok hızlı tıklama
+  const cl = {};
+  for (const e of D.events) if (e.type === 'click') { const k = e.wallet + '|' + Math.floor(Date.parse(e.ts) / 20000); cl[k] = (cl[k] || 0) + 1; }
+  for (const [k, n] of Object.entries(cl)) if (n >= 45) { const [w, b] = k.split('|'); out.push({ lv: 'w', w, t: new Date(b * 20000).toISOString(), m: '20 saniyede ' + n + ' tıklama', d: 'Otomatik tıklama (bot) olabilir.' }); }
+  return out.sort((a, b) => Date.parse(b.t) - Date.parse(a.t));
+}
+
+function render() {
+  const now = Date.parse(D.now), P = D.players;
+  const on = p => now - Date.parse(p.last_seen) < 60000, act = p => now - Date.parse(p.last_seen) < 86400000;
+  const sum = k => P.reduce((s, p) => s + (+(p.snap || {})[k] || 0), 0);
+  const st = [['Şu an online', P.filter(on).length, 'g'], ['Son 24 saat aktif', P.filter(act).length], ['Toplam kayıt', P.length], ['Toplam giriş', P.reduce((s, p) => s + p.sessions, 0)],
+    ['NFT mint eden', P.filter(p => (p.snap || {}).minted).length, 'y'], ['Toplam kazanılan coin', F(sum('earned'))], ['Bankalardaki toplam', F(sum('bank')), 'y'], ['Havuza yatırılan', F(sum('mine'))], ['En yüksek dalga', Math.max(0, ...P.map(p => (p.snap || {}).wave || 0))]];
+  $('stats').innerHTML = st.map(s => '<div class="st"><small>' + s[0] + '</small><b class="' + (s[2] || '') + '">' + s[1] + '</b></div>').join('');
+  $('pc').textContent = P.length + ' cüzdan';
+  $('pl').innerHTML = P.map(p => { const s = p.snap || {}, o = on(p), idle = o && (s.vis === 'hidden' || s.paused);
+    return '<tr class="p' + (sel === p.wallet ? ' sel' : '') + '" data-w="' + esc(p.wallet) + '"><td class="mono">' + who(p.wallet) + '</td><td><span class="dot ' + (o ? idle ? 'idle' : 'on' : '') + '"></span>' + (o ? idle ? 'Arka planda' : (s.crashed ? 'Çöktü' : 'Oynuyor') : 'Çevrimdışı') + '</td><td>' + ago(now - Date.parse(p.last_seen)) + '</td><td class="num">' + p.sessions +
+      '</td><td class="num">' + F(s.coins) + '</td><td class="num">' + F(s.earned) + '</td><td class="num">' + (s.wave || 0) + '</td><td class="num">' + F(s.bag) + '</td><td class="num y">' + F(s.bank) + '</td><td class="num">' + F(s.mine) + '</td><td>' + (s.minted ? ({ m: '👦 Erkek', f: '👧 Kız' }[(s.nft || '').split(':')[0]] || '✔') : '—') + '</td><td>' + dev(p.ua) + '</td></tr>'; }).join('') || '<tr><td colspan="12" class="mut">Henüz kimse girmedi.</td></tr>';
+  const A = alerts(); $('ac').textContent = A.length ? A.length + ' uyarı' : 'temiz';
+  $('al').innerHTML = A.slice(0, 40).map(a => '<div class="al ' + (a.lv === 'w' ? 'w' : '') + '"><div><b>' + esc(a.m) + '</b><br><span class="mono">' + who(a.w) + '</span> · <small>' + hm(a.t) + '</small><br><small>' + esc(a.d) + '</small></div></div>').join('') || '<p class="g">Şüpheli bir şey yok ✔</p>';
+  $('fd').innerHTML = D.events.slice(0, 250).map(feedRow).join('') || '<p class="mut">Olay yok.</p>';
+  $('upd').textContent = 'Güncellendi ' + new Date().toLocaleTimeString('tr-TR') + ' · 15 sn\'de bir yenilenir';
+  if (sel) detail(sel);
+}
+const LBL = { session_start: 'Oyuna girdi', session_end: 'Çıktı', wave: 'Dalga', crash: 'Market çöktü', run_reset: 'Yeni tur', click: 'Tıkladı' };
+function evText(e) { const d = e.data || {};
+  if (e.type === 'wave') return 'Dalga ' + d.wave + "'e ulaştı";
+  if (e.type === 'crash') return 'Çöktü (dalga ' + d.wave + ', coin ' + F(d.coins) + ')';
+  if (e.type === 'click') return '“' + esc(d.el) + '”' + (d.type ? ' <span class="mut">(' + esc(d.type) + ')</span>' : '');
+  if (e.type === 'session_start') return 'Oyuna girdi <span class="mut">' + esc(d.screen || '') + '</span>';
+  return LBL[e.type] || esc(e.type); }
+const feedRow = e => '<div><time>' + hm(e.ts) + '</time><span class="mono">' + who(e.wallet) + '</span> <span class="tag t-' + esc(e.type) + '">' + (LBL[e.type] || esc(e.type)) + '</span>' + evText(e) + '</div>';
+
+function spark(pts, key, color) {
+  if (pts.length < 2) return '<p class="mut">Grafik için yeterli veri yok.</p>';
+  const t0 = Date.parse(pts[0].ts), t1 = Date.parse(pts[pts.length - 1].ts), vs = pts.map(p => +(p.snap || {})[key] || 0), mx = Math.max(1, ...vs);
+  const d = pts.map((p, i) => (i ? 'L' : 'M') + ((Date.parse(p.ts) - t0) / Math.max(1, t1 - t0) * 600).toFixed(1) + ',' + (110 - vs[i] / mx * 100).toFixed(1)).join('');
+  return '<svg class="spark" viewBox="0 0 600 120" preserveAspectRatio="none"><path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><small class="mut">en yüksek ' + F(mx) + '</small>';
+}
+function detail(w) {
+  const p = D.players.find(x => x.wallet === w); if (!p) return;
+  const s = p.snap || {}, sn = D.snaps.filter(x => x.wallet === w), ev = D.events.filter(x => x.wallet === w);
+  const box = $('det'); box.classList.remove('hidden');
+  box.innerHTML = '<h2>Oyuncu: <span class="mono">' + esc(w) + '</span> ' + (NAMES[w] ? '(' + NAMES[w] + ')' : '') + ' <span class="c">ilk giriş ' + hm(p.first_seen) + '</span></h2>' +
+    '<div class="kv">' + [['Coin', F(s.coins)], ['Kazanılan (tur)', F(s.earned)], ['Harcanan (tur)', F(s.spent)], ['Dalga', s.wave || 0], ['Kaçan zombi', s.leaks || 0], ['Bag', F(s.bag)], ['Banka', F(s.bank)], ['Havuz payı', F(s.mine)], ['Gelir/sn', F(s.dps)], ['Dil', s.lang || '—'], ['Toplam giriş', p.sessions], ['Cihaz', dev(p.ua)]].map(k => '<div><small>' + k[0] + '</small>' + k[1] + '</div>').join('') + '</div>' +
+    '<h2>Coin <span class="c">seçili zaman aralığı</span></h2>' + spark(sn, 'coins', '#ffd23f') + '<h2 style="margin-top:12px">Banka</h2>' + spark(sn, 'bank', '#3ddc84') +
+    '<h2 style="margin-top:12px">Bu oyuncunun hareketleri <span class="c">' + ev.length + '</span></h2><div class="feed tw" style="max-height:320px">' + (ev.slice(0, 300).map(feedRow).join('') || '<p class="mut">Olay yok.</p>') + '</div>' +
+    '<p style="margin-top:10px"><button onclick="sel=null;document.getElementById(\'det\').classList.add(\'hidden\');render()">Kapat</button></p>';
+}
+$('pl').addEventListener('click', e => { const tr = e.target.closest('tr[data-w]'); if (!tr) return; sel = tr.dataset.w; render(); $('det').scrollIntoView({ behavior: 'smooth' }); });
+$('go').onclick = () => { tok = $('tok').value.trim(); start(); };
+$('tok').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+$('ref').onclick = () => load().catch(e => alert(e.message));
+$('hrs').onchange = () => load().catch(() => {});
+$('out').onclick = () => { try { localStorage.removeItem('pvy_admin_tok'); } catch (e) {} location.reload(); };
+if (tok) start();
+</script></body></html>
