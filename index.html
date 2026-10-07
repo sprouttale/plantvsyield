@@ -524,10 +524,11 @@ function showEnroll(addr, keyRaw) { $('codeBox').style.display = 'block'; $('cod
 async function openGame(addr, keyRaw) {
   setStatus('st_loading');
   const keys = await (await fetch('keys.json', { cache: 'no-store' })).json();
-  const ent = keys[addr]; if (!ent) throw new Error('nokey');
-  let cek;
-  try { const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']); cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k)); }
-  catch (e) { throw new Error('nokey'); }
+  const ents = [].concat(keys[addr] || []); if (!ents.length) throw new Error('nokey');
+  const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']);
+  let cek = null;
+  for (const ent of ents) { try { cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k)); break; } catch (e) {} }
+  if (!cek) throw new Error('nokey');
   const ck = await crypto.subtle.importKey('raw', cek, 'AES-GCM', false, ['decrypt']);
   const enc = new Uint8Array(await (await fetch('game.enc', { cache: 'no-store' })).arrayBuffer());
   const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: enc.slice(0, 12) }, ck, enc.slice(12));
