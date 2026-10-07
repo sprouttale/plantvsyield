@@ -34,6 +34,8 @@ td{padding:7px 8px;border-bottom:1px solid rgba(38,47,82,.6);white-space:nowrap}
 svg.spark{width:100%;height:120px;display:block}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:10px}.kv div{background:#10162b;border-radius:8px;padding:8px}.kv small{color:var(--mut);display:block;font-size:11px}
 .hidden{display:none!important}
+.bn{background:#3a1018;border-color:#ff5d6c;color:#ffb3bb}.bn:hover{background:#5a1824}.ub{background:#10301e;border-color:#3ddc84;color:#9ff0c2}.sm{padding:3px 9px;font-size:12px;margin-top:5px}
+tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 </style></head><body>
 <div id="login"><img src="../assets/logo.webp" alt=""><h2>Admin Paneli</h2><input id="tok" type="password" placeholder="Admin anahtarı" autocomplete="off"><button id="go">Giriş</button><p id="err"></p></div>
 <div id="app" class="hidden">
@@ -64,6 +66,15 @@ const hm = t => new Date(t).toLocaleString('tr-TR', { day: '2-digit', month: '2-
 const dev = ua => !ua ? '—' : (/Mobile|Android|iPhone/.test(ua) ? '📱 ' : '💻 ') + (/Edg\//.test(ua) ? 'Edge' : /Chrome\//.test(ua) ? 'Chrome' : /Firefox/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'Diğer');
 let tok = ''; try { tok = localStorage.getItem('pvy_admin_tok') || ''; } catch (e) {}
 let D = null, sel = null, timer = null;
+const isBan = w => !!(D && D.bans && D.bans.some(b => b.wallet === w));
+async function setBan(w, on) {
+  let reason = null;
+  if (on) { reason = prompt(short(w) + ' cüzdanını yasakla.\nSebep (oyuncu bunu görecek, boş bırakabilirsin):', ''); if (reason === null) return; }
+  else if (!confirm(short(w) + ' cüzdanının yasağı kaldırılsın mı?')) return;
+  const r = await fetch(API.replace('pvy_admin', 'pvy_ban'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_wallet: w, p_ban: on, p_reason: reason || null }) });
+  if (!r.ok) return alert('Olmadı: ' + r.status);
+  await load();
+}
 
 async function load() {
   const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_hours: +$('hrs').value }) });
@@ -111,23 +122,26 @@ function render() {
   const on = p => now - Date.parse(p.last_seen) < 60000, act = p => now - Date.parse(p.last_seen) < 86400000;
   const sum = k => P.reduce((s, p) => s + (+(p.snap || {})[k] || 0), 0);
   const st = [['Şu an online', P.filter(on).length, 'g'], ['Son 24 saat aktif', P.filter(act).length], ['Toplam kayıt', P.length], ['Toplam giriş', P.reduce((s, p) => s + p.sessions, 0)],
-    ['NFT mint eden', P.filter(p => (p.snap || {}).minted).length, 'y'], ['Toplam kazanılan coin', F(sum('earned'))], ['Bankalardaki toplam', F(sum('bank')), 'y'], ['Havuza yatırılan', F(sum('mine'))], ['En yüksek dalga', Math.max(0, ...P.map(p => (p.snap || {}).wave || 0))]];
+    ['NFT mint eden', P.filter(p => (p.snap || {}).minted).length, 'y'], ['Toplam kazanılan coin', F(sum('earned'))], ['Bankalardaki toplam', F(sum('bank')), 'y'], ['Havuza yatırılan', F(sum('mine'))], ['Yasaklı', (D.bans || []).length, 'r'], ['En yüksek dalga', Math.max(0, ...P.map(p => (p.snap || {}).wave || 0))]];
   $('stats').innerHTML = st.map(s => '<div class="st"><small>' + s[0] + '</small><b class="' + (s[2] || '') + '">' + s[1] + '</b></div>').join('');
   $('pc').textContent = P.length + ' cüzdan';
   $('pl').innerHTML = P.map(p => { const s = p.snap || {}, o = on(p), idle = o && (s.vis === 'hidden' || s.paused);
-    return '<tr class="p' + (sel === p.wallet ? ' sel' : '') + '" data-w="' + esc(p.wallet) + '"><td class="mono">' + who(p.wallet) + '</td><td><span class="dot ' + (o ? idle ? 'idle' : 'on' : '') + '"></span>' + (o ? idle ? 'Arka planda' : (s.crashed ? 'Çöktü' : 'Oynuyor') : 'Çevrimdışı') + '</td><td>' + ago(now - Date.parse(p.last_seen)) + '</td><td class="num">' + p.sessions +
+    const bn = isBan(p.wallet);
+    return '<tr class="p' + (sel === p.wallet ? ' sel' : '') + (bn ? ' ban' : '') + '" data-w="' + esc(p.wallet) + '"><td class="mono">' + who(p.wallet) + '</td><td>' + (bn ? '<b class="r">⛔ Yasaklı</b> ' : '') + '<span class="dot ' + (o ? idle ? 'idle' : 'on' : '') + '"></span>' + (o ? idle ? 'Arka planda' : (s.crashed ? 'Çöktü' : 'Oynuyor') : 'Çevrimdışı') + '</td><td>' + ago(now - Date.parse(p.last_seen)) + '</td><td class="num">' + p.sessions +
       '</td><td class="num">' + F(s.coins) + '</td><td class="num">' + F(s.earned) + '</td><td class="num">' + (s.wave || 0) + '</td><td class="num">' + F(s.bag) + '</td><td class="num y">' + F(s.bank) + '</td><td class="num">' + F(s.mine) + '</td><td>' + (s.minted ? ({ m: '👦 Erkek', f: '👧 Kız' }[(s.nft || '').split(':')[0]] || '✔') : '—') + '</td><td>' + dev(p.ua) + '</td></tr>'; }).join('') || '<tr><td colspan="12" class="mut">Henüz kimse girmedi.</td></tr>';
   const A = alerts(); $('ac').textContent = A.length ? A.length + ' uyarı' : 'temiz';
-  $('al').innerHTML = A.slice(0, 40).map(a => '<div class="al ' + (a.lv === 'w' ? 'w' : '') + '"><div><b>' + esc(a.m) + '</b><br><span class="mono">' + who(a.w) + '</span> · <small>' + hm(a.t) + '</small><br><small>' + esc(a.d) + '</small></div></div>').join('') || '<p class="g">Şüpheli bir şey yok ✔</p>';
+  $('al').innerHTML = A.slice(0, 40).map(a => '<div class="al ' + (a.lv === 'w' ? 'w' : '') + '"><div><b>' + esc(a.m) + '</b><br><span class="mono">' + who(a.w) + '</span> · <small>' + hm(a.t) + '</small><br><small>' + esc(a.d) + '</small><br>' + (isBan(a.w) ? '<small class="r">⛔ yasaklandı</small>' : '<button class="bn sm" data-ban="' + esc(a.w) + '">⛔ Yasakla</button>') + '</div></div>').join('') || '<p class="g">Şüpheli bir şey yok ✔</p>';
   $('fd').innerHTML = D.events.slice(0, 250).map(feedRow).join('') || '<p class="mut">Olay yok.</p>';
   $('upd').textContent = 'Güncellendi ' + new Date().toLocaleTimeString('tr-TR') + ' · 15 sn\'de bir yenilenir';
   if (sel) detail(sel);
 }
-const LBL = { session_start: 'Oyuna girdi', session_end: 'Çıktı', wave: 'Dalga', crash: 'Market çöktü', run_reset: 'Yeni tur', click: 'Tıkladı' };
+const LBL = { session_start: 'Oyuna girdi', session_end: 'Çıktı', wave: 'Dalga', crash: 'Market çöktü', run_reset: 'Yeni tur', click: 'Tıkladı', banned: '⛔ Yasaklandı', unbanned: 'Yasak kalktı' };
 function evText(e) { const d = e.data || {};
   if (e.type === 'wave') return 'Dalga ' + d.wave + "'e ulaştı";
   if (e.type === 'crash') return 'Çöktü (dalga ' + d.wave + ', coin ' + F(d.coins) + ')';
   if (e.type === 'click') return '“' + esc(d.el) + '”' + (d.type ? ' <span class="mut">(' + esc(d.type) + ')</span>' : '');
+  if (e.type === 'banned') return 'Admin yasakladı' + (d.reason ? ': ' + esc(d.reason) : '');
+  if (e.type === 'unbanned') return 'Admin yasağı kaldırdı';
   if (e.type === 'session_start') return 'Oyuna girdi <span class="mut">' + esc(d.screen || '') + '</span>';
   return LBL[e.type] || esc(e.type); }
 const feedRow = e => '<div><time>' + hm(e.ts) + '</time><span class="mono">' + who(e.wallet) + '</span> <span class="tag t-' + esc(e.type) + '">' + (LBL[e.type] || esc(e.type)) + '</span>' + evText(e) + '</div>';
@@ -142,13 +156,14 @@ function detail(w) {
   const p = D.players.find(x => x.wallet === w); if (!p) return;
   const s = p.snap || {}, sn = D.snaps.filter(x => x.wallet === w), ev = D.events.filter(x => x.wallet === w);
   const box = $('det'); box.classList.remove('hidden');
-  box.innerHTML = '<h2>Oyuncu: <span class="mono">' + esc(w) + '</span> ' + (NAMES[w] ? '(' + NAMES[w] + ')' : '') + ' <span class="c">ilk giriş ' + hm(p.first_seen) + '</span></h2>' +
+  box.innerHTML = '<h2>Oyuncu: <span class="mono">' + esc(w) + '</span> ' + (NAMES[w] ? '(' + NAMES[w] + ')' : '') + ' <span class="c">ilk giriş ' + hm(p.first_seen) + '</span><span style="flex:1"></span>' + (isBan(w) ? '<b class="r">⛔ Yasaklı</b> <button class="ub" data-unban="' + esc(w) + '">Yasağı kaldır</button>' : '<button class="bn" data-ban="' + esc(w) + '">⛔ Yasakla</button>') + '</h2>' +
     '<div class="kv">' + [['Coin', F(s.coins)], ['Kazanılan (tur)', F(s.earned)], ['Harcanan (tur)', F(s.spent)], ['Dalga', s.wave || 0], ['Kaçan zombi', s.leaks || 0], ['Bag', F(s.bag)], ['Banka', F(s.bank)], ['Havuz payı', F(s.mine)], ['Gelir/sn', F(s.dps)], ['Dil', s.lang || '—'], ['Toplam giriş', p.sessions], ['Cihaz', dev(p.ua)]].map(k => '<div><small>' + k[0] + '</small>' + k[1] + '</div>').join('') + '</div>' +
     '<h2>Coin <span class="c">seçili zaman aralığı</span></h2>' + spark(sn, 'coins', '#ffd23f') + '<h2 style="margin-top:12px">Banka</h2>' + spark(sn, 'bank', '#3ddc84') +
     '<h2 style="margin-top:12px">Bu oyuncunun hareketleri <span class="c">' + ev.length + '</span></h2><div class="feed tw" style="max-height:320px">' + (ev.slice(0, 300).map(feedRow).join('') || '<p class="mut">Olay yok.</p>') + '</div>' +
     '<p style="margin-top:10px"><button onclick="sel=null;document.getElementById(\'det\').classList.add(\'hidden\');render()">Kapat</button></p>';
 }
 $('pl').addEventListener('click', e => { const tr = e.target.closest('tr[data-w]'); if (!tr) return; sel = tr.dataset.w; render(); $('det').scrollIntoView({ behavior: 'smooth' }); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-ban],[data-unban]'); if (!b) return; e.stopPropagation(); if (b.dataset.ban) setBan(b.dataset.ban, true); else setBan(b.dataset.unban, false); }, true);
 $('go').onclick = () => { tok = $('tok').value.trim(); start(); };
 $('tok').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
 $('ref').onclick = () => load().catch(e => alert(e.message));
