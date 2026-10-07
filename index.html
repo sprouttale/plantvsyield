@@ -1,24 +1,67 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Plant vs. Yield</title>
-<meta name="description" content="Plant vs. Yield — bitkilerini dik, $COIN bas, zombi dalgalarını savuştur.">
+<meta name="description" content="Plant vs. Yield — plant, farm $COIN and survive the zombie market. Closed beta on Robinhood Chain.">
 <script>if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) location.replace('https://' + location.host + location.pathname + location.search);</script>
 <style>
-  :root{--bg:#0b0d17;--panel:#141829;--line:#2a3152;--gold:#ffd23f;--green:#3ddc84;--red:#ff4d6a;--purple:#b46bff;--cyan:#3ff0ff;--txt:#e8ecff;--mut:#8a93b8}
+  :root{--bg:#070912;--panel:#141829;--line:#2a3152;--gold:#ffd23f;--green:#3ddc84;--red:#ff4d6a;--purple:#b46bff;--cyan:#3ff0ff;--orange:#ff9f43;--txt:#e8ecff;--mut:#97a0c6}
   *{box-sizing:border-box}
-  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--txt);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
-  body{display:flex;align-items:center;justify-content:center;padding:24px 16px;
-       background:radial-gradient(1200px 600px at 50% -10%,#2a2f63 0%,transparent 60%),radial-gradient(800px 400px at 50% 120%,rgba(61,220,132,.18),transparent 60%),var(--bg)}
-  body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(63,240,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(63,240,255,.05) 1px,transparent 1px);background-size:28px 28px}
-  .card{position:relative;width:100%;max-width:460px;background:linear-gradient(180deg,#1b2036,#121528);border:1px solid #2f3866;border-radius:18px;padding:28px 26px 22px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(180,107,255,.12);text-align:center}
-  .logo{font:900 44px/1 Impact,"Arial Black",sans-serif;letter-spacing:1px;margin:4px 0 2px;background:linear-gradient(180deg,#fff6c2,#ffd23f 55%,#c98a00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #3a2600)}
-  .logo i{font-style:normal;font-size:26px;background:linear-gradient(180deg,#b8ffd6,#1fa85a);-webkit-background-clip:text;background-clip:text}
-  .tag{color:var(--mut);margin:6px 0 20px;font-size:14px}
-  .chips{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:22px}
-  .chip{font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.6 "Segoe UI",system-ui,-apple-system,sans-serif;overflow-x:hidden}
+  a{color:inherit}
+  img{display:block}
+
+  /* ---------- top bar ---------- */
+  .top{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 24px;background:linear-gradient(180deg,rgba(7,9,18,.92),rgba(7,9,18,0));}
+  .brand{font:900 22px/1 Impact,"Arial Black",sans-serif;letter-spacing:.5px;background:linear-gradient(180deg,#fff6c2,#ffd23f 60%,#c98a00);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;white-space:nowrap}
+  .brand i{font-style:normal;font-size:14px;background:linear-gradient(180deg,#b8ffd6,#1fa85a);-webkit-background-clip:text;background-clip:text}
+  .nav{display:flex;gap:18px;margin-left:auto}
+  .nav a{text-decoration:none;color:var(--mut);font-weight:700;font-size:14px}
+  .nav a:hover{color:var(--txt)}
+  .lang{appearance:none;background:#141829 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2397a0c6'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:7px 28px 7px 34px;font:700 13px "Segoe UI",sans-serif;cursor:pointer}
+  .langw{position:relative}
+  .langw svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none}
+
+  /* ---------- hero scene ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:90px 20px 200px;overflow:hidden;
+        background:radial-gradient(900px 500px at 70% 10%,rgba(180,107,255,.22),transparent 60%),radial-gradient(700px 400px at 15% 20%,rgba(63,240,255,.14),transparent 60%),linear-gradient(180deg,#0b0f24 0%,#101634 45%,#14203a 70%,#0f1a1a 100%)}
+  .moon{position:absolute;top:12%;right:12%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fffbe6,#ffe9a8 45%,#f2c45a 70%);box-shadow:0 0 80px 20px rgba(255,220,130,.25),0 0 200px 60px rgba(255,210,63,.08)}
+  .stars{position:absolute;inset:0;background-image:radial-gradient(1.5px 1.5px at 10% 20%,#fff,transparent),radial-gradient(1px 1px at 30% 8%,#cfe,transparent),radial-gradient(1.5px 1.5px at 55% 25%,#fff,transparent),radial-gradient(1px 1px at 75% 40%,#fff,transparent),radial-gradient(1px 1px at 88% 12%,#cfe,transparent),radial-gradient(1.5px 1.5px at 42% 45%,#fff,transparent),radial-gradient(1px 1px at 20% 50%,#fff,transparent);opacity:.7;animation:tw 6s ease-in-out infinite alternate}
+  @keyframes tw{to{opacity:.35}}
+  .hills{position:absolute;left:0;right:0;bottom:120px;height:220px;background:radial-gradient(60% 100% at 20% 100%,#16302a 60%,transparent 61%),radial-gradient(55% 90% at 80% 100%,#12281f 60%,transparent 61%);opacity:.9}
+  .graves{position:absolute;left:0;right:0;bottom:150px;height:90px;display:flex;justify-content:space-around;align-items:flex-end;opacity:.55;pointer-events:none}
+  .graves span{width:34px;height:48px;background:#2a3346;border-radius:16px 16px 3px 3px;box-shadow:inset -6px 0 0 rgba(0,0,0,.25)}
+  .graves span:nth-child(2n){height:38px;width:28px}
+  .graves span:nth-child(3n){height:58px;width:22px;border-radius:3px}
+  .ground{position:absolute;left:0;right:0;bottom:0;height:170px;background:linear-gradient(180deg,#3a8f3a 0,#2e7a31 18px,#245f28 40%,#1a4120 100%);box-shadow:0 -6px 30px rgba(61,220,132,.25)}
+  .ground::before{content:"";position:absolute;left:0;right:0;top:-10px;height:20px;background:repeating-linear-gradient(90deg,#4fb84a 0 6px,transparent 6px 12px);clip-path:polygon(0 100%,3% 0,6% 100%,9% 10%,12% 100%,15% 0,18% 100%,21% 20%,24% 100%,27% 0,30% 100%,33% 10%,36% 100%,39% 0,42% 100%,45% 20%,48% 100%,51% 0,54% 100%,57% 10%,60% 100%,63% 0,66% 100%,69% 20%,72% 100%,75% 0,78% 100%,81% 10%,84% 100%,87% 0,90% 100%,93% 20%,96% 100%,100% 0,100% 100%)}
+  .ground::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 80px,transparent 80px 160px)}
+  .fog{position:absolute;left:-10%;right:-10%;bottom:130px;height:120px;background:radial-gradient(50% 60% at 30% 60%,rgba(200,220,255,.12),transparent 70%),radial-gradient(40% 50% at 75% 50%,rgba(200,220,255,.10),transparent 70%);animation:fog 18s ease-in-out infinite alternate;pointer-events:none}
+  @keyframes fog{to{transform:translateX(6%)}}
+  .plants{position:absolute;left:3%;bottom:70px;display:flex;align-items:flex-end;gap:2px;z-index:2}
+  .plants img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 8px 6px rgba(0,0,0,.45));animation:sway 3.2s ease-in-out infinite}
+  .plants img:nth-child(2n){animation-delay:-1.4s}
+  .plants img:nth-child(3n){animation-delay:-.7s}
+  @keyframes sway{50%{transform:translateY(-4px) rotate(-2deg)}}
+  .march{position:absolute;bottom:72px;left:0;right:0;height:120px;z-index:2;pointer-events:none}
+  .march img{position:absolute;bottom:0;width:86px;height:110px;object-fit:contain;transform:scaleX(-1);filter:drop-shadow(0 8px 6px rgba(0,0,0,.5));animation:walk linear infinite}
+  @keyframes walk{0%{right:-130px;opacity:0}6%{opacity:1}88%{opacity:1}100%{right:56%;opacity:0}}
+  .march img.bob{animation-name:walk;}
+  .coins{position:absolute;inset:0;pointer-events:none;z-index:1}
+  .coins img{position:absolute;width:30px;height:30px;opacity:0;animation:rise 7s ease-in infinite}
+  @keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.95}100%{transform:translateY(-55vh) scale(1);opacity:0}}
+
+  /* ---------- connect card ---------- */
+  .card{position:relative;z-index:5;width:100%;max-width:470px;background:linear-gradient(180deg,rgba(27,32,54,.92),rgba(16,19,36,.94));backdrop-filter:blur(6px);border:1px solid #333d72;border-radius:20px;padding:30px 28px 22px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 50px rgba(180,107,255,.15);text-align:center}
+  .logo{font:900 56px/1 Impact,"Arial Black",sans-serif;letter-spacing:1px;margin:2px 0 6px;background:linear-gradient(180deg,#fff6c2,#ffd23f 55%,#c98a00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #3a2600) drop-shadow(0 0 24px rgba(255,210,63,.25))}
+  .logo i{font-style:normal;font-size:30px;background:linear-gradient(180deg,#b8ffd6,#1fa85a);-webkit-background-clip:text;background-clip:text}
+  .tagline{font-weight:800;font-size:18px;margin:4px 0 6px}
+  .sub{color:var(--mut);margin:0 0 16px;font-size:14px}
+  .chips{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+  .chip{font-size:11px;font-weight:800;letter-spacing:.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
   .chip.net{color:var(--green);border-color:rgba(61,220,132,.5)}
   .chip.beta{color:var(--purple);border-color:rgba(180,107,255,.5)}
   .btn{position:relative;display:flex;width:100%;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;font:800 16px "Segoe UI",sans-serif;padding:15px 20px;border-radius:13px;color:#2a1300;
@@ -26,56 +69,447 @@
   .btn:hover{filter:brightness(1.08)}
   .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8a3f06}
   .btn:disabled{filter:grayscale(.8) brightness(.6);cursor:wait;transform:none}
-  .btn.green{color:#04220f;background:linear-gradient(180deg,#8affb8,#3ddc84 50%,#1fa85a);box-shadow:0 4px 0 #11703a,inset 0 1px 0 rgba(255,255,255,.4),0 10px 26px rgba(61,220,132,.3)}
   .btn svg{width:24px;height:24px}
-  .status{min-height:22px;margin:14px 0 0;font-size:13px;color:var(--mut)}
-  .status.err{color:var(--red)} .status.ok{color:var(--green)}
-  .who{display:none;margin:16px 0 0;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);font:12px ui-monospace,Consolas,monospace;color:var(--mut);word-break:break-all;text-align:left}
-  .who b{color:var(--txt)}
-  .code{display:none;margin-top:12px;text-align:left}
-  .code textarea{width:100%;height:70px;resize:none;background:#0a0c16;color:var(--cyan);border:1px solid var(--line);border-radius:8px;padding:8px;font:11px ui-monospace,Consolas,monospace}
-  .foot{margin-top:18px;font-size:11px;color:#5d6690}
-  .foot a{color:var(--mut)}
   .spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,.25);border-top-color:#2a1300;animation:sp .8s linear infinite;display:none}
   .btn.busy .spin{display:inline-block}
   @keyframes sp{to{transform:rotate(360deg)}}
+  .status{min-height:22px;margin:14px 0 0;font-size:13px;color:var(--mut)}
+  .status.err{color:var(--red)} .status.ok{color:var(--green)}
+  .who{display:none;margin:12px 0 0;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);font:12px ui-monospace,Consolas,monospace;color:var(--mut);word-break:break-all;text-align:left}
+  .who b{color:var(--txt)}
+  .code{display:none;margin-top:12px;text-align:left}
+  .code textarea{width:100%;height:70px;resize:none;background:#0a0c16;color:var(--cyan);border:1px solid var(--line);border-radius:8px;padding:8px;font:11px ui-monospace,Consolas,monospace}
+  .code button{margin-top:6px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:5px 10px;cursor:pointer;font:700 12px "Segoe UI",sans-serif}
+  .note{margin-top:16px;font-size:11px;color:#6b75a2}
+  .scroll{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:6;color:#cfe;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8;animation:bounce 2s infinite}
+  @keyframes bounce{50%{transform:translate(-50%,6px)}}
+
+  /* ---------- sections ---------- */
+  section.sec{position:relative;padding:80px 20px;max-width:1120px;margin:0 auto}
+  .sec h2{font:900 36px/1.1 Impact,"Arial Black",sans-serif;letter-spacing:.5px;margin:0 0 8px;text-align:center;background:linear-gradient(180deg,#fff6c2,#ffd23f);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sec .lead{color:var(--mut);text-align:center;margin:0 auto 36px;max-width:620px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px}
+  .step{position:relative;background:linear-gradient(180deg,#171c33,#11152a);border:1px solid #283160;border-radius:16px;padding:18px 18px 16px 18px;transition:transform .15s,border-color .15s}
+  .step:hover{transform:translateY(-3px);border-color:#4552a0}
+  .step .n{position:absolute;top:12px;right:14px;font:900 28px/1 Impact,sans-serif;color:rgba(255,255,255,.07)}
+  .step img{width:64px;height:64px;object-fit:contain;margin-bottom:8px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.4))}
+  .step img.flip{transform:scaleX(-1)}
+  .step h3{margin:0 0 6px;font-size:17px}
+  .step p{margin:0;color:var(--mut);font-size:14px}
+  .step.warn{border-color:rgba(255,77,106,.35)}
+  .step.warn h3{color:#ff8a9d}
+  .step.gold{border-color:rgba(255,210,63,.35)}
+  .step.gold h3{color:var(--gold)}
+  .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:12px;margin-bottom:22px}
+  .flow .box{background:linear-gradient(180deg,#171c33,#11152a);border:1px solid #283160;border-radius:16px;padding:18px;text-align:center}
+  .flow .box img{width:58px;height:58px;object-fit:contain;margin:0 auto 6px}
+  .flow .box h3{margin:0 0 6px;font-size:17px}
+  .flow .box p{margin:0;color:var(--mut);font-size:14px}
+  .flow .arr{align-self:center;font-size:28px;color:var(--gold)}
+  .b-bag{border-color:rgba(180,107,255,.45)!important} .b-bag h3{color:var(--purple)}
+  .b-pool{border-color:rgba(63,240,255,.45)!important} .b-pool h3{color:var(--cyan)}
+  .b-bank{border-color:rgba(61,220,132,.45)!important} .b-bank h3{color:var(--green)}
+  .keys{margin:28px auto 0;max-width:820px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;color:var(--mut);font-size:13px}
+  .keys span{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;background:#11152a;border:1px solid #283160}
+  kbd{font:800 12px ui-monospace,Consolas,monospace;color:var(--txt);background:#232a4d;border:1px solid #3a4370;border-bottom-width:3px;border-radius:6px;padding:1px 7px}
+  .faq{max-width:760px;margin:0 auto;display:grid;gap:10px}
+  .faq details{background:#11152a;border:1px solid #283160;border-radius:14px;padding:14px 18px}
+  .faq summary{cursor:pointer;font-weight:800;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  .faq summary::after{content:"+";color:var(--gold);font-size:20px;line-height:1}
+  .faq details[open] summary::after{content:"–"}
+  .faq p{margin:10px 0 0;color:var(--mut)}
+  .cta{text-align:center;margin-top:40px}
+  .cta a{display:inline-flex;text-decoration:none;max-width:320px}
+  footer{border-top:1px solid #1d2340;padding:26px 20px;text-align:center;color:#5d6690;font-size:12px}
+
+  @media (max-width:760px){
+    .nav{display:none}
+    .top{padding:10px 14px}
+    .logo{font-size:44px}
+    .plants img{width:62px;height:62px}
+    .plants img:nth-child(n+5){display:none}
+    .march img{width:62px;height:80px;animation-name:walkM}
+    @keyframes walkM{0%{right:-90px;opacity:0}8%{opacity:1}85%{opacity:1}100%{right:30%;opacity:0}}
+    .plants img:nth-child(n+4){display:none}
+    .moon{width:80px;height:80px;right:8%}
+    .flow{grid-template-columns:1fr}
+    .flow .arr{transform:rotate(90deg);justify-self:center}
+    .sec h2{font-size:30px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}.march{display:none}}
 </style>
 </head>
 <body>
-<main class="card">
-  <div class="logo">PLANT <i>vs.</i> YIELD</div>
-  <p class="tag">Bitkilerini dik, $COIN bas, zombi dalgalarını savuştur.</p>
-  <div class="chips"><span class="chip net" id="netChip">Robinhood Chain</span><span class="chip beta">Kapalı Beta</span></div>
-
-  <button class="btn" id="connectBtn">
-    <svg viewBox="0 0 35 33" aria-hidden="true"><path fill="#e17726" d="M32.96 1 19.6 10.94l2.47-5.85z"/><path fill="#e27625" d="m2.04 1 13.24 10.03-2.35-5.94zM28.15 23.53l-3.55 5.44 7.6 2.09 2.18-7.41zM.63 23.65l2.17 7.41 7.59-2.09-3.55-5.44z"/><path fill="#e27625" d="m9.97 14.4-2.12 3.2 7.55.34-.25-8.13zM25.03 14.4l-5.24-4.68-.17 8.22 7.55-.34zM10.39 28.97l4.55-2.2-3.92-3.06zM20.06 26.77l4.54 2.2-.62-5.26z"/><path fill="#d5bfb2" d="m24.6 28.97-4.54-2.2.37 2.95-.04 1.25zM10.39 28.97l4.22 2-.03-1.25.36-2.95z"/><path fill="#233447" d="m14.68 21.75-3.77-1.1 2.66-1.22zM20.32 21.75l1.11-2.32 2.67 1.22z"/><path fill="#cc6228" d="m10.39 28.97.65-5.44-4.2.12zM23.96 23.53l.64 5.44 3.55-5.32zM27.15 17.6l-7.55.34.7 3.81 1.12-2.32 2.67 1.22zM10.91 20.65l2.66-1.22 1.11 2.32.7-3.81-7.55-.34z"/><path fill="#e27525" d="m7.85 17.6 3.16 6.17-.1-3.12zM24.1 20.65l-.12 3.12 3.17-6.17zM15.4 17.94l-.7 3.81.89 4.57.2-6.02zM19.6 17.94l-.37 2.35.18 6.03.89-4.57z"/></svg>
-    <span id="btnTxt">MetaMask ile Bağlan</span><span class="spin"></span>
-  </button>
-
-  <div class="status" id="status" role="status" aria-live="polite"></div>
-  <div class="who" id="who"></div>
-  <div class="code" id="codeBox">
-    <p class="status">Bu cüzdan izin listesinde ama henüz kayıtlı değil. Aşağıdaki kayıt kodunu geliştiriciye gönder (sadece güvendiğin kişiye):</p>
-    <textarea id="codeTxt" readonly></textarea>
+<header class="top">
+  <a class="brand" href="#">PLANT <i>vs.</i> YIELD</a>
+  <nav class="nav"><a href="#how" data-i="nav_how"></a><a href="#economy" data-i="nav_econ"></a><a href="#faq" data-i="nav_faq"></a></nav>
+  <div class="langw">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#97a0c6" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>
+    <select class="lang" id="lang" aria-label="Language"></select>
   </div>
-  <p class="foot">Sadece izin verilen cüzdanlar oyuna girebilir. İmza ücretsizdir, işlem değildir.</p>
+</header>
+
+<main>
+<section class="hero" id="top">
+  <div class="stars"></div><div class="moon"></div><div class="hills"></div>
+  <div class="graves"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="fog"></div>
+  <div class="coins" id="coins"></div>
+  <div class="ground"></div>
+  <div class="plants">
+    <img src="assets/n_solar.webp" alt=""><img src="assets/n_mush.webp" alt=""><img src="assets/n_log2.webp" alt=""><img src="assets/n_icecorn.webp" alt=""><img src="assets/q_viper.webp" alt=""><img src="assets/q_pitaya.webp" alt="">
+  </div>
+  <div class="march" id="march"></div>
+
+  <div class="card">
+    <div class="logo">PLANT <i>vs.</i> YIELD</div>
+    <div class="tagline" data-i="tagline"></div>
+    <p class="sub" data-i="sub"></p>
+    <div class="chips"><span class="chip net" id="netChip">Robinhood Chain</span><span class="chip beta" data-i="chip_beta"></span></div>
+    <button class="btn" id="connectBtn">
+      <svg viewBox="0 0 35 33" aria-hidden="true"><path fill="#e17726" d="M32.96 1 19.6 10.94l2.47-5.85z"/><path fill="#e27625" d="m2.04 1 13.24 10.03-2.35-5.94zM28.15 23.53l-3.55 5.44 7.6 2.09 2.18-7.41zM.63 23.65l2.17 7.41 7.59-2.09-3.55-5.44z"/><path fill="#e27625" d="m9.97 14.4-2.12 3.2 7.55.34-.25-8.13zM25.03 14.4l-5.24-4.68-.17 8.22 7.55-.34zM10.39 28.97l4.55-2.2-3.92-3.06zM20.06 26.77l4.54 2.2-.62-5.26z"/><path fill="#d5bfb2" d="m24.6 28.97-4.54-2.2.37 2.95-.04 1.25zM10.39 28.97l4.22 2-.03-1.25.36-2.95z"/><path fill="#233447" d="m14.68 21.75-3.77-1.1 2.66-1.22zM20.32 21.75l1.11-2.32 2.67 1.22z"/><path fill="#cc6228" d="m10.39 28.97.65-5.44-4.2.12zM23.96 23.53l.64 5.44 3.55-5.32zM27.15 17.6l-7.55.34.7 3.81 1.12-2.32 2.67 1.22zM10.91 20.65l2.66-1.22 1.11 2.32.7-3.81-7.55-.34z"/><path fill="#e27525" d="m7.85 17.6 3.16 6.17-.1-3.12zM24.1 20.65l-.12 3.12 3.17-6.17zM15.4 17.94l-.7 3.81.89 4.57.2-6.02zM19.6 17.94l-.37 2.35.18 6.03.89-4.57z"/></svg>
+      <span id="btnTxt"></span><span class="spin"></span>
+    </button>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="who" id="who"></div>
+    <div class="code" id="codeBox">
+      <p class="status" data-i="enroll"></p>
+      <textarea id="codeTxt" readonly></textarea>
+      <button id="copyBtn" data-i="copy"></button>
+    </div>
+    <p class="note" data-i="note"></p>
+  </div>
+  <a class="scroll" href="#how" data-i="scroll"></a>
+</section>
+
+<section class="sec" id="how">
+  <h2 data-i="how_title"></h2>
+  <p class="lead" data-i="how_lead"></p>
+  <div class="grid">
+    <div class="step"><span class="n">01</span><img src="assets/n_solar.webp" alt=""><h3 data-i="s1t"></h3><p data-i="s1p"></p></div>
+    <div class="step"><span class="n">02</span><img src="assets/q_sundew.webp" alt=""><h3 data-i="s2t"></h3><p data-i="s2p"></p></div>
+    <div class="step"><span class="n">03</span><img class="flip" src="assets/zz0.webp" alt=""><h3 data-i="s3t"></h3><p data-i="s3p"></p></div>
+    <div class="step"><span class="n">04</span><img src="assets/q_thistle.webp" alt=""><h3 data-i="s4t"></h3><p data-i="s4p"></p></div>
+    <div class="step warn"><span class="n">05</span><img src="assets/shield.webp" alt=""><h3 data-i="s5t"></h3><p data-i="s5p"></p></div>
+    <div class="step warn"><span class="n">06</span><img class="flip" src="assets/zz10.webp" alt=""><h3 data-i="s6t"></h3><p data-i="s6p"></p></div>
+    <div class="step warn"><span class="n">07</span><img class="flip" src="assets/zz7.webp" alt=""><h3 data-i="s7t"></h3><p data-i="s7p"></p></div>
+    <div class="step gold"><span class="n">08</span><img src="assets/i_jar.webp" alt=""><h3 data-i="s8t"></h3><p data-i="s8p"></p></div>
+  </div>
+  <div class="keys">
+    <span><kbd>1</kbd>–<kbd>9</kbd> <b data-i="k_pick"></b></span>
+    <span><kbd>Esc</kbd> <b data-i="k_cancel"></b></span>
+    <span><kbd>P</kbd> / <kbd>Space</kbd> <b data-i="k_pause"></b></span>
+    <span><kbd>2D</kbd>/<kbd>3D</kbd> <b data-i="k_view"></b></span>
+  </div>
+</section>
+
+<section class="sec" id="economy">
+  <h2 data-i="econ_title"></h2>
+  <p class="lead" data-i="econ_lead"></p>
+  <div class="flow">
+    <div class="box b-bag"><img src="assets/i_coin.webp" alt=""><h3 data-i="bag_t"></h3><p data-i="bag_p"></p></div>
+    <div class="arr">➜</div>
+    <div class="box b-pool"><img src="assets/i_gem.webp" alt=""><h3 data-i="pool_t"></h3><p data-i="pool_p"></p></div>
+    <div class="arr">➜</div>
+    <div class="box b-bank"><img src="assets/box.webp" alt=""><h3 data-i="bank_t"></h3><p data-i="bank_p"></p></div>
+  </div>
+  <div class="grid">
+    <div class="step"><img src="assets/q_orchid.webp" alt=""><h3 data-i="garden_t"></h3><p data-i="garden_p"></p></div>
+    <div class="step"><img src="assets/q_timeloop.webp" alt=""><h3 data-i="pass_t"></h3><p data-i="pass_p"></p></div>
+    <div class="step"><img src="assets/q_psych.webp" alt=""><h3 data-i="nft_t"></h3><p data-i="nft_p"></p></div>
+  </div>
+</section>
+
+<section class="sec" id="faq">
+  <h2 data-i="faq_title"></h2>
+  <div class="faq">
+    <details><summary data-i="q1"></summary><p data-i="a1"></p></details>
+    <details><summary data-i="q2"></summary><p data-i="a2"></p></details>
+    <details><summary data-i="q3"></summary><p data-i="a3"></p></details>
+    <details><summary data-i="q4"></summary><p data-i="a4"></p></details>
+    <details><summary data-i="q5"></summary><p data-i="a5"></p></details>
+  </div>
+  <div class="cta"><a class="btn" href="#top" data-i="cta"></a></div>
+</section>
 </main>
+<footer data-i="footer"></footer>
 
 <script>
-/* ===== Ayarlar ===== */
-const CHAIN = null;          // Robinhood Chain parametreleri (wallet_addEthereumChain biçimi)
-const ALLOW = ["0xadc8f313c7205d4def2545460037b3e4260e383f"];            // izinli adresler (küçük harf)
-const SIGN_MSG = a => 'Plant vs. Yield erişim anahtarı\n\nCüzdan: ' + a.toLowerCase() + '\n\nBu imza bir işlem değildir ve ücret ödenmez.';
+/* ===== Settings (filled at build) ===== */
+const CHAIN = null;
+const ALLOW = ["0xadc8f313c7205d4def2545460037b3e4260e383f"];
+const SIGN_MSG = a => 'Plant vs. Yield access key\n\nWallet: ' + a.toLowerCase() + '\n\nThis signature is not a transaction and costs no fees.';
 
-/* ===== Yardımcılar ===== */
+/* ===== i18n ===== */
+const LANGS = { en: 'English', es: 'Español', pt: 'Português', fr: 'Français', de: 'Deutsch', ru: 'Русский', zh: '中文', ja: '日本語', tr: 'Türkçe' };
+const I = {
+en:{nav_how:"How to Play",nav_econ:"Economy",nav_faq:"FAQ",tagline:"Plant. Farm $COIN. Survive the zombie market.",sub:"A tower-defense yield game where your garden is your portfolio. Build a money machine, hold the line against zombie traders — and don't get rugged.",chip_beta:"Closed Beta",
+btn_connect:"Connect MetaMask",btn_connecting:"Connecting wallet…",btn_network:"Checking network…",btn_sign:"Waiting for signature…",btn_other:"Try another wallet",btn_retry:"Try again",
+st_nomm:"MetaMask not found. Install the MetaMask extension to continue.",st_denied:"This wallet has no access. The closed beta is invite-only.",st_signhint:"Approve the signature request in MetaMask (free).",st_loading:"Loading the game…",st_fail:"Couldn't open the game. Make sure you signed with the invited wallet.",st_rejected:"Request rejected.",st_err:"Connection error: ",
+who:"Connected wallet:",enroll:"This wallet is invited but not activated yet. Send this activation code to the developer (only to someone you trust):",copy:"Copy code",copied:"Copied!",note:"Only invited wallets can enter. Signing is free and is not a transaction.",scroll:"How to play ↓",
+how_title:"How to Play",how_lead:"Everything you need to survive your first market cycle.",
+s1t:"Plant your portfolio",s1p:"Pick a plant from the Market and place it on an open lane. Producers mint $COIN every second; shooters and walls keep them alive.",
+s2t:"Synergy stacks",s2p:"Every plant boosts your total income by 4%. A bigger garden earns faster — but it's also more to defend.",
+s3t:"Hold the lanes",s3p:"Zombie traders march in from the right in waves. New lanes open as the waves climb, so cover every row before it's too late.",
+s4t:"Upgrade wisely",s4p:"Select a plant to level it up for more yield and power. High-level upgrades can RUG — the higher you push, the bigger the risk.",
+s5t:"Pay your rent",s5p:"Garden rent is due every 5 minutes. Miss it and your income drops 80% while zombies move 50% faster.",
+s6t:"Stop the Whale Boss",s6p:"Every 10th wave a Whale Boss rolls in. If it reaches the left edge: MARKET CRASH and your run is over.",
+s7t:"Don't leak",s7p:"If 10 zombies slip past your defense, it collapses and 10% of your Bag burns.",
+s8t:"Rebirth stronger",s8p:"A crash isn't the end. The coins you spent turn into Golden Fertilizer — an income multiplier for the rest of the day.",
+k_pick:"select plant",k_cancel:"cancel",k_pause:"pause",k_view:"switch view",
+econ_title:"From Coins to Rewards",econ_lead:"Your in-game $COIN keeps the garden running. Your Bag is what you take home.",
+bag_t:"Bag",bag_p:"1% of every $COIN you earn drops into your Bag. Premium Pass boosts can raise this rate for a while.",
+pool_t:"Daily Pool",pool_p:"Deposit your Bag into the daily reward pool. When the day ends, the reward is split by everyone's share.",
+bank_t:"Bank",bank_p:"Your pool share lands in your Bank. Withdraw it, or convert it back into in-game $COIN.",
+garden_t:"Garden & Seeds",garden_p:"Mystery Boxes drop rare seeds. Plant them in your Garden for daily Bank income, or merge 3 of the same rarity to roll a rarer one.",
+pass_t:"Premium Pass",pass_p:"Defeat zombies to earn XP and unlock rewards: boxes, seeds and temporary coin and Bag-rate boosts.",
+nft_t:"Character NFT",nft_p:"Mint a random plant or zombie character to join the daily pool. Leaks damage it — repair it to keep playing.",
+faq_title:"FAQ",q1:"Who can play right now?",a1:"Plant vs. Yield is in closed beta. Only invited wallets can enter for now — public access is coming later.",
+q2:"Does connecting my wallet cost anything?",a2:"No. You only sign a message to prove you own the wallet. It isn't a transaction and costs no gas.",
+q3:"Which network does the game use?",a3:"The game runs on Robinhood Chain. If your wallet is on another network, MetaMask will ask you to switch.",
+q4:"Do I need to install anything?",a4:"Just a desktop browser with the MetaMask extension. The game runs right in your browser — nothing to download.",
+q5:"Is my progress saved?",a5:"Yes. Your garden, seeds and settings are saved in your browser on this device.",
+cta:"Connect & Play",footer:"© 2026 Plant vs. Yield · Closed Beta"},
+es:{nav_how:"Cómo jugar",nav_econ:"Economía",nav_faq:"Preguntas",tagline:"Planta. Cosecha $COIN. Sobrevive al mercado zombi.",sub:"Un juego de defensa y rendimiento donde tu jardín es tu cartera. Construye una máquina de dinero, frena a los traders zombis y que no te hagan rug.",chip_beta:"Beta cerrada",
+btn_connect:"Conectar MetaMask",btn_connecting:"Conectando cartera…",btn_network:"Comprobando red…",btn_sign:"Esperando firma…",btn_other:"Probar otra cartera",btn_retry:"Reintentar",
+st_nomm:"No se encontró MetaMask. Instala la extensión de MetaMask para continuar.",st_denied:"Esta cartera no tiene acceso. La beta cerrada es solo por invitación.",st_signhint:"Aprueba la solicitud de firma en MetaMask (gratis).",st_loading:"Cargando el juego…",st_fail:"No se pudo abrir el juego. Asegúrate de firmar con la cartera invitada.",st_rejected:"Solicitud rechazada.",st_err:"Error de conexión: ",
+who:"Cartera conectada:",enroll:"Esta cartera está invitada pero aún no está activada. Envía este código de activación al desarrollador (solo a alguien de confianza):",copy:"Copiar código",copied:"¡Copiado!",note:"Solo las carteras invitadas pueden entrar. Firmar es gratis y no es una transacción.",scroll:"Cómo jugar ↓",
+how_title:"Cómo jugar",how_lead:"Todo lo que necesitas para sobrevivir a tu primer ciclo de mercado.",
+s1t:"Planta tu cartera",s1p:"Elige una planta del Mercado y colócala en un carril abierto. Los productores generan $COIN cada segundo; los tiradores y muros los protegen.",
+s2t:"La sinergia se acumula",s2p:"Cada planta aumenta tus ingresos totales un 4%. Un jardín más grande gana más rápido, pero también hay más que defender.",
+s3t:"Defiende los carriles",s3p:"Los traders zombis llegan por la derecha en oleadas. Se abren nuevos carriles al subir de oleada: cubre cada fila a tiempo.",
+s4t:"Mejora con cabeza",s4p:"Selecciona una planta para subirla de nivel. Las mejoras de nivel alto pueden hacer RUG: cuanto más subes, mayor el riesgo.",
+s5t:"Paga el alquiler",s5p:"El alquiler del jardín vence cada 5 minutos. Si no pagas, tus ingresos bajan un 80% y los zombis van un 50% más rápido.",
+s6t:"Detén al Whale Boss",s6p:"Cada 10 oleadas llega un Whale Boss. Si alcanza el borde izquierdo: MARKET CRASH y se acaba la partida.",
+s7t:"Que no se cuelen",s7p:"Si 10 zombis atraviesan tu defensa, esta colapsa y se quema el 10% de tu Bolsa.",
+s8t:"Renace más fuerte",s8p:"Un crash no es el final. Las monedas gastadas se convierten en Fertilizante Dorado, un multiplicador de ingresos para el resto del día.",
+k_pick:"elegir planta",k_cancel:"cancelar",k_pause:"pausa",k_view:"cambiar vista",
+econ_title:"De monedas a recompensas",econ_lead:"Tus $COIN del juego mantienen el jardín. Tu Bolsa es lo que te llevas.",
+bag_t:"Bolsa",bag_p:"El 1% de cada $COIN que ganas va a tu Bolsa. Las mejoras del Premium Pass pueden subir este porcentaje temporalmente.",
+pool_t:"Fondo diario",pool_p:"Deposita tu Bolsa en el fondo de recompensas diario. Al acabar el día, el premio se reparte según la participación de cada uno.",
+bank_t:"Banco",bank_p:"Tu parte del fondo llega a tu Banco. Retírala o conviértela de nuevo en $COIN del juego.",
+garden_t:"Jardín y semillas",garden_p:"Las Mystery Box sueltan semillas raras. Plántalas en tu Jardín para ganar ingresos diarios o fusiona 3 de la misma rareza para obtener una más rara.",
+pass_t:"Premium Pass",pass_p:"Derrota zombis para ganar XP y desbloquear recompensas: cajas, semillas y mejoras temporales de monedas y de Bolsa.",
+nft_t:"NFT de personaje",nft_p:"Acuña un personaje aleatorio (planta o zombi) para unirte al fondo diario. Las fugas lo dañan: repáralo para seguir jugando.",
+faq_title:"Preguntas frecuentes",q1:"¿Quién puede jugar ahora?",a1:"Plant vs. Yield está en beta cerrada. Por ahora solo entran carteras invitadas; el acceso público llegará más adelante.",
+q2:"¿Conectar mi cartera cuesta algo?",a2:"No. Solo firmas un mensaje para demostrar que la cartera es tuya. No es una transacción y no cuesta gas.",
+q3:"¿Qué red usa el juego?",a3:"El juego funciona en Robinhood Chain. Si tu cartera está en otra red, MetaMask te pedirá cambiarla.",
+q4:"¿Tengo que instalar algo?",a4:"Solo un navegador de escritorio con la extensión MetaMask. El juego funciona en el navegador, sin descargas.",
+q5:"¿Se guarda mi progreso?",a5:"Sí. Tu jardín, semillas y ajustes se guardan en el navegador de este dispositivo.",
+cta:"Conectar y jugar",footer:"© 2026 Plant vs. Yield · Beta cerrada"},
+pt:{nav_how:"Como jogar",nav_econ:"Economia",nav_faq:"Perguntas",tagline:"Plante. Colha $COIN. Sobreviva ao mercado zumbi.",sub:"Um jogo de defesa e rendimento em que seu jardim é sua carteira. Monte uma máquina de dinheiro, segure os traders zumbis e não leve rug.",chip_beta:"Beta fechado",
+btn_connect:"Conectar MetaMask",btn_connecting:"Conectando carteira…",btn_network:"Verificando rede…",btn_sign:"Aguardando assinatura…",btn_other:"Tentar outra carteira",btn_retry:"Tentar de novo",
+st_nomm:"MetaMask não encontrada. Instale a extensão MetaMask para continuar.",st_denied:"Esta carteira não tem acesso. O beta fechado é só para convidados.",st_signhint:"Aprove o pedido de assinatura na MetaMask (grátis).",st_loading:"Carregando o jogo…",st_fail:"Não foi possível abrir o jogo. Confira se assinou com a carteira convidada.",st_rejected:"Pedido recusado.",st_err:"Erro de conexão: ",
+who:"Carteira conectada:",enroll:"Esta carteira foi convidada, mas ainda não foi ativada. Envie este código de ativação ao desenvolvedor (só para alguém de confiança):",copy:"Copiar código",copied:"Copiado!",note:"Só carteiras convidadas podem entrar. Assinar é grátis e não é uma transação.",scroll:"Como jogar ↓",
+how_title:"Como jogar",how_lead:"Tudo o que você precisa para sobreviver ao seu primeiro ciclo de mercado.",
+s1t:"Plante sua carteira",s1p:"Escolha uma planta no Mercado e coloque-a numa pista aberta. Produtores geram $COIN a cada segundo; atiradores e muros os protegem.",
+s2t:"Sinergia acumulada",s2p:"Cada planta aumenta sua renda total em 4%. Um jardim maior rende mais rápido, mas também dá mais trabalho para defender.",
+s3t:"Segure as pistas",s3p:"Traders zumbis chegam pela direita em ondas. Novas pistas abrem conforme as ondas sobem — cubra cada linha a tempo.",
+s4t:"Evolua com cuidado",s4p:"Selecione uma planta para subir de nível. Melhorias de nível alto podem dar RUG: quanto mais alto, maior o risco.",
+s5t:"Pague o aluguel",s5p:"O aluguel do jardim vence a cada 5 minutos. Se atrasar, sua renda cai 80% e os zumbis ficam 50% mais rápidos.",
+s6t:"Pare o Whale Boss",s6p:"A cada 10 ondas chega um Whale Boss. Se ele alcançar a borda esquerda: MARKET CRASH e a partida acaba.",
+s7t:"Não deixe vazar",s7p:"Se 10 zumbis passarem pela sua defesa, ela desmorona e 10% da sua Bolsa queima.",
+s8t:"Renasça mais forte",s8p:"Um crash não é o fim. As moedas gastas viram Fertilizante Dourado, um multiplicador de renda para o resto do dia.",
+k_pick:"escolher planta",k_cancel:"cancelar",k_pause:"pausar",k_view:"trocar visão",
+econ_title:"De moedas a recompensas",econ_lead:"Seus $COIN do jogo mantêm o jardim. Sua Bolsa é o que você leva para casa.",
+bag_t:"Bolsa",bag_p:"1% de cada $COIN que você ganha vai para a Bolsa. Bônus do Premium Pass podem aumentar essa taxa por um tempo.",
+pool_t:"Pool diário",pool_p:"Deposite sua Bolsa no pool de recompensas diário. No fim do dia, o prêmio é dividido pela participação de cada um.",
+bank_t:"Banco",bank_p:"Sua parte do pool cai no seu Banco. Saque ou converta de volta em $COIN do jogo.",
+garden_t:"Jardim e sementes",garden_p:"Mystery Boxes soltam sementes raras. Plante-as no Jardim para renda diária ou funda 3 da mesma raridade para tirar uma mais rara.",
+pass_t:"Premium Pass",pass_p:"Derrote zumbis para ganhar XP e liberar recompensas: caixas, sementes e bônus temporários de moedas e de Bolsa.",
+nft_t:"NFT de personagem",nft_p:"Crie um personagem aleatório (planta ou zumbi) para entrar no pool diário. Vazamentos o danificam — conserte para continuar jogando.",
+faq_title:"Perguntas frequentes",q1:"Quem pode jogar agora?",a1:"Plant vs. Yield está em beta fechado. Por enquanto só carteiras convidadas entram; o acesso público vem depois.",
+q2:"Conectar a carteira custa algo?",a2:"Não. Você só assina uma mensagem para provar que a carteira é sua. Não é uma transação e não custa gas.",
+q3:"Qual rede o jogo usa?",a3:"O jogo roda na Robinhood Chain. Se sua carteira estiver em outra rede, a MetaMask pedirá para trocar.",
+q4:"Preciso instalar algo?",a4:"Só um navegador de computador com a extensão MetaMask. O jogo roda no navegador, sem downloads.",
+q5:"Meu progresso fica salvo?",a5:"Sim. Seu jardim, sementes e configurações ficam salvos no navegador deste dispositivo.",
+cta:"Conectar e jogar",footer:"© 2026 Plant vs. Yield · Beta fechado"},
+fr:{nav_how:"Comment jouer",nav_econ:"Économie",nav_faq:"FAQ",tagline:"Plantez. Récoltez des $COIN. Survivez au marché zombie.",sub:"Un jeu de défense et de rendement où votre jardin est votre portefeuille. Bâtissez une machine à cash, repoussez les traders zombies et ne vous faites pas rugger.",chip_beta:"Bêta fermée",
+btn_connect:"Connecter MetaMask",btn_connecting:"Connexion du portefeuille…",btn_network:"Vérification du réseau…",btn_sign:"En attente de signature…",btn_other:"Essayer un autre portefeuille",btn_retry:"Réessayer",
+st_nomm:"MetaMask introuvable. Installez l’extension MetaMask pour continuer.",st_denied:"Ce portefeuille n’a pas accès. La bêta fermée est sur invitation.",st_signhint:"Approuvez la demande de signature dans MetaMask (gratuit).",st_loading:"Chargement du jeu…",st_fail:"Impossible d’ouvrir le jeu. Vérifiez que vous avez signé avec le portefeuille invité.",st_rejected:"Demande refusée.",st_err:"Erreur de connexion : ",
+who:"Portefeuille connecté :",enroll:"Ce portefeuille est invité mais pas encore activé. Envoyez ce code d’activation au développeur (uniquement à une personne de confiance) :",copy:"Copier le code",copied:"Copié !",note:"Seuls les portefeuilles invités peuvent entrer. Signer est gratuit et n’est pas une transaction.",scroll:"Comment jouer ↓",
+how_title:"Comment jouer",how_lead:"Tout ce qu’il faut pour survivre à votre premier cycle de marché.",
+s1t:"Plantez votre portefeuille",s1p:"Choisissez une plante au Marché et placez-la sur une ligne ouverte. Les producteurs génèrent des $COIN chaque seconde ; tireurs et murs les protègent.",
+s2t:"La synergie s’additionne",s2p:"Chaque plante augmente vos revenus totaux de 4 %. Un plus grand jardin rapporte plus vite, mais il y a plus à défendre.",
+s3t:"Tenez les lignes",s3p:"Les traders zombies arrivent par la droite, par vagues. De nouvelles lignes s’ouvrent au fil des vagues : couvrez chaque rangée à temps.",
+s4t:"Améliorez avec prudence",s4p:"Sélectionnez une plante pour la faire monter de niveau. À haut niveau, une amélioration peut RUG : plus vous montez, plus le risque grandit.",
+s5t:"Payez le loyer",s5p:"Le loyer du jardin tombe toutes les 5 minutes. En cas d’impayé, vos revenus chutent de 80 % et les zombies vont 50 % plus vite.",
+s6t:"Arrêtez le Whale Boss",s6p:"Toutes les 10 vagues, un Whale Boss débarque. S’il atteint le bord gauche : MARKET CRASH, la partie est finie.",
+s7t:"Pas de fuite",s7p:"Si 10 zombies franchissent votre défense, elle s’effondre et 10 % de votre Sac brûle.",
+s8t:"Renaissez plus fort",s8p:"Un crash n’est pas la fin. Les pièces dépensées deviennent de l’Engrais Doré, un multiplicateur de revenus pour le reste de la journée.",
+k_pick:"choisir une plante",k_cancel:"annuler",k_pause:"pause",k_view:"changer de vue",
+econ_title:"Des pièces aux récompenses",econ_lead:"Vos $COIN en jeu font tourner le jardin. Votre Sac, c’est ce que vous emportez.",
+bag_t:"Sac",bag_p:"1 % de chaque $COIN gagné tombe dans votre Sac. Les bonus du Premium Pass peuvent augmenter ce taux temporairement.",
+pool_t:"Cagnotte du jour",pool_p:"Déposez votre Sac dans la cagnotte quotidienne. En fin de journée, la récompense est partagée selon la part de chacun.",
+bank_t:"Banque",bank_p:"Votre part de la cagnotte arrive dans votre Banque. Retirez-la ou reconvertissez-la en $COIN de jeu.",
+garden_t:"Jardin et graines",garden_p:"Les Mystery Box donnent des graines rares. Plantez-les dans votre Jardin pour un revenu quotidien, ou fusionnez-en 3 de même rareté pour en obtenir une plus rare.",
+pass_t:"Premium Pass",pass_p:"Battez des zombies pour gagner de l’XP et débloquer des récompenses : coffres, graines et bonus temporaires de pièces et de Sac.",
+nft_t:"NFT personnage",nft_p:"Mintez un personnage aléatoire (plante ou zombie) pour rejoindre la cagnotte. Les fuites l’abîment : réparez-le pour continuer à jouer.",
+faq_title:"FAQ",q1:"Qui peut jouer maintenant ?",a1:"Plant vs. Yield est en bêta fermée. Pour l’instant, seuls les portefeuilles invités peuvent entrer ; l’accès public viendra plus tard.",
+q2:"Connecter mon portefeuille coûte-t-il quelque chose ?",a2:"Non. Vous signez seulement un message pour prouver que le portefeuille vous appartient. Ce n’est pas une transaction et ça ne coûte pas de gas.",
+q3:"Quel réseau le jeu utilise-t-il ?",a3:"Le jeu tourne sur Robinhood Chain. Si votre portefeuille est sur un autre réseau, MetaMask vous proposera de changer.",
+q4:"Dois-je installer quelque chose ?",a4:"Juste un navigateur d’ordinateur avec l’extension MetaMask. Le jeu tourne dans le navigateur, rien à télécharger.",
+q5:"Ma progression est-elle sauvegardée ?",a5:"Oui. Votre jardin, vos graines et vos réglages sont enregistrés dans le navigateur de cet appareil.",
+cta:"Connecter et jouer",footer:"© 2026 Plant vs. Yield · Bêta fermée"},
+de:{nav_how:"So wird gespielt",nav_econ:"Wirtschaft",nav_faq:"FAQ",tagline:"Pflanzen. $COIN farmen. Den Zombie-Markt überleben.",sub:"Ein Tower-Defense-Yield-Spiel, in dem dein Garten dein Portfolio ist. Bau eine Geldmaschine, halte die Zombie-Trader auf – und lass dich nicht ruggen.",chip_beta:"Geschlossene Beta",
+btn_connect:"MetaMask verbinden",btn_connecting:"Wallet wird verbunden…",btn_network:"Netzwerk wird geprüft…",btn_sign:"Warte auf Signatur…",btn_other:"Andere Wallet versuchen",btn_retry:"Erneut versuchen",
+st_nomm:"MetaMask nicht gefunden. Installiere die MetaMask-Erweiterung, um fortzufahren.",st_denied:"Diese Wallet hat keinen Zugang. Die geschlossene Beta ist nur auf Einladung.",st_signhint:"Bestätige die Signaturanfrage in MetaMask (kostenlos).",st_loading:"Spiel wird geladen…",st_fail:"Das Spiel konnte nicht geöffnet werden. Stelle sicher, dass du mit der eingeladenen Wallet signiert hast.",st_rejected:"Anfrage abgelehnt.",st_err:"Verbindungsfehler: ",
+who:"Verbundene Wallet:",enroll:"Diese Wallet ist eingeladen, aber noch nicht aktiviert. Sende diesen Aktivierungscode an den Entwickler (nur an jemanden, dem du vertraust):",copy:"Code kopieren",copied:"Kopiert!",note:"Nur eingeladene Wallets kommen rein. Signieren ist kostenlos und keine Transaktion.",scroll:"So wird gespielt ↓",
+how_title:"So wird gespielt",how_lead:"Alles, was du brauchst, um deinen ersten Marktzyklus zu überleben.",
+s1t:"Pflanze dein Portfolio",s1p:"Wähle eine Pflanze im Markt und setze sie auf eine offene Bahn. Produzenten erzeugen jede Sekunde $COIN; Schützen und Mauern halten sie am Leben.",
+s2t:"Synergie stapelt sich",s2p:"Jede Pflanze erhöht dein Gesamteinkommen um 4 %. Ein größerer Garten verdient schneller – muss aber auch mehr verteidigen.",
+s3t:"Halte die Bahnen",s3p:"Zombie-Trader marschieren in Wellen von rechts heran. Mit steigenden Wellen öffnen sich neue Bahnen – sichere jede Reihe rechtzeitig.",
+s4t:"Klug upgraden",s4p:"Wähle eine Pflanze aus, um sie aufzuleveln. Hohe Upgrades können RUGGEN – je höher du gehst, desto größer das Risiko.",
+s5t:"Zahl die Miete",s5p:"Alle 5 Minuten ist die Gartenmiete fällig. Verpasst du sie, sinkt dein Einkommen um 80 % und Zombies werden 50 % schneller.",
+s6t:"Stopp den Whale Boss",s6p:"Jede 10. Welle rollt ein Whale Boss an. Erreicht er den linken Rand: MARKET CRASH, die Runde ist vorbei.",
+s7t:"Nichts durchlassen",s7p:"Schlüpfen 10 Zombies durch deine Verteidigung, bricht sie zusammen und 10 % deiner Tasche verbrennen.",
+s8t:"Stärker wiedergeboren",s8p:"Ein Crash ist nicht das Ende. Ausgegebene Münzen werden zu Golddünger – einem Einkommensmultiplikator für den Rest des Tages.",
+k_pick:"Pflanze wählen",k_cancel:"abbrechen",k_pause:"Pause",k_view:"Ansicht wechseln",
+econ_title:"Von Münzen zu Belohnungen",econ_lead:"Deine Spiel-$COIN halten den Garten am Laufen. Deine Tasche ist das, was du mitnimmst.",
+bag_t:"Tasche",bag_p:"1 % jeder verdienten $COIN fließt in deine Tasche. Premium-Pass-Boni können diese Rate eine Zeit lang erhöhen.",
+pool_t:"Tagespool",pool_p:"Zahle deine Tasche in den täglichen Belohnungspool ein. Am Tagesende wird die Belohnung nach Anteilen verteilt.",
+bank_t:"Bank",bank_p:"Dein Poolanteil landet in deiner Bank. Hebe ihn ab oder wandle ihn wieder in Spiel-$COIN um.",
+garden_t:"Garten & Samen",garden_p:"Mystery Boxes liefern seltene Samen. Pflanze sie für tägliches Bankeinkommen in deinen Garten oder verschmelze 3 gleicher Seltenheit zu einem selteneren.",
+pass_t:"Premium Pass",pass_p:"Besiege Zombies für XP und schalte Belohnungen frei: Kisten, Samen sowie zeitlich begrenzte Münz- und Taschen-Boni.",
+nft_t:"Charakter-NFT",nft_p:"Minte einen zufälligen Pflanzen- oder Zombie-Charakter, um dem Tagespool beizutreten. Lecks beschädigen ihn – repariere ihn, um weiterzuspielen.",
+faq_title:"FAQ",q1:"Wer kann gerade spielen?",a1:"Plant vs. Yield ist in der geschlossenen Beta. Vorerst kommen nur eingeladene Wallets rein – der öffentliche Zugang folgt später.",
+q2:"Kostet das Verbinden meiner Wallet etwas?",a2:"Nein. Du signierst nur eine Nachricht, um zu beweisen, dass dir die Wallet gehört. Das ist keine Transaktion und kostet kein Gas.",
+q3:"Welches Netzwerk nutzt das Spiel?",a3:"Das Spiel läuft auf Robinhood Chain. Ist deine Wallet in einem anderen Netzwerk, fragt MetaMask nach einem Wechsel.",
+q4:"Muss ich etwas installieren?",a4:"Nur einen Desktop-Browser mit der MetaMask-Erweiterung. Das Spiel läuft direkt im Browser – kein Download nötig.",
+q5:"Wird mein Fortschritt gespeichert?",a5:"Ja. Garten, Samen und Einstellungen werden im Browser dieses Geräts gespeichert.",
+cta:"Verbinden & spielen",footer:"© 2026 Plant vs. Yield · Geschlossene Beta"},
+ru:{nav_how:"Как играть",nav_econ:"Экономика",nav_faq:"Вопросы",tagline:"Сажай. Фарми $COIN. Переживи зомби-рынок.",sub:"Игра в жанре tower defense, где твой сад — это твой портфель. Построй денежную машину, сдержи зомби-трейдеров и не попади под rug.",chip_beta:"Закрытая бета",
+btn_connect:"Подключить MetaMask",btn_connecting:"Подключение кошелька…",btn_network:"Проверка сети…",btn_sign:"Ожидание подписи…",btn_other:"Другой кошелёк",btn_retry:"Повторить",
+st_nomm:"MetaMask не найден. Установи расширение MetaMask, чтобы продолжить.",st_denied:"У этого кошелька нет доступа. Закрытая бета — только по приглашениям.",st_signhint:"Подтверди запрос на подпись в MetaMask (бесплатно).",st_loading:"Загрузка игры…",st_fail:"Не удалось открыть игру. Убедись, что подписал приглашённым кошельком.",st_rejected:"Запрос отклонён.",st_err:"Ошибка подключения: ",
+who:"Подключён кошелёк:",enroll:"Этот кошелёк приглашён, но ещё не активирован. Отправь этот код активации разработчику (только тому, кому доверяешь):",copy:"Копировать код",copied:"Скопировано!",note:"Войти могут только приглашённые кошельки. Подпись бесплатна и не является транзакцией.",scroll:"Как играть ↓",
+how_title:"Как играть",how_lead:"Всё, что нужно, чтобы пережить свой первый рыночный цикл.",
+s1t:"Посади свой портфель",s1p:"Выбери растение на Рынке и поставь его на открытую линию. Производители приносят $COIN каждую секунду, стрелки и стены их защищают.",
+s2t:"Синергия складывается",s2p:"Каждое растение увеличивает общий доход на 4%. Большой сад зарабатывает быстрее, но и защищать его сложнее.",
+s3t:"Держи линии",s3p:"Зомби-трейдеры идут справа волнами. С ростом волн открываются новые линии — успей закрыть каждый ряд.",
+s4t:"Улучшай с умом",s4p:"Выбери растение, чтобы повысить его уровень. Высокоуровневые улучшения могут сделать RUG — чем выше, тем больше риск.",
+s5t:"Плати аренду",s5p:"Аренда сада списывается каждые 5 минут. Не заплатишь — доход упадёт на 80%, а зомби станут на 50% быстрее.",
+s6t:"Останови Whale Boss",s6p:"Каждую 10-ю волну приходит Whale Boss. Если он дойдёт до левого края — MARKET CRASH, забег окончен.",
+s7t:"Не пропускай",s7p:"Если 10 зомби прорвутся через оборону, она рухнет и сгорит 10% твоей Сумки.",
+s8t:"Перерождайся сильнее",s8p:"Крах — это не конец. Потраченные монеты превращаются в Золотое удобрение — множитель дохода до конца дня.",
+k_pick:"выбрать растение",k_cancel:"отмена",k_pause:"пауза",k_view:"сменить вид",
+econ_title:"От монет к наградам",econ_lead:"Игровые $COIN поддерживают сад. Сумка — это то, что ты забираешь.",
+bag_t:"Сумка",bag_p:"1% каждого заработанного $COIN попадает в Сумку. Бонусы Premium Pass могут временно повысить эту ставку.",
+pool_t:"Дневной пул",pool_p:"Внеси Сумку в ежедневный пул наград. В конце дня награда делится по долям участников.",
+bank_t:"Банк",bank_p:"Твоя доля пула поступает в Банк. Выведи её или конвертируй обратно в игровые $COIN.",
+garden_t:"Сад и семена",garden_p:"Mystery Box дают редкие семена. Сажай их в Саду ради ежедневного дохода или объединяй 3 одинаковой редкости, чтобы получить более редкое.",
+pass_t:"Premium Pass",pass_p:"Побеждай зомби, получай опыт и открывай награды: ящики, семена и временные бонусы к монетам и Сумке.",
+nft_t:"NFT-персонаж",nft_p:"Сминти случайного персонажа (растение или зомби), чтобы участвовать в дневном пуле. Прорывы его повреждают — чини, чтобы продолжать.",
+faq_title:"Вопросы и ответы",q1:"Кто может играть сейчас?",a1:"Plant vs. Yield в закрытой бете. Пока войти могут только приглашённые кошельки, открытый доступ появится позже.",
+q2:"Подключение кошелька платное?",a2:"Нет. Ты лишь подписываешь сообщение, чтобы доказать владение кошельком. Это не транзакция и газ не тратится.",
+q3:"Какую сеть использует игра?",a3:"Игра работает в Robinhood Chain. Если кошелёк в другой сети, MetaMask предложит переключиться.",
+q4:"Нужно что-то устанавливать?",a4:"Только браузер на компьютере с расширением MetaMask. Игра работает прямо в браузере — ничего скачивать не нужно.",
+q5:"Прогресс сохраняется?",a5:"Да. Сад, семена и настройки сохраняются в браузере на этом устройстве.",
+cta:"Подключиться и играть",footer:"© 2026 Plant vs. Yield · Закрытая бета"},
+zh:{nav_how:"玩法",nav_econ:"经济系统",nav_faq:"常见问题",tagline:"种植。赚取 $COIN。在僵尸市场中生存。",sub:"一款塔防收益游戏，你的花园就是你的投资组合。打造赚钱机器，挡住僵尸交易员，别被 rug。",chip_beta:"封闭测试",
+btn_connect:"连接 MetaMask",btn_connecting:"正在连接钱包…",btn_network:"正在检查网络…",btn_sign:"等待签名…",btn_other:"换个钱包试试",btn_retry:"重试",
+st_nomm:"未找到 MetaMask。请安装 MetaMask 扩展后继续。",st_denied:"此钱包没有访问权限。封闭测试仅限受邀用户。",st_signhint:"请在 MetaMask 中批准签名请求（免费）。",st_loading:"正在加载游戏…",st_fail:"无法打开游戏。请确认使用受邀钱包签名。",st_rejected:"请求已被拒绝。",st_err:"连接错误：",
+who:"已连接钱包：",enroll:"此钱包已受邀但尚未激活。请将以下激活码发送给开发者（仅限你信任的人）：",copy:"复制激活码",copied:"已复制！",note:"仅受邀钱包可进入。签名免费，不是交易。",scroll:"玩法 ↓",
+how_title:"玩法",how_lead:"度过第一个市场周期所需的一切。",
+s1t:"种下你的投资组合",s1p:"从商店选择植物，放到开放的赛道上。生产型植物每秒产出 $COIN，射手和墙负责保护它们。",
+s2t:"协同叠加",s2p:"每株植物使总收入提高 4%。花园越大赚得越快，但需要防守的也越多。",
+s3t:"守住赛道",s3p:"僵尸交易员从右侧成波来袭。随着波数上升会开放新赛道，及时守住每一行。",
+s4t:"谨慎升级",s4p:"选中植物即可升级，获得更高收益和战力。高等级升级可能 RUG——升得越高，风险越大。",
+s5t:"按时交租",s5p:"花园租金每 5 分钟到期一次。逾期后收入下降 80%，僵尸速度提升 50%。",
+s6t:"挡住鲸鱼 Boss",s6p:"每第 10 波会出现鲸鱼 Boss。一旦它到达左侧边缘：MARKET CRASH，本局结束。",
+s7t:"别让僵尸漏过",s7p:"如果有 10 只僵尸突破防线，防线崩溃，你的背包将烧毁 10%。",
+s8t:"重生更强",s8p:"崩盘不是终点。花掉的金币会变成金色肥料——在当天剩余时间内提供收入倍率。",
+k_pick:"选择植物",k_cancel:"取消",k_pause:"暂停",k_view:"切换视角",
+econ_title:"从金币到奖励",econ_lead:"游戏内的 $COIN 维持花园运转，背包才是你真正带走的。",
+bag_t:"背包",bag_p:"你赚到的每个 $COIN 中有 1% 进入背包。Premium Pass 加成可在一段时间内提高这一比例。",
+pool_t:"每日奖池",pool_p:"把背包存入每日奖池。每天结束时，奖励按每个人的份额分配。",
+bank_t:"银行",bank_p:"你的奖池份额会进入银行。可以提取，也可以换回游戏内 $COIN。",
+garden_t:"花园与种子",garden_p:"神秘箱会掉落稀有种子。种在花园里获得每日银行收入，或将 3 颗同稀有度种子合成为更稀有的一颗。",
+pass_t:"Premium Pass",pass_p:"击败僵尸获得经验并解锁奖励：箱子、种子以及临时的金币和背包加成。",
+nft_t:"角色 NFT",nft_p:"铸造一个随机植物或僵尸角色即可加入每日奖池。漏怪会损坏角色——修复后才能继续游戏。",
+faq_title:"常见问题",q1:"现在谁可以玩？",a1:"Plant vs. Yield 正处于封闭测试阶段。目前仅受邀钱包可进入，稍后将开放公众访问。",
+q2:"连接钱包需要付费吗？",a2:"不需要。你只需签署一条消息以证明钱包归你所有。这不是交易，也不消耗 gas。",
+q3:"游戏使用哪个网络？",a3:"游戏运行在 Robinhood Chain 上。如果你的钱包在其他网络，MetaMask 会提示你切换。",
+q4:"需要安装什么吗？",a4:"只需一个装有 MetaMask 扩展的电脑浏览器。游戏直接在浏览器中运行，无需下载。",
+q5:"进度会保存吗？",a5:"会。你的花园、种子和设置保存在这台设备的浏览器中。",
+cta:"连接并开始游戏",footer:"© 2026 Plant vs. Yield · 封闭测试"},
+ja:{nav_how:"遊び方",nav_econ:"経済",nav_faq:"FAQ",tagline:"植えて、$COINを稼いで、ゾンビ相場を生き延びろ。",sub:"庭があなたのポートフォリオになるタワーディフェンス型の利回りゲーム。マネーマシンを築き、ゾンビトレーダーを食い止め、ラグられないように。",chip_beta:"クローズドベータ",
+btn_connect:"MetaMaskに接続",btn_connecting:"ウォレットに接続中…",btn_network:"ネットワークを確認中…",btn_sign:"署名を待っています…",btn_other:"別のウォレットで試す",btn_retry:"再試行",
+st_nomm:"MetaMaskが見つかりません。続行するにはMetaMask拡張機能をインストールしてください。",st_denied:"このウォレットにはアクセス権がありません。クローズドベータは招待制です。",st_signhint:"MetaMaskで署名リクエストを承認してください（無料）。",st_loading:"ゲームを読み込み中…",st_fail:"ゲームを開けませんでした。招待されたウォレットで署名したか確認してください。",st_rejected:"リクエストが拒否されました。",st_err:"接続エラー：",
+who:"接続中のウォレット：",enroll:"このウォレットは招待済みですが、まだ有効化されていません。以下の有効化コードを開発者に送ってください（信頼できる相手のみ）：",copy:"コードをコピー",copied:"コピーしました！",note:"招待されたウォレットのみ入場できます。署名は無料で、取引ではありません。",scroll:"遊び方 ↓",
+how_title:"遊び方",how_lead:"最初の相場サイクルを生き延びるために必要なことのすべて。",
+s1t:"ポートフォリオを植えよう",s1p:"マーケットで植物を選び、空いているレーンに置きます。生産系は毎秒$COINを生み、シューターや壁がそれを守ります。",
+s2t:"シナジーは積み重なる",s2p:"植物1本ごとに総収入が4%アップ。庭が大きいほど稼ぎは速いが、守るものも増えます。",
+s3t:"レーンを守れ",s3p:"ゾンビトレーダーは右からウェーブで押し寄せます。ウェーブが進むと新しいレーンが開くので、すべての列を早めにカバーしましょう。",
+s4t:"アップグレードは慎重に",s4p:"植物を選んでレベルアップすると収益と戦力が上がります。高レベルの強化はRUGすることも——上げるほどリスクも大きくなります。",
+s5t:"家賃を払おう",s5p:"庭の家賃は5分ごとに発生します。払わないと収入が80%減り、ゾンビが50%速くなります。",
+s6t:"クジラBossを止めろ",s6p:"10ウェーブごとにクジラBossが登場。左端に到達されるとMARKET CRASHでランは終了です。",
+s7t:"突破させるな",s7p:"ゾンビに10体突破されると防衛が崩壊し、バッグの10%が燃えてしまいます。",
+s8t:"より強く転生",s8p:"クラッシュは終わりではありません。使ったコインは黄金の肥料になり、その日の残りの収入倍率になります。",
+k_pick:"植物を選択",k_cancel:"キャンセル",k_pause:"一時停止",k_view:"視点切替",
+econ_title:"コインから報酬へ",econ_lead:"ゲーム内$COINは庭を回すためのもの。持ち帰れるのはバッグです。",
+bag_t:"バッグ",bag_p:"稼いだ$COINの1%がバッグに入ります。Premium Passのブーストで一定時間この割合を上げられます。",
+pool_t:"デイリープール",pool_p:"バッグを毎日の報酬プールに預けましょう。1日の終わりに、報酬がシェアに応じて分配されます。",
+bank_t:"バンク",bank_p:"プールの取り分はバンクに入ります。引き出すか、ゲーム内$COINに戻せます。",
+garden_t:"ガーデンと種",garden_p:"ミステリーボックスからレアな種が出ます。ガーデンに植えて毎日のバンク収入を得るか、同じレア度の種を3つ合成してよりレアな種を狙いましょう。",
+pass_t:"Premium Pass",pass_p:"ゾンビを倒してXPを稼ぎ、報酬を解放：ボックス、種、コインとバッグの一時ブースト。",
+nft_t:"キャラクターNFT",nft_p:"ランダムな植物またはゾンビのキャラクターをミントしてデイリープールに参加。突破されるとダメージを受けるので、修理して遊び続けましょう。",
+faq_title:"よくある質問",q1:"今は誰が遊べますか？",a1:"Plant vs. Yieldはクローズドベータ中です。現在は招待されたウォレットのみ入場でき、一般公開は今後予定しています。",
+q2:"ウォレット接続にお金はかかりますか？",a2:"かかりません。ウォレットの所有を証明するためにメッセージに署名するだけで、取引ではなくガス代も不要です。",
+q3:"どのネットワークを使いますか？",a3:"ゲームはRobinhood Chain上で動きます。ウォレットが別のネットワークにある場合、MetaMaskが切り替えを求めます。",
+q4:"何かインストールが必要ですか？",a4:"MetaMask拡張機能を入れたPCブラウザだけでOK。ゲームはブラウザ上で動き、ダウンロードは不要です。",
+q5:"進行状況は保存されますか？",a5:"はい。庭、種、設定はこの端末のブラウザに保存されます。",
+cta:"接続してプレイ",footer:"© 2026 Plant vs. Yield · クローズドベータ"},
+tr:{nav_how:"Nasıl Oynanır",nav_econ:"Ekonomi",nav_faq:"SSS",tagline:"Dik. $COIN topla. Zombi piyasasında hayatta kal.",sub:"Bahçenin portföyün olduğu bir kule savunma ve getiri oyunu. Para makineni kur, zombi trader'ları durdur ve rug yeme.",chip_beta:"Kapalı Beta",
+btn_connect:"MetaMask ile Bağlan",btn_connecting:"Cüzdan bağlanıyor…",btn_network:"Ağ kontrol ediliyor…",btn_sign:"İmza bekleniyor…",btn_other:"Başka cüzdanla dene",btn_retry:"Tekrar dene",
+st_nomm:"MetaMask bulunamadı. Devam etmek için MetaMask eklentisini kur.",st_denied:"Bu cüzdanın erişim izni yok. Kapalı beta sadece davetlilere açık.",st_signhint:"MetaMask'ta açılan imza isteğini onayla (ücretsiz).",st_loading:"Oyun yükleniyor…",st_fail:"Oyun açılamadı. Davetli cüzdanla imzaladığından emin ol.",st_rejected:"İstek reddedildi.",st_err:"Bağlantı hatası: ",
+who:"Bağlı cüzdan:",enroll:"Bu cüzdan davetli ama henüz etkinleştirilmedi. Bu etkinleştirme kodunu geliştiriciye gönder (sadece güvendiğin kişiye):",copy:"Kodu kopyala",copied:"Kopyalandı!",note:"Sadece davetli cüzdanlar girebilir. İmza ücretsizdir, işlem değildir.",scroll:"Nasıl oynanır ↓",
+how_title:"Nasıl Oynanır",how_lead:"İlk piyasa döngünü atlatmak için bilmen gereken her şey.",
+s1t:"Portföyünü dik",s1p:"Market'ten bir bitki seç ve açık bir hatta yerleştir. Üreticiler her saniye $COIN basar; nişancılar ve duvarlar onları korur.",
+s2t:"Sinerji katlanır",s2p:"Her bitki toplam gelirini %4 artırır. Büyük bahçe daha hızlı kazanır ama savunması da zorlaşır.",
+s3t:"Hatları tut",s3p:"Zombi trader'lar sağdan dalgalar halinde gelir. Dalgalar ilerledikçe yeni hatlar açılır; her sırayı zamanında kapat.",
+s4t:"Akıllıca yükselt",s4p:"Bir bitkiyi seçip seviyesini yükselt, daha çok getiri ve güç kazan. Yüksek seviyeli yükseltmeler RUG olabilir; ne kadar yükseltirsen risk o kadar büyür.",
+s5t:"Kiranı öde",s5p:"Bahçe kirası her 5 dakikada bir gelir. Ödemezsen gelirin %80 düşer, zombiler %50 hızlanır.",
+s6t:"Whale Boss'u durdur",s6p:"Her 10. dalgada bir Whale Boss gelir. Sol kenara ulaşırsa MARKET CRASH olur ve tur biter.",
+s7t:"Sızdırma",s7p:"10 zombi savunmanı geçerse savunma çöker ve Çantandaki coinin %10'u yanar.",
+s8t:"Daha güçlü doğ",s8p:"Çöküş son değil. Harcadığın coinler Altın Gübreye dönüşür; günün geri kalanında gelir çarpanı verir.",
+k_pick:"bitki seç",k_cancel:"iptal",k_pause:"duraklat",k_view:"görünüm değiştir",
+econ_title:"Coinden Ödüle",econ_lead:"Oyun içi $COIN bahçeni döndürür. Çantan ise eve götürdüğün kısımdır.",
+bag_t:"Çanta",bag_p:"Kazandığın her $COIN'in %1'i Çantana düşer. Premium Pass bonusları bu oranı bir süreliğine artırabilir.",
+pool_t:"Günlük Havuz",pool_p:"Çantanı günlük ödül havuzuna koy. Gün bitince ödül herkesin payına göre dağıtılır.",
+bank_t:"Banka",bank_p:"Havuz payın Bankana düşer. Çekebilir ya da tekrar oyun içi $COIN'e çevirebilirsin.",
+garden_t:"Bahçe ve Tohumlar",garden_p:"Mystery Box'lardan nadir tohumlar çıkar. Bahçene dikip günlük banka geliri al ya da aynı nadirlikte 3 tohumu birleştirip daha nadirini dene.",
+pass_t:"Premium Pass",pass_p:"Zombi öldürerek XP kazan ve ödülleri aç: kutular, tohumlar, geçici coin ve çanta oranı bonusları.",
+nft_t:"Karakter NFT",nft_p:"Günlük havuza katılmak için rastgele bir bitki ya da zombi karakter mint et. Sızan zombiler ona hasar verir; oynamaya devam etmek için onar.",
+faq_title:"Sıkça Sorulanlar",q1:"Şu an kimler oynayabilir?",a1:"Plant vs. Yield kapalı betada. Şimdilik sadece davetli cüzdanlar girebiliyor; herkese açık erişim daha sonra gelecek.",
+q2:"Cüzdan bağlamak ücretli mi?",a2:"Hayır. Cüzdanın sana ait olduğunu kanıtlamak için sadece bir mesaj imzalarsın. Bu bir işlem değildir, gas ödenmez.",
+q3:"Oyun hangi ağı kullanıyor?",a3:"Oyun Robinhood Chain üzerinde çalışır. Cüzdanın başka ağdaysa MetaMask geçiş yapmanı ister.",
+q4:"Bir şey kurmam gerekiyor mu?",a4:"Sadece MetaMask eklentisi olan bir bilgisayar tarayıcısı. Oyun doğrudan tarayıcıda çalışır, indirme yok.",
+q5:"İlerlemem kaydediliyor mu?",a5:"Evet. Bahçen, tohumların ve ayarların bu cihazdaki tarayıcıda saklanır.",
+cta:"Bağlan ve Oyna",footer:"© 2026 Plant vs. Yield · Kapalı Beta"}
+};
+let lang = 'en';
+try { const l = localStorage.getItem('pvy_lang'); if (l && I[l]) lang = l; else localStorage.setItem('pvy_lang', 'en'); } catch (e) {}
+const t = k => (I[lang] && I[lang][k]) || I.en[k] || k;
+let btnKey = 'btn_connect';
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i]').forEach(el => { el.textContent = t(el.dataset.i); });
+  $('btnTxt').textContent = t(btnKey);
+  if (stKey) $('status').textContent = t(stKey) + stExtra;
+}
+function setLang(l) { if (!I[l]) return; lang = l; try { localStorage.setItem('pvy_lang', l); } catch (e) {} applyLang(); }
+
+/* ===== helpers ===== */
 const $ = id => document.getElementById(id);
-const setStatus = (t, c) => { const s = $('status'); s.textContent = t; s.className = 'status ' + (c || ''); };
-const busy = (on, txt) => { const b = $('connectBtn'); b.disabled = on; b.classList.toggle('busy', on); if (txt) $('btnTxt').textContent = txt; };
+let stKey = null, stExtra = '';
+const setStatus = (k, c, extra) => { stKey = k; stExtra = extra || ''; const s = $('status'); s.textContent = k ? t(k) + stExtra : ''; s.className = 'status ' + (c || ''); };
+const busy = (on, k) => { const b = $('connectBtn'); b.disabled = on; b.classList.toggle('busy', on); if (k) { btnKey = k; $('btnTxt').textContent = t(k); } };
 const hex2buf = h => { h = h.replace(/^0x/, ''); const u = new Uint8Array(h.length / 2); for (let i = 0; i < u.length; i++) u[i] = parseInt(h.substr(i * 2, 2), 16); return u; };
 const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
 const short = a => a.slice(0, 6) + '…' + a.slice(-4);
 
+/* ===== wallet + unlock ===== */
 async function ensureChain(eth) {
   if (!CHAIN) return;
   const cur = await eth.request({ method: 'eth_chainId' });
@@ -86,52 +520,65 @@ async function ensureChain(eth) {
     else throw e;
   }
 }
-
-async function unlock(sig) {
-  const raw = await crypto.subtle.digest('SHA-256', hex2buf(sig));
-  return raw;
-}
-
+function showEnroll(addr, keyRaw) { $('codeBox').style.display = 'block'; $('codeTxt').value = addr + ':' + b64e(keyRaw); }
 async function openGame(addr, keyRaw) {
-  setStatus('Oyun yükleniyor…');
+  setStatus('st_loading');
   const keys = await (await fetch('keys.json', { cache: 'no-store' })).json();
   const ent = keys[addr]; if (!ent) throw new Error('nokey');
-  const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']);
-  const cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k));
+  let cek;
+  try { const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']); cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k)); }
+  catch (e) { throw new Error('nokey'); }
   const ck = await crypto.subtle.importKey('raw', cek, 'AES-GCM', false, ['decrypt']);
   const enc = new Uint8Array(await (await fetch('game.enc', { cache: 'no-store' })).arrayBuffer());
   const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: enc.slice(0, 12) }, ck, enc.slice(12));
   const html = new TextDecoder().decode(plain);
-  try { sessionStorage.setItem('pvy_wallet', addr); } catch (e) {}
+  try { sessionStorage.setItem('pvy_wallet', addr); localStorage.setItem('pvy_lang', lang); } catch (e) {}
   window.PVY_WALLET = addr;
   document.open(); document.write(html); document.close();
 }
-
 async function connect() {
   const eth = window.ethereum;
-  if (!eth) { setStatus('MetaMask bulunamadı. Tarayıcına MetaMask eklentisini kur.', 'err'); window.open('https://metamask.io/download/', '_blank', 'noopener'); return; }
+  if (!eth) { setStatus('st_nomm', 'err'); window.open('https://metamask.io/download/', '_blank', 'noopener'); return; }
   try {
-    busy(true, 'Cüzdan bağlanıyor…'); setStatus('');
+    busy(true, 'btn_connecting'); setStatus(null); $('codeBox').style.display = 'none';
     const [acc] = await eth.request({ method: 'eth_requestAccounts' });
     const addr = acc.toLowerCase();
-    $('who').style.display = 'block'; $('who').innerHTML = 'Bağlı cüzdan: <b>' + short(acc) + '</b>';
-    busy(true, 'Ağ kontrol ediliyor…'); await ensureChain(eth);
-    if (!ALLOW.includes(addr)) { busy(false, 'Başka cüzdanla dene'); setStatus('Bu cüzdanın erişim izni yok. Kapalı beta sadece davetli cüzdanlara açık.', 'err'); return; }
-    busy(true, 'İmza bekleniyor…'); setStatus('MetaMask\'ta açılan imza isteğini onayla (ücretsiz).');
+    $('who').style.display = 'block'; $('who').innerHTML = '<span data-i="who">' + t('who') + '</span> <b>' + short(acc) + '</b>';
+    busy(true, 'btn_network'); await ensureChain(eth);
+    if (!ALLOW.includes(addr)) { busy(false, 'btn_other'); setStatus('st_denied', 'err'); return; }
+    busy(true, 'btn_sign'); setStatus('st_signhint');
     const sig = await eth.request({ method: 'personal_sign', params: [SIGN_MSG(addr), acc] });
-    const keyRaw = await unlock(sig);
+    const keyRaw = await crypto.subtle.digest('SHA-256', hex2buf(sig));
     try { await openGame(addr, keyRaw); }
     catch (e) {
-      if (e.message === 'nokey') { busy(false, 'MetaMask ile Bağlan'); setStatus(''); $('codeBox').style.display = 'block'; $('codeTxt').value = addr + ':' + b64e(keyRaw); return; }
-      busy(false, 'Tekrar dene'); setStatus('Oyun açılamadı. Doğru cüzdanla imzaladığından emin ol.', 'err'); console.error(e);
+      if (e.message === 'nokey') { busy(false, 'btn_connect'); setStatus(null); showEnroll(addr, keyRaw); return; }
+      busy(false, 'btn_retry'); setStatus('st_fail', 'err'); console.error(e);
     }
   } catch (e) {
-    busy(false, 'MetaMask ile Bağlan');
-    setStatus(e && e.code === 4001 ? 'İstek reddedildi.' : 'Bağlantı hatası: ' + (e && e.message || e), 'err');
+    busy(false, 'btn_connect');
+    if (e && e.code === 4001) setStatus('st_rejected', 'err'); else setStatus('st_err', 'err', (e && e.message) || String(e));
   }
 }
-$('connectBtn').addEventListener('click', connect);
-if (CHAIN) $('netChip').textContent = CHAIN.chainName;
+
+/* ===== scene ===== */
+function scene() {
+  const zs = ['zz0', 'zz2', 'zz3', 'zz6', 'zz7', 'zz12', 'zz14', 'zz10'], m = $('march');
+  zs.forEach((z, i) => { const im = new Image(); im.src = 'assets/' + z + '.webp'; im.alt = ''; const d = 26 + Math.random() * 14; im.style.animationDuration = d + 's'; im.style.animationDelay = (-i * d / zs.length) + 's'; if (z === 'zz10') { im.style.width = '120px'; im.style.height = '150px'; } m.appendChild(im); });
+  const c = $('coins');
+  for (let i = 0; i < 14; i++) { const im = new Image(); im.src = 'assets/i_coin.webp'; im.alt = ''; im.style.left = (3 + Math.random() * 40) + '%'; im.style.bottom = (150 + Math.random() * 60) + 'px'; im.style.animationDelay = (Math.random() * 7) + 's'; im.style.animationDuration = (5 + Math.random() * 4) + 's'; c.appendChild(im); }
+}
+
+/* ===== init ===== */
+(function init() {
+  const sel = $('lang');
+  for (const [k, v] of Object.entries(LANGS)) { const o = document.createElement('option'); o.value = k; o.textContent = v; sel.appendChild(o); }
+  sel.value = lang; sel.addEventListener('change', () => setLang(sel.value));
+  if (CHAIN) $('netChip').textContent = CHAIN.chainName;
+  applyLang(); scene();
+  $('connectBtn').addEventListener('click', connect);
+  $('copyBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('codeTxt').value); $('copyBtn').textContent = t('copied'); setTimeout(() => $('copyBtn').textContent = t('copy'), 1500); } catch (e) { $('codeTxt').select(); } });
+  document.querySelector('.cta a').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 400); });
+})();
 </script>
 </body>
 </html>
