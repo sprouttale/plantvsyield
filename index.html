@@ -158,6 +158,10 @@
   #wpickList button{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:12px;border:1px solid #2f3866;background:#171d38;color:#fff;font:700 15px "Segoe UI",sans-serif;cursor:pointer;text-align:left}
   #wpickList button:hover{border-color:#ff9f2e;background:#1d2446}
   #wpickList img,#wpickList i{width:28px;height:28px;border-radius:7px;background:#2a3152;flex-shrink:0}
+
+html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20transform%3D%22translate(16%2016)%22%20stroke%3D%22%23c9c9d6%22%20stroke-width%3D%221%22%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(0)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(45)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(90)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(135)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(180)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(225)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(270)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(315)%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%225%22%20fill%3D%22%23ffc928%22%20stroke%3D%22%23c98a00%22%20stroke-width%3D%221.2%22%2F%3E%3C%2Fsvg%3E") 16 16,auto}
+#musBtn{position:fixed;top:78px;left:14px;z-index:30;width:44px;height:44px;border-radius:50%;border:1px solid rgba(120,140,220,.35);background:rgba(10,14,32,.7);backdrop-filter:blur(8px);color:#ffd23f;font-size:20px;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+#musBtn:hover{background:rgba(30,36,70,.85)}
 </style>
 </head>
 <body>
@@ -590,6 +594,7 @@ async function openGame(addr, keyRaw) {
   const html = new TextDecoder().decode(plain);
   try { sessionStorage.setItem('pvy_wallet', addr); localStorage.setItem('pvy_lang', lang); } catch (e) {}
   window.PVY_WALLET = addr;
+  try { window.PVY_LAND_MUSIC && (PVY_LAND_MUSIC.pause(), PVY_LAND_MUSIC.src = ""); } catch (e) {}
   document.open(); document.write(html); document.close();
 }
 async function connect() {
@@ -632,5 +637,7 @@ function scene() {}
   document.querySelector('.cta a').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 400); });
 })();
 </script>
+<button id="musBtn" aria-label="Music" title="Music">🔊</button>
+<script>(function(){const a=new Audio("assets/music.mp3");a.loop=true;a.volume=.35;let on=true;try{on=localStorage.getItem("pvy_land_music")!=="0"}catch(e){}const b=document.getElementById("musBtn");const ui=()=>b.textContent=on?"🔊":"🔇";ui();const play=()=>{if(on)a.play().catch(()=>{})};play();const first=e=>{if(e.target===b)return;play();["pointerdown","keydown"].forEach(k=>removeEventListener(k,first,true))};["pointerdown","keydown"].forEach(k=>addEventListener(k,first,true));b.onclick=()=>{on=!on;try{localStorage.setItem("pvy_land_music",on?"1":"0")}catch(e){}ui();on?a.play().catch(()=>{}):a.pause()};window.PVY_LAND_MUSIC=a})();</script>
 </body>
 </html>
