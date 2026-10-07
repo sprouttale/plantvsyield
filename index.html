@@ -193,6 +193,15 @@
     .feat:nth-child(4){left:65.9cqw;width:10.4cqw}
     .feat:nth-child(5){left:83.7cqw;width:11cqw}
   }
+  .wpick{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(3,6,16,.72);backdrop-filter:blur(4px);padding:16px}
+  .wpick[hidden]{display:none}
+  .wpick-card{position:relative;width:min(360px,100%);background:#11162b;border:1px solid #2f3866;border-radius:16px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+  .wpick-card > b{display:block;font-size:17px;margin-bottom:12px}
+  .wpick-x{position:absolute;top:10px;right:12px;background:none;border:0;color:#97a0c6;font-size:16px;cursor:pointer}
+  #wpickList{display:grid;gap:8px}
+  #wpickList button{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:12px;border:1px solid #2f3866;background:#171d38;color:#fff;font:700 15px "Segoe UI",sans-serif;cursor:pointer;text-align:left}
+  #wpickList button:hover{border-color:#ff9f2e;background:#1d2446}
+  #wpickList img,#wpickList i{width:28px;height:28px;border-radius:7px;background:#2a3152;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -289,6 +298,7 @@
   <div class="cta"><a class="btn" href="#top" data-i="cta"></a></div>
 </section>
 </main>
+<div class="wpick" id="wpick" hidden><div class="wpick-card"><button class="wpick-x" id="wpickClose" type="button" aria-label="Close">✕</button><b data-i="pick_title"></b><div id="wpickList"></div></div></div>
 <footer data-i="footer"></footer>
 
 <script>
@@ -546,6 +556,7 @@ cta:"Bağlan ve Oyna",footer:"© 2026 Plant vs. Yield · Kapalı Beta"}
 };
 const EXTRA = {"en":{"start":"Start Game","tagline_html":"Plant. Farm <b class=\"g\">$COIN</b>. Survive the <b class=\"z\">zombie market</b>.","f1t":"Build Your Garden","f1p":"Plant seeds and grow your defense.","f2t":"Earn $COIN","f2p":"Get yield from your plants.","f3t":"Defend Against Zombies","f3p":"Stop the zombie traders.","f4t":"Work the Market","f4p":"Buy plants, upgrade, profit.","f5t":"Climb the Ranks","f5p":"Top the daily reward pool."},"es":{"start":"Empezar","tagline_html":"Planta. Cosecha <b class=\"g\">$COIN</b>. Sobrevive al <b class=\"z\">mercado zombi</b>.","f1t":"Construye tu jardín","f1p":"Planta semillas y arma tu defensa.","f2t":"Gana $COIN","f2p":"Obtén rendimiento de tus plantas.","f3t":"Defiéndete de los zombis","f3p":"Frena a los traders zombis.","f4t":"Opera en el Mercado","f4p":"Compra plantas, mejora y gana.","f5t":"Sube en el ranking","f5p":"Lidera el fondo diario."},"pt":{"start":"Começar","tagline_html":"Plante. Colha <b class=\"g\">$COIN</b>. Sobreviva ao <b class=\"z\">mercado zumbi</b>.","f1t":"Monte seu jardim","f1p":"Plante sementes e erga sua defesa.","f2t":"Ganhe $COIN","f2p":"Tire rendimento das suas plantas.","f3t":"Defenda-se dos zumbis","f3p":"Pare os traders zumbis.","f4t":"Opere no Mercado","f4p":"Compre plantas, evolua e lucre.","f5t":"Suba no ranking","f5p":"Lidere o pool diário."},"fr":{"start":"Jouer","tagline_html":"Plantez. Récoltez des <b class=\"g\">$COIN</b>. Survivez au <b class=\"z\">marché zombie</b>.","f1t":"Bâtissez votre jardin","f1p":"Semez et montez votre défense.","f2t":"Gagnez des $COIN","f2p":"Tirez du rendement de vos plantes.","f3t":"Repoussez les zombies","f3p":"Stoppez les traders zombies.","f4t":"Jouez le Marché","f4p":"Achetez, améliorez, profitez.","f5t":"Grimpez au classement","f5p":"Dominez la cagnotte du jour."},"de":{"start":"Spielen","tagline_html":"Pflanzen. <b class=\"g\">$COIN</b> farmen. Den <b class=\"z\">Zombie-Markt</b> überleben.","f1t":"Bau deinen Garten","f1p":"Säe Samen, bau deine Verteidigung.","f2t":"Verdiene $COIN","f2p":"Hol Rendite aus deinen Pflanzen.","f3t":"Wehr die Zombies ab","f3p":"Stopp die Zombie-Trader.","f4t":"Handle am Markt","f4p":"Pflanzen kaufen, upgraden, profitieren.","f5t":"Steig im Ranking auf","f5p":"Führe den Tagespool an."},"ru":{"start":"Начать игру","tagline_html":"Сажай. Фарми <b class=\"g\">$COIN</b>. Переживи <b class=\"z\">зомби-рынок</b>.","f1t":"Построй сад","f1p":"Сажай семена и строй оборону.","f2t":"Зарабатывай $COIN","f2p":"Получай доход с растений.","f3t":"Отбивайся от зомби","f3p":"Останови зомби-трейдеров.","f4t":"Торгуй на Рынке","f4p":"Покупай, улучшай, зарабатывай.","f5t":"Поднимайся в рейтинге","f5p":"Возглавь дневной пул."},"zh":{"start":"开始游戏","tagline_html":"种植。赚取 <b class=\"g\">$COIN</b>。在<b class=\"z\">僵尸市场</b>中生存。","f1t":"打造花园","f1p":"播种植物，筑起防线。","f2t":"赚取 $COIN","f2p":"从植物中获得收益。","f3t":"抵御僵尸","f3p":"挡住僵尸交易员。","f4t":"玩转市场","f4p":"购买植物、升级、获利。","f5t":"冲上排行榜","f5p":"登顶每日奖池。"},"ja":{"start":"ゲーム開始","tagline_html":"植えて、<b class=\"g\">$COIN</b>を稼いで、<b class=\"z\">ゾンビ相場</b>を生き延びろ。","f1t":"庭をつくる","f1p":"種をまいて防衛を築こう。","f2t":"$COINを稼ぐ","f2p":"植物から利回りを得よう。","f3t":"ゾンビを撃退","f3p":"ゾンビトレーダーを止めろ。","f4t":"マーケットで取引","f4p":"植物を買って強化して稼ごう。","f5t":"ランキング上位へ","f5p":"デイリープールの頂点を目指せ。"},"tr":{"start":"Oyunu Başlat","tagline_html":"Dik. <b class=\"g\">$COIN</b> topla. <b class=\"z\">Zombi piyasasında</b> hayatta kal.","f1t":"Bahçeni Kur","f1p":"Tohum ek, bitkileri yetiştir.","f2t":"$COIN Kazan","f2p":"Bitkilerinden getiri elde et.","f3t":"Zombilere Karşı Savun","f3p":"Trader zombileri durdur.","f4t":"Market'te İşlem Yap","f4p":"Bitki al, yükselt, kâr et.","f5t":"Sıralamada Yüksel","f5p":"Günlük ödül havuzunda zirveye çık."}};
 for (const k in EXTRA) Object.assign(I[k], EXTRA[k]);
+Object.entries({ en: 'Choose a wallet', es: 'Elige una cartera', pt: 'Escolha uma carteira', fr: 'Choisissez un portefeuille', de: 'Wallet auswählen', ru: 'Выберите кошелёк', zh: '选择钱包', ja: 'ウォレットを選択', tr: 'Cüzdan seç' }).forEach(([k, v]) => I[k].pick_title = v);
 let lang = 'en';
 try { const l = localStorage.getItem('pvy_lang'); if (l && I[l]) lang = l; else localStorage.setItem('pvy_lang', 'en'); } catch (e) {}
 const t = k => (I[lang] && I[lang][k]) || I.en[k] || k;
@@ -570,6 +581,33 @@ const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
 const short = a => a.slice(0, 6) + '…' + a.slice(-4);
 
 /* ===== wallet + unlock ===== */
+// Birden fazla cüzdan eklentisi (Coinbase, Rabby, Phantom...) window.ethereum'u ele geçirebilir.
+// EIP-6963 ile hepsini listeleyip MetaMask'ı seçiyoruz; yoksa kullanıcıya seçtiriyoruz.
+const WALLETS = new Map();
+addEventListener('eip6963:announceProvider', e => { const d = e.detail; if (d && d.info && d.provider) WALLETS.set(d.info.uuid || d.info.rdns, d); });
+dispatchEvent(new Event('eip6963:requestProvider'));
+function legacyList() {
+  const eth = window.ethereum; if (!eth) return [];
+  const arr = Array.isArray(eth.providers) && eth.providers.length ? eth.providers : [eth];
+  return arr.map((p, i) => ({ info: { uuid: 'legacy' + i, name: p.isMetaMask && !p.isCoinbaseWallet && !p.isBraveWallet && !p.isRabby && !p.isPhantom ? 'MetaMask' : p.isCoinbaseWallet ? 'Coinbase Wallet' : p.isRabby ? 'Rabby' : p.isPhantom ? 'Phantom' : 'Wallet', rdns: p.isMetaMask && !p.isCoinbaseWallet && !p.isRabby && !p.isPhantom ? 'io.metamask' : '', icon: '' }, provider: p }));
+}
+function pickFrom(list) {
+  return new Promise(res => {
+    const box = $('wpick'), ul = $('wpickList'); ul.innerHTML = '';
+    list.forEach(w => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = (w.info.icon ? '<img src="' + w.info.icon + '" alt="">' : '<i></i>') + '<span></span>'; b.querySelector('span').textContent = w.info.name; b.onclick = () => { box.hidden = true; res(w.provider); }; ul.appendChild(b); });
+    $('wpickClose').onclick = () => { box.hidden = true; res(null); };
+    box.hidden = false;
+  });
+}
+async function getProvider() {
+  if (!WALLETS.size) { dispatchEvent(new Event('eip6963:requestProvider')); await new Promise(r => setTimeout(r, 350)); }
+  const list = WALLETS.size ? [...WALLETS.values()] : legacyList();
+  if (!list.length) return null;
+  const mm = list.find(w => /^io\.metamask/.test(w.info.rdns || ''));
+  if (mm) return mm.provider;
+  if (list.length === 1) return list[0].provider;
+  return pickFrom(list);
+}
 async function ensureChain(eth) {
   if (!CHAIN) return;
   const cur = await eth.request({ method: 'eth_chainId' });
@@ -598,7 +636,7 @@ async function openGame(addr, keyRaw) {
   document.open(); document.write(html); document.close();
 }
 async function connect() {
-  const eth = window.ethereum;
+  const eth = await getProvider();
   if (!eth) { setStatus('st_nomm', 'err'); window.open('https://metamask.io/download/', '_blank', 'noopener'); return; }
   try {
     busy(true, 'btn_connecting'); setStatus(null); $('codeBox').style.display = 'none';
