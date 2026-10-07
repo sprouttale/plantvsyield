@@ -64,7 +64,7 @@ const who = a => short(a) + (NAMES[a] ? ' <span class="mut">(' + NAMES[a] + ')</
 const ago = ms => { const s = Math.max(0, ms / 1000 | 0); return s < 60 ? s + ' sn önce' : s < 3600 ? (s / 60 | 0) + ' dk önce' : s < 86400 ? (s / 3600 | 0) + ' sa önce' : (s / 86400 | 0) + ' gün önce'; };
 const hm = t => new Date(t).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
 const dev = ua => !ua ? '—' : (/Mobile|Android|iPhone/.test(ua) ? '📱 ' : '💻 ') + (/Edg\//.test(ua) ? 'Edge' : /Chrome\//.test(ua) ? 'Chrome' : /Firefox/.test(ua) ? 'Firefox' : /Safari/.test(ua) ? 'Safari' : 'Diğer');
-let tok = ''; try { tok = localStorage.getItem('pvy_admin_tok') || ''; } catch (e) {}
+let tok = ''; try { localStorage.removeItem('pvy_admin_tok'); } catch (e) {}
 let D = null, sel = null, timer = null;
 const isBan = w => !!(D && D.bans && D.bans.some(b => b.wallet === w));
 async function setBan(w, on) {
@@ -83,7 +83,7 @@ async function load() {
 }
 async function start() {
   $('err').textContent = '';
-  try { await load(); try { localStorage.setItem('pvy_admin_tok', tok); } catch (e) {} $('login').classList.add('hidden'); $('app').classList.remove('hidden'); clearInterval(timer); timer = setInterval(() => load().catch(() => {}), 15000); }
+  try { await load(); $('login').classList.add('hidden'); $('app').classList.remove('hidden'); clearInterval(timer); timer = setInterval(() => load().catch(() => {}), 15000); }
   catch (e) { $('err').textContent = /unauth|400|401/.test(e.message) ? 'Anahtar yanlış.' : 'Bağlanılamadı: ' + e.message; }
 }
 
@@ -169,5 +169,5 @@ $('tok').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
 $('ref').onclick = () => load().catch(e => alert(e.message));
 $('hrs').onchange = () => load().catch(() => {});
 $('out').onclick = () => { try { localStorage.removeItem('pvy_admin_tok'); } catch (e) {} location.reload(); };
-if (tok) start();
+
 </script></body></html>
