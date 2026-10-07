@@ -14,51 +14,64 @@
   a{color:inherit}
   img{display:block}
 
-  /* ---------- top bar ---------- */
-  .top{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;gap:18px;padding:12px 24px;background:linear-gradient(180deg,rgba(7,9,18,.92),rgba(7,9,18,0));}
-  .brand{font:900 22px/1 Impact,"Arial Black",sans-serif;letter-spacing:.5px;background:linear-gradient(180deg,#fff6c2,#ffd23f 60%,#c98a00);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none;white-space:nowrap}
-  .brand i{font-style:normal;font-size:14px;background:linear-gradient(180deg,#b8ffd6,#1fa85a);-webkit-background-clip:text;background-clip:text}
-  .nav{display:flex;gap:18px;margin-left:auto}
-  .nav a{text-decoration:none;color:var(--mut);font-weight:700;font-size:14px}
-  .nav a:hover{color:var(--txt)}
-  .lang{appearance:none;background:#141829 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2397a0c6'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:7px 28px 7px 34px;font:700 13px "Segoe UI",sans-serif;cursor:pointer}
+  /* ---------- top bar (pill) ---------- */
+  .top{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:20;width:min(1340px,calc(100% - 28px));display:flex;align-items:center;gap:22px;padding:8px 10px 8px 18px;border-radius:999px;background:rgba(10,14,32,.62);backdrop-filter:blur(8px);border:1px solid rgba(120,140,220,.22);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .brand img{height:44px;width:auto;display:block}
+  .nav{display:flex;gap:30px;margin:0 auto}
+  .nav a{display:flex;align-items:center;gap:9px;text-decoration:none;color:#e8ecff;font-weight:700;font-size:15px;opacity:.92}
+  .nav a:hover{opacity:1;color:#fff}
+  .nav svg{width:22px;height:22px;fill:#e8ecff}
+  .lang{appearance:none;background:rgba(20,24,41,.85) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c8cff0'/%3E%3C/svg%3E") no-repeat right 12px center;color:#fff;border:1px solid rgba(120,140,220,.35);border-radius:12px;padding:9px 32px 9px 38px;font:700 14px "Segoe UI",sans-serif;cursor:pointer}
+  .lang option{color:#000}
   .langw{position:relative}
-  .langw svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none}
+  .langw svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:17px;height:17px;pointer-events:none}
+  .startbtn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font:800 15px "Segoe UI",sans-serif;color:#2a1300;padding:11px 20px;border-radius:999px;background:linear-gradient(180deg,#ffc35e,#ff9f2e 55%,#ee7d12);box-shadow:0 3px 0 #8a3f06,inset 0 1px 0 rgba(255,255,255,.45),0 6px 18px rgba(255,159,67,.35);white-space:nowrap}
+  .startbtn:hover{filter:brightness(1.07)}
+  .startbtn svg{width:18px;height:18px}
 
-  /* ---------- hero scene ---------- */
-  .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:96px 20px 80px;overflow:hidden;background:#070912}
-  .bgimg{position:absolute;inset:-4%;background:url(assets/board.webp) center/cover no-repeat;filter:saturate(1.05) brightness(.9);animation:kb 46s ease-in-out infinite alternate;will-change:transform}
-  @keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.08) translate(-1.5%,1%)}}
-  .shade{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,rgba(7,9,18,.30),rgba(7,9,18,.78) 80%),linear-gradient(180deg,rgba(7,9,18,.70) 0%,rgba(7,9,18,.15) 30%,rgba(7,9,18,.15) 70%,rgba(7,9,18,.95) 100%)}
-  /* ---------- connect card ---------- */
-  .card{position:relative;z-index:5;width:100%;max-width:470px;background:linear-gradient(180deg,rgba(27,32,54,.92),rgba(16,19,36,.94));backdrop-filter:blur(6px);border:1px solid #333d72;border-radius:20px;padding:30px 28px 22px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 50px rgba(180,107,255,.15);text-align:center}
-  .logo{font:900 56px/1 Impact,"Arial Black",sans-serif;letter-spacing:1px;margin:2px 0 6px;background:linear-gradient(180deg,#fff6c2,#ffd23f 55%,#c98a00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #3a2600) drop-shadow(0 0 24px rgba(255,210,63,.25))}
-  .logo i{font-style:normal;font-size:30px;background:linear-gradient(180deg,#b8ffd6,#1fa85a);-webkit-background-clip:text;background-clip:text}
-  .tagline{font-weight:800;font-size:18px;margin:4px 0 6px}
-  .sub{color:var(--mut);margin:0 0 16px;font-size:14px}
-  .chips{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:20px}
-  .chip{font-size:11px;font-weight:800;letter-spacing:.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
-  .chip.net{color:var(--green);border-color:rgba(61,220,132,.5)}
-  .chip.beta{color:var(--purple);border-color:rgba(180,107,255,.5)}
-  .btn{position:relative;display:flex;width:100%;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;font:800 16px "Segoe UI",sans-serif;padding:15px 20px;border-radius:13px;color:#2a1300;
-       background:linear-gradient(180deg,#ffc78a,#ff9f43 50%,#e2761b);box-shadow:0 4px 0 #8a3f06,inset 0 1px 0 rgba(255,255,255,.4),0 10px 26px rgba(255,159,67,.3);transition:transform .08s,box-shadow .08s,filter .15s}
-  .btn:hover{filter:brightness(1.08)}
-  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8a3f06}
+  /* ---------- hero ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:92px 20px 0;overflow:hidden;background:url(assets/hero_bg.webp) center bottom/100% auto no-repeat,linear-gradient(180deg,#02081f 0%,#05163b 100%)}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 48% 42% at 50% 46%,rgba(8,12,34,.45),transparent 75%),linear-gradient(180deg,rgba(6,9,24,.35),transparent 18%,transparent 70%,rgba(6,9,20,.85) 100%);pointer-events:none}
+  .fire{position:absolute;inset:0;pointer-events:none;background:radial-gradient(3px 3px at 20% 70%,rgba(255,220,120,.9),transparent),radial-gradient(2px 2px at 80% 60%,rgba(255,220,120,.8),transparent),radial-gradient(2px 2px at 35% 55%,rgba(180,255,160,.7),transparent),radial-gradient(2px 2px at 65% 75%,rgba(255,220,120,.7),transparent);animation:ff 6s ease-in-out infinite alternate;opacity:.7}
+  @keyframes ff{to{transform:translateY(-14px);opacity:.35}}
+  .card{position:relative;z-index:5;width:100%;max-width:980px;text-align:center}
+  .logoimg{display:block;width:min(720px,92vw);height:auto;margin:-6px auto 6px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.45))}
+  .tagline{font:800 clamp(22px,2.6vw,34px)/1.2 "Segoe UI",sans-serif;margin:0 0 12px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.5),0 4px 16px rgba(0,0,0,.6)}
+  .tagline b.g{color:#ffd23f} .tagline b.z{color:#5dfc6a}
+  .sub{color:#e3e8ff;margin:0 auto 18px;font-size:16px;max-width:620px;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+  .chips{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+  .chip{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:800;letter-spacing:.2px;padding:9px 18px;border-radius:999px;background:rgba(8,14,30,.7);backdrop-filter:blur(4px)}
+  .chip svg{width:18px;height:18px}
+  .chip.net{color:#4dff9a;border:1.5px solid rgba(61,220,132,.75)}
+  .chip.beta{color:#d7b4ff;border:1.5px solid rgba(180,107,255,.8)}
+  .btn{position:relative;display:flex;width:min(460px,100%);margin:0 auto;align-items:center;justify-content:center;gap:12px;border:0;cursor:pointer;font:800 20px "Segoe UI",sans-serif;padding:17px 56px;border-radius:16px;color:#2a1300;text-decoration:none;
+       background:linear-gradient(180deg,#ffc35e,#ff9f2e 55%,#ee7d12);box-shadow:0 5px 0 #8a3f06,inset 0 1px 0 rgba(255,255,255,.45),0 14px 34px rgba(255,159,67,.4);transition:transform .08s,box-shadow .08s,filter .15s}
+  #connectBtn::after{content:"\203A";position:absolute;right:22px;top:50%;transform:translateY(-54%);font-size:32px;font-weight:900}
+  .btn:hover{filter:brightness(1.07)}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8a3f06}
   .btn:disabled{filter:grayscale(.8) brightness(.6);cursor:wait;transform:none}
-  .btn svg{width:24px;height:24px}
+  .btn svg{width:30px;height:30px}
   .spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,.25);border-top-color:#2a1300;animation:sp .8s linear infinite;display:none}
   .btn.busy .spin{display:inline-block}
+  .btn.busy::after{display:none}
   @keyframes sp{to{transform:rotate(360deg)}}
-  .status{min-height:22px;margin:14px 0 0;font-size:13px;color:var(--mut)}
-  .status.err{color:var(--red)} .status.ok{color:var(--green)}
-  .who{display:none;margin:12px 0 0;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);font:12px ui-monospace,Consolas,monospace;color:var(--mut);word-break:break-all;text-align:left}
+  .status{min-height:22px;margin:10px auto 0;font-size:14px;color:#e3e8ff;max-width:560px;text-shadow:0 1px 6px rgba(0,0,0,.9)}
+  .status.err{color:#ff8a9d} .status.ok{color:var(--green)}
+  .who{display:none;margin:10px auto 0;max-width:460px;padding:9px 12px;border-radius:10px;background:rgba(8,12,28,.8);border:1px solid var(--line);font:12px ui-monospace,Consolas,monospace;color:var(--mut);word-break:break-all;text-align:left}
   .who b{color:var(--txt)}
-  .code{display:none;margin-top:12px;text-align:left}
-  .code textarea{width:100%;height:70px;resize:none;background:#0a0c16;color:var(--cyan);border:1px solid var(--line);border-radius:8px;padding:8px;font:11px ui-monospace,Consolas,monospace}
+  .code{display:none;margin:10px auto 0;max-width:460px;text-align:left;background:rgba(8,12,28,.88);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .code textarea{width:100%;height:64px;resize:none;background:#0a0c16;color:var(--cyan);border:1px solid var(--line);border-radius:8px;padding:8px;font:11px ui-monospace,Consolas,monospace}
   .code button{margin-top:6px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:5px 10px;cursor:pointer;font:700 12px "Segoe UI",sans-serif}
-  .note{margin-top:16px;font-size:11px;color:#6b75a2}
-  .scroll{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:6;color:#cfe;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.8;animation:bounce 2s infinite}
-  @keyframes bounce{50%{transform:translate(-50%,6px)}}
+  .note{margin:12px 0 0;font-size:13px;color:#d3d9f5;text-shadow:0 1px 6px rgba(0,0,0,.9)}
+
+  /* ---------- feature strip ---------- */
+  .feats{position:relative;z-index:6;margin:auto 0 26px;padding-top:40px;width:min(1540px,calc(100% - 28px));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+  .feat{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:rgba(10,14,32,.82);backdrop-filter:blur(6px);border:1px solid rgba(120,140,220,.22);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+  .feat img{width:70px;height:70px;flex-shrink:0}
+  .feat b{display:block;font-size:17px;color:#fff;margin-bottom:3px}
+  .feat b.gold{color:#ffd23f}
+  .feat span{display:block;color:#c3cbea;font-size:14px;line-height:1.35}
+  @media (max-width:1100px){.feats{grid-template-columns:repeat(3,minmax(0,1fr))}.nav{gap:18px}}
 
   /* ---------- sections ---------- */
   section.sec{position:relative;padding:80px 20px;max-width:1120px;margin:0 auto}
@@ -99,6 +112,17 @@
   footer{border-top:1px solid #1d2340;padding:26px 20px;text-align:center;color:#5d6690;font-size:12px}
 
   @media (max-width:760px){
+    .top{gap:10px;padding:6px 6px 6px 12px}
+    .brand img{height:30px}
+    .startbtn{display:none}
+    .top{justify-content:space-between}
+    .lang{padding:8px 26px 8px 30px;font-size:13px}
+    .langw svg{left:9px;width:15px}
+    .hero{padding-top:84px;background-size:auto 46vh,100% 100%;background-position:24% 100%,0 0}
+    .feats{grid-template-columns:1fr;margin-top:28px;padding-top:0}
+    .feat{padding:12px 14px}
+    .feat img{width:54px;height:54px}
+    .btn{font-size:17px;padding:15px 46px}
     .bgimg{background-position:22% center}
     .nav{display:none}
     .top{padding:10px 14px}
@@ -112,36 +136,43 @@
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="#">PLANT <i>vs.</i> YIELD</a>
-  <nav class="nav"><a href="#how" data-i="nav_how"></a><a href="#economy" data-i="nav_econ"></a><a href="#faq" data-i="nav_faq"></a></nav>
+  <a class="brand" href="#top"><img src="assets/logo.webp" alt="Plant vs. Yield"></a>
+  <nav class="nav"><a href="#how"><svg viewBox="0 0 24 24"><path d="M7 7h10a5 5 0 0 1 4.9 6l-.9 4.2a2.4 2.4 0 0 1-4.1 1.1L14.5 16h-5l-2.4 2.3A2.4 2.4 0 0 1 3 17.2L2.1 13A5 5 0 0 1 7 7zm1 3v1.5H6.5V13H8v1.5h1.5V13H11v-1.5H9.5V10zm8.3 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 2.2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg><span data-i="nav_how"></span></a><a href="#economy"><svg viewBox="0 0 24 24"><path d="M4 20V12h3v8zm6.5 0V4h3v16zM17 20v-6h3v6z"/></svg><span data-i="nav_econ"></span></a><a href="#faq"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5zM8 12v1.6h8V12zm0 3.4V17h8v-1.6zm0-6.8v1.6h4V8.6z"/></svg><span data-i="nav_faq"></span></a></nav>
   <div class="langw">
-    <svg viewBox="0 0 24 24" fill="none" stroke="#97a0c6" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#c8cff0" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>
     <select class="lang" id="lang" aria-label="Language"></select>
   </div>
+  <a class="startbtn" href="#top" id="startTop"><svg viewBox="0 0 24 24" fill="#2a1300"><path d="M13.5 2.5c3.6.4 6.6 3.4 7 7l-5.6 5.6-1.7 3.9-2.1-2.1-2.4 2.4-1.4-1.4 2.4-2.4-2.1-2.1 3.9-1.7zM16 6.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM5 15l4 4c-1.6 1.6-4.4 2-6 2 0-1.6.4-4.4 2-6z"/></svg><span data-i="start"></span></a>
 </header>
 
 <main>
 <section class="hero" id="top">
-  <div class="bgimg" aria-hidden="true"></div><div class="shade" aria-hidden="true"></div>
+  <div class="fire" aria-hidden="true"></div>
   <div class="card">
-    <div class="logo">PLANT <i>vs.</i> YIELD</div>
-    <div class="tagline" data-i="tagline"></div>
+    <h1 style="margin:0"><img class="logoimg" src="assets/logo.webp" alt="Plant vs. Yield"></h1>
+    <div class="tagline" data-ih="tagline_html"></div>
     <p class="sub" data-i="sub"></p>
-    <div class="chips"><span class="chip net" id="netChip">Robinhood Chain</span><span class="chip beta" data-i="chip_beta"></span></div>
+    <div class="chips"><span class="chip net"><svg viewBox="0 0 24 24" fill="none" stroke="#4dff9a" stroke-width="2" stroke-linecap="round"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7"/></svg><span id="netChip">Robinhood Chain</span></span><span class="chip beta"><svg viewBox="0 0 24 24" fill="#d7b4ff"><path d="M9 2h6v2h-1v5.2l5.7 9.4A2.2 2.2 0 0 1 17.8 22H6.2a2.2 2.2 0 0 1-1.9-3.4L10 9.2V4H9zm3 8.6L8.6 16h6.8z"/></svg><span data-i="chip_beta"></span></span></div>
     <button class="btn" id="connectBtn">
       <svg viewBox="0 0 35 33" aria-hidden="true"><path fill="#e17726" d="M32.96 1 19.6 10.94l2.47-5.85z"/><path fill="#e27625" d="m2.04 1 13.24 10.03-2.35-5.94zM28.15 23.53l-3.55 5.44 7.6 2.09 2.18-7.41zM.63 23.65l2.17 7.41 7.59-2.09-3.55-5.44z"/><path fill="#e27625" d="m9.97 14.4-2.12 3.2 7.55.34-.25-8.13zM25.03 14.4l-5.24-4.68-.17 8.22 7.55-.34zM10.39 28.97l4.55-2.2-3.92-3.06zM20.06 26.77l4.54 2.2-.62-5.26z"/><path fill="#d5bfb2" d="m24.6 28.97-4.54-2.2.37 2.95-.04 1.25zM10.39 28.97l4.22 2-.03-1.25.36-2.95z"/><path fill="#233447" d="m14.68 21.75-3.77-1.1 2.66-1.22zM20.32 21.75l1.11-2.32 2.67 1.22z"/><path fill="#cc6228" d="m10.39 28.97.65-5.44-4.2.12zM23.96 23.53l.64 5.44 3.55-5.32zM27.15 17.6l-7.55.34.7 3.81 1.12-2.32 2.67 1.22zM10.91 20.65l2.66-1.22 1.11 2.32.7-3.81-7.55-.34z"/><path fill="#e27525" d="m7.85 17.6 3.16 6.17-.1-3.12zM24.1 20.65l-.12 3.12 3.17-6.17zM15.4 17.94l-.7 3.81.89 4.57.2-6.02zM19.6 17.94l-.37 2.35.18 6.03.89-4.57z"/></svg>
       <span id="btnTxt"></span><span class="spin"></span>
     </button>
+    <p class="note" data-i="note"></p>
     <div class="status" id="status" role="status" aria-live="polite"></div>
     <div class="who" id="who"></div>
     <div class="code" id="codeBox">
-      <p class="status" data-i="enroll"></p>
+      <p class="status" style="text-shadow:none;margin:0 0 6px" data-i="enroll"></p>
       <textarea id="codeTxt" readonly></textarea>
       <button id="copyBtn" data-i="copy"></button>
     </div>
-    <p class="note" data-i="note"></p>
   </div>
-  <a class="scroll" href="#how" data-i="scroll"></a>
+  <div class="feats">
+    <div class="feat"><img src="assets/f_garden.webp" alt=""><div><b data-i="f1t"></b><span data-i="f1p"></span></div></div>
+    <div class="feat"><img src="assets/f_coin.webp" alt=""><div><b class="gold" data-i="f2t"></b><span data-i="f2p"></span></div></div>
+    <div class="feat"><img src="assets/f_defend.webp" alt=""><div><b data-i="f3t"></b><span data-i="f3p"></span></div></div>
+    <div class="feat"><img src="assets/f_market.webp" alt=""><div><b data-i="f4t"></b><span data-i="f4p"></span></div></div>
+    <div class="feat"><img src="assets/f_rank.webp" alt=""><div><b data-i="f5t"></b><span data-i="f5p"></span></div></div>
+  </div>
 </section>
 
 <section class="sec" id="how">
@@ -449,6 +480,8 @@ q4:"Bir şey kurmam gerekiyor mu?",a4:"Sadece MetaMask eklentisi olan bir bilgis
 q5:"İlerlemem kaydediliyor mu?",a5:"Evet. Bahçen, tohumların ve ayarların bu cihazdaki tarayıcıda saklanır.",
 cta:"Bağlan ve Oyna",footer:"© 2026 Plant vs. Yield · Kapalı Beta"}
 };
+const EXTRA = {"en":{"start":"Start Game","tagline_html":"Plant. Farm <b class=\"g\">$COIN</b>. Survive the <b class=\"z\">zombie market</b>.","f1t":"Build Your Garden","f1p":"Plant seeds and grow your defense.","f2t":"Earn $COIN","f2p":"Get yield from your plants.","f3t":"Defend Against Zombies","f3p":"Stop the zombie traders.","f4t":"Work the Market","f4p":"Buy plants, upgrade, profit.","f5t":"Climb the Ranks","f5p":"Top the daily reward pool."},"es":{"start":"Empezar","tagline_html":"Planta. Cosecha <b class=\"g\">$COIN</b>. Sobrevive al <b class=\"z\">mercado zombi</b>.","f1t":"Construye tu jardín","f1p":"Planta semillas y arma tu defensa.","f2t":"Gana $COIN","f2p":"Obtén rendimiento de tus plantas.","f3t":"Defiéndete de los zombis","f3p":"Frena a los traders zombis.","f4t":"Opera en el Mercado","f4p":"Compra plantas, mejora y gana.","f5t":"Sube en el ranking","f5p":"Lidera el fondo diario."},"pt":{"start":"Começar","tagline_html":"Plante. Colha <b class=\"g\">$COIN</b>. Sobreviva ao <b class=\"z\">mercado zumbi</b>.","f1t":"Monte seu jardim","f1p":"Plante sementes e erga sua defesa.","f2t":"Ganhe $COIN","f2p":"Tire rendimento das suas plantas.","f3t":"Defenda-se dos zumbis","f3p":"Pare os traders zumbis.","f4t":"Opere no Mercado","f4p":"Compre plantas, evolua e lucre.","f5t":"Suba no ranking","f5p":"Lidere o pool diário."},"fr":{"start":"Jouer","tagline_html":"Plantez. Récoltez des <b class=\"g\">$COIN</b>. Survivez au <b class=\"z\">marché zombie</b>.","f1t":"Bâtissez votre jardin","f1p":"Semez et montez votre défense.","f2t":"Gagnez des $COIN","f2p":"Tirez du rendement de vos plantes.","f3t":"Repoussez les zombies","f3p":"Stoppez les traders zombies.","f4t":"Jouez le Marché","f4p":"Achetez, améliorez, profitez.","f5t":"Grimpez au classement","f5p":"Dominez la cagnotte du jour."},"de":{"start":"Spielen","tagline_html":"Pflanzen. <b class=\"g\">$COIN</b> farmen. Den <b class=\"z\">Zombie-Markt</b> überleben.","f1t":"Bau deinen Garten","f1p":"Säe Samen, bau deine Verteidigung.","f2t":"Verdiene $COIN","f2p":"Hol Rendite aus deinen Pflanzen.","f3t":"Wehr die Zombies ab","f3p":"Stopp die Zombie-Trader.","f4t":"Handle am Markt","f4p":"Pflanzen kaufen, upgraden, profitieren.","f5t":"Steig im Ranking auf","f5p":"Führe den Tagespool an."},"ru":{"start":"Начать игру","tagline_html":"Сажай. Фарми <b class=\"g\">$COIN</b>. Переживи <b class=\"z\">зомби-рынок</b>.","f1t":"Построй сад","f1p":"Сажай семена и строй оборону.","f2t":"Зарабатывай $COIN","f2p":"Получай доход с растений.","f3t":"Отбивайся от зомби","f3p":"Останови зомби-трейдеров.","f4t":"Торгуй на Рынке","f4p":"Покупай, улучшай, зарабатывай.","f5t":"Поднимайся в рейтинге","f5p":"Возглавь дневной пул."},"zh":{"start":"开始游戏","tagline_html":"种植。赚取 <b class=\"g\">$COIN</b>。在<b class=\"z\">僵尸市场</b>中生存。","f1t":"打造花园","f1p":"播种植物，筑起防线。","f2t":"赚取 $COIN","f2p":"从植物中获得收益。","f3t":"抵御僵尸","f3p":"挡住僵尸交易员。","f4t":"玩转市场","f4p":"购买植物、升级、获利。","f5t":"冲上排行榜","f5p":"登顶每日奖池。"},"ja":{"start":"ゲーム開始","tagline_html":"植えて、<b class=\"g\">$COIN</b>を稼いで、<b class=\"z\">ゾンビ相場</b>を生き延びろ。","f1t":"庭をつくる","f1p":"種をまいて防衛を築こう。","f2t":"$COINを稼ぐ","f2p":"植物から利回りを得よう。","f3t":"ゾンビを撃退","f3p":"ゾンビトレーダーを止めろ。","f4t":"マーケットで取引","f4p":"植物を買って強化して稼ごう。","f5t":"ランキング上位へ","f5p":"デイリープールの頂点を目指せ。"},"tr":{"start":"Oyunu Başlat","tagline_html":"Dik. <b class=\"g\">$COIN</b> topla. <b class=\"z\">Zombi piyasasında</b> hayatta kal.","f1t":"Bahçeni Kur","f1p":"Tohum ek, bitkileri yetiştir.","f2t":"$COIN Kazan","f2p":"Bitkilerinden getiri elde et.","f3t":"Zombilere Karşı Savun","f3p":"Trader zombileri durdur.","f4t":"Market'te İşlem Yap","f4p":"Bitki al, yükselt, kâr et.","f5t":"Sıralamada Yüksel","f5p":"Günlük ödül havuzunda zirveye çık."}};
+for (const k in EXTRA) Object.assign(I[k], EXTRA[k]);
 let lang = 'en';
 try { const l = localStorage.getItem('pvy_lang'); if (l && I[l]) lang = l; else localStorage.setItem('pvy_lang', 'en'); } catch (e) {}
 const t = k => (I[lang] && I[lang][k]) || I.en[k] || k;
@@ -456,6 +489,7 @@ let btnKey = 'btn_connect';
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i]').forEach(el => { el.textContent = t(el.dataset.i); });
+  document.querySelectorAll('[data-ih]').forEach(el => { el.innerHTML = t(el.dataset.ih); });
   $('btnTxt').textContent = t(btnKey);
   if (stKey) $('status').textContent = t(stKey) + stExtra;
 }
@@ -535,6 +569,7 @@ function scene() {}
   applyLang(); scene();
   $('connectBtn').addEventListener('click', connect);
   $('copyBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('codeTxt').value); $('copyBtn').textContent = t('copied'); setTimeout(() => $('copyBtn').textContent = t('copy'), 1500); } catch (e) { $('codeTxt').select(); } });
+  $('startTop').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 300); });
   document.querySelector('.cta a').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 400); });
 })();
 </script>
