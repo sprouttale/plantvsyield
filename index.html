@@ -690,6 +690,16 @@ function scene() {}
 .wl-soon{text-align:center;padding:26px 10px;color:#c8cff0}
 @media(max-width:520px){.wl{padding:18px 14px}.st{padding:12px}.wl-hd h2{font-size:21px}}
 </style>
+<script>
+// site ziyaret sayacı (admin paneli için)
+(function () {
+  let vid = ''; try { vid = localStorage.getItem('pvy_vid') || ''; if (!vid) { vid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('pvy_vid', vid); } } catch (e) { vid = Math.random().toString(36).slice(2) + Date.now().toString(36); }
+  const send = ev => { try { fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_visit', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: JSON.stringify({ p_vid: vid, p_ev: ev, p_ref: document.referrer || null, p_lang: navigator.language || null, p_ua: navigator.userAgent }) }).catch(() => {}); } catch (e) {} };
+  window.pvyTrack = send;
+  send(/[?&](wl|code)=/.test(location.search) ? 'ping' : 'view');
+  setInterval(() => { if (document.visibilityState === 'visible') send('ping'); }, 30000);
+})();
+</script>
 <div class="wl-ov" id="wlOv" role="dialog" aria-modal="true" aria-label="Waitlist">
  <div class="wl">
   <button class="wl-x" id="wlClose" aria-label="Close">×</button>
@@ -715,7 +725,7 @@ function scene() {}
       const c = await sb(); const { data } = await c.auth.getSession(); const s = data && data.session; if (!s) return null;
       TOKEN = s.access_token; const m = s.user.user_metadata || {};
       const u = (m.user_name || m.preferred_username || m.screen_name || '').replace(/^@/, '');
-      if (u) Object.assign(S, { x: 1, u, name: m.full_name || m.name || u, av: m.avatar_url || m.picture || '' });
+      if (u && !S.x) window.pvyTrack && pvyTrack('x_conn'); if (u) Object.assign(S, { x: 1, u, name: m.full_name || m.name || u, av: m.avatar_url || m.picture || '' });
       return s;
     } catch (e) { return null; }
   }
@@ -813,13 +823,13 @@ function scene() {}
   async function join(btn) {
     busy(btn, true, 'VERIFYING…');
     let r; try { r = await rpc('pvy_wl_submit', { p_user: S.u, p_quote: S.qUrl, p_reply: S.rUrl, p_wallet: S.wallet, p_name: S.name || null, p_avatar: S.av || null }); } catch (e) { r = { ok: false, err: 'net' }; }
-    if (r.ok) { S.joined = 1; S.n = r.n || ''; S.f = Math.random() < .5 ? 'farmer_m' : 'farmer_f'; save(); return render(); }
+    if (r.ok) { window.pvyTrack && pvyTrack('joined'); S.joined = 1; S.n = r.n || ''; S.f = Math.random() < .5 ? 'farmer_m' : 'farmer_f'; save(); return render(); }
     busy(btn, false, 'JOIN EARLY ACCESS');
     if (r.step === 'quote' || r.step === 'reply') { delete S[r.step]; save(); render(); } else if (['link_used', 'bad_link'].includes(r.err)) { delete S.quote; delete S.reply; save(); render(); }
     if (['no_user', 'user_used', 'bad_user', 'not_connected'].includes(r.err)) { delete S.x; save(); render(); }
     msg('join', '✗ ' + (ERR[r.err] || r.err || ERR.net).replace('{u}', S.u || ''));
   }
-  async function show() { $('wlOv').classList.add('on'); document.body.style.overflow = 'hidden'; $('wlBody').innerHTML = '<p class="wl-soon">Loading…</p>'; if (S.x || /[?&](wl|code)=/.test(location.search)) { const s = await session(); if (!s) delete S.x; save(); } try { INFO = await rpc('pvy_wl_info'); } catch (e) {} render(); }
+  async function show() { window.pvyTrack && pvyTrack('wl_open'); $('wlOv').classList.add('on'); document.body.style.overflow = 'hidden'; $('wlBody').innerHTML = '<p class="wl-soon">Loading…</p>'; if (S.x || /[?&](wl|code)=/.test(location.search)) { const s = await session(); if (!s) delete S.x; save(); } try { INFO = await rpc('pvy_wl_info'); } catch (e) {} render(); }
   function hide() { $('wlOv').classList.remove('on'); document.body.style.overflow = ''; }
   document.addEventListener('click', e => {
     if (e.target.closest('#wlOpen, [data-wl-open]')) { e.preventDefault(); return show(); }

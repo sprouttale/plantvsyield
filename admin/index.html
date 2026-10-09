@@ -44,6 +44,10 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <a href="../?play=1" target="_blank" rel="noopener" style="text-decoration:none"><button style="background:#ffd23f;color:#2a1300;border:0;font-weight:800">🎮 Oyuna gir</button></a>
 <button id="ref">Yenile</button><button id="out">Çıkış</button></header>
 <main>
+<div class="box"><h2>🌐 Site &amp; Waitlist <span class="c">plantvsyield.xyz ziyaretçileri</span></h2>
+<div class="stats" id="sstats" style="margin-bottom:12px"></div>
+<div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px" id="sgrid"><div><small class="mut">Son 14 gün — <span style="color:#5fb4ff">■ ziyaretçi</span> <span style="color:#3ddc84">■ waitlist katılımı</span></small><div id="schart"></div></div><div><small class="mut">Nereden geldiler</small><div id="srefs" style="margin-top:6px"></div></div></div></div>
+<h2 style="font-size:15px;margin:4px 0 10px">🎮 Oyun</h2>
 <div class="stats" id="stats"></div>
 <div class="grid"><div>
 <div class="box"><h2>Oyuncular <span class="c" id="pc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th>Son görülme</th><th class="num">Giriş</th><th class="num">Coin</th><th class="num">Kazanılan</th><th class="num">Dalga</th><th class="num">Bag</th><th class="num">Banka</th><th class="num">Havuz payı</th><th>NFT</th><th>Cihaz</th></tr></thead><tbody id="pl"></tbody></table></div></div>
@@ -84,7 +88,23 @@ async function setBan(w, on) {
 async function load() {
   const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_hours: +$('hrs').value }) });
   if (!r.ok) throw new Error(r.status === 400 || r.status === 401 ? 'unauthorized' : 'HTTP ' + r.status);
-  D = await r.json(); render(); wl();
+  D = await r.json(); render(); wl(); site();
+}
+async function site() {
+  const r = await fetch(API.replace('pvy_admin', 'pvy_site_stats'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok }) });
+  if (!r.ok) return; const S = await r.json();
+  const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+  const st = [['Sitede şu an', S.online, 'g'], ['Bugün gelen', S.today], ['Toplam ziyaretçi', S.total], ['Toplam sayfa açılışı', S.views],
+    ['Waitlist penceresini açan', S.wl_open], ['X bağlayan', S.x_conn], ['Waitlist\'e katılan', S.joined, 'y'], ['Bugün katılan', S.joined_today, 'y'], ['Katılım oranı', pct(S.joined, S.total), 'g']];
+  $('sstats').innerHTML = st.map(s => '<div class="st"><small>' + s[0] + '</small><b class="' + (s[2] || '') + '">' + s[1] + '</b></div>').join('');
+  const mx = Math.max(1, ...S.days.map(d => d.v)), bw = 600 / S.days.length;
+  $('schart').innerHTML = '<svg viewBox="0 0 600 150" style="width:100%;height:150px;display:block">' + S.days.map((d, i) => {
+    const hv = d.v / mx * 115, hj = d.j / mx * 115, x = i * bw;
+    return '<rect x="' + (x + 4) + '" y="' + (125 - hv) + '" width="' + (bw * .45 - 4) + '" height="' + hv + '" fill="#5fb4ff" rx="2"><title>' + d.d + ': ' + d.v + ' ziyaretçi</title></rect>' +
+      '<rect x="' + (x + bw * .45 + 2) + '" y="' + (125 - hj) + '" width="' + (bw * .45 - 4) + '" height="' + hj + '" fill="#3ddc84" rx="2"><title>' + d.d + ': ' + d.j + ' katılım</title></rect>' +
+      '<text x="' + (x + bw / 2) + '" y="142" fill="#8b94b8" font-size="10" text-anchor="middle">' + d.d.slice(8) + '.' + d.d.slice(5, 7) + '</text>';
+  }).join('') + '</svg>';
+  $('srefs').innerHTML = S.refs.map(x => '<div class="kv" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(38,47,82,.6);margin:0"><span>' + esc(x.r) + '</span><b>' + x.n + '</b></div>').join('') || '<p class="mut">Henüz veri yok.</p>';
 }
 async function wl(post, remove) {
   const r = await fetch(API.replace('pvy_admin', 'pvy_wl_admin'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_post: post == null ? null : post, p_remove: remove || null }) });
