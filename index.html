@@ -695,14 +695,31 @@ function scene() {}
 <script>
 (function () {
   const API = 'https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/', KEY = 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A', HANDLE = 'PlantVsYield';
-  const rpc = (f, b) => fetch(API + f, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify(b || {}) }).then(r => r.json());
+  let SB = null, TOKEN = null;
+  const sb = async () => {
+    if (SB) return SB;
+    if (!window.supabase) await new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+    SB = window.supabase.createClient('https://rbfcjqpkdketyagczmms.supabase.co', KEY, { auth: { flowType: 'pkce', persistSession: true, detectSessionInUrl: true, storageKey: 'pvy_sb_auth' } });
+    return SB;
+  };
+  const rpc = (f, b) => fetch(API + f, { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json', apikey: KEY }, TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}), body: JSON.stringify(b || {}) }).then(r => r.json());
+  // X girişinden dönen oturumu oku
+  async function session() {
+    try {
+      const c = await sb(); const { data } = await c.auth.getSession(); const s = data && data.session; if (!s) return null;
+      TOKEN = s.access_token; const m = s.user.user_metadata || {};
+      const u = (m.user_name || m.preferred_username || m.screen_name || '').replace(/^@/, '');
+      if (u) Object.assign(S, { x: 1, u, name: m.full_name || m.name || u, av: m.avatar_url || m.picture || '' });
+      return s;
+    } catch (e) { return null; }
+  }
   const $ = id => document.getElementById(id), esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const ERR = {
     bad_user: 'That doesn’t look like an X username.', no_user: 'We couldn’t find that X account. Check the spelling and try again.', user_used: 'This X account is already on the whitelist.',
     no_post: 'The whitelist post isn’t live yet. Check back soon!', bad_link: 'Paste the full link of your post (x.com/…/status/…).', link_used: 'This link was already used.',
     not_found: 'We couldn’t open that post. Make sure it’s public, wait a few seconds and try again.', not_yours: 'This post isn’t from @{u}. Post it from the account you connected.',
     not_quote: 'This post doesn’t quote our whitelist post. Use the Quote button and try again.', not_reply: 'This isn’t a comment on our whitelist post. Use the Comment button and try again.',
-    bad_wallet: 'Connect a valid wallet first.', dup: 'This wallet or X account is already registered.', net: 'Network error — please try again.'
+    bad_wallet: 'Connect a valid wallet first.', not_connected: 'Your X session expired. Connect X again.', busy: 'X is slow right now — please try again in a moment.', dup: 'This wallet or X account is already registered.', net: 'Network error — please try again.'
   };
   let S = {}; try { S = JSON.parse(localStorage.getItem('pvy_wl') || '{}'); } catch (e) {}
   const save = () => { try { localStorage.setItem('pvy_wl', JSON.stringify(S)); } catch (e) {} };
@@ -712,7 +729,7 @@ function scene() {}
   const short = a => a.slice(0, 6) + '…' + a.slice(-4);
 
   const STEPS = [
-    { k: 'x', t: 'Connect X', d: 'Enter your X username. Your quote and comment must come from this account.' },
+    { k: 'x', t: 'Connect X', d: 'Sign in with X. We only read your username and picture.' },
     { k: 'follow', t: 'Follow @' + HANDLE, d: 'Opens our profile on X.' },
     { k: 'like', t: 'Like & Repost the post', d: 'Opens the whitelist post on X.' },
     { k: 'quote', t: 'Quote the post', d: 'Quote it on X, then paste the link of your quote here.' },
@@ -742,7 +759,7 @@ function scene() {}
   function stepHTML(s, i, c) {
     const st = S[s.k] ? 'done' : i === c ? 'cur' : 'lock';
     let row = '', extra = '';
-    if (s.k === 'x') { row = '<input id="wlU" placeholder="@username" autocomplete="off" value="' + esc(S.u || '') + '"><button class="go" data-a="x">Connect</button>';
+    if (s.k === 'x') { row = '<button class="go" data-a="x" style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="16" height="16" fill="#2a1300"><path d="M17.8 3h3.1l-6.8 7.7 8 10.3h-6.3l-4.9-6.4L5.3 21H2.2l7.2-8.3L1.8 3h6.4l4.5 5.9zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg>Connect X</button>';
       if (S.x) extra = '<div class="xu">' + (S.av ? '<img src="' + esc(S.av) + '" alt="">' : '') + '@' + esc(S.u) + ' <span style="color:#8f98bf;font-weight:500">' + esc(S.name || '') + '</span></div>'; }
     if (s.k === 'follow') row = '<button class="go sec" data-a="follow">Follow on X</button><button class="go" data-a="followed" ' + (S.fClick ? '' : 'disabled') + '>I followed</button>';
     if (s.k === 'like') row = '<button class="go sec" data-a="likeit">Like</button><button class="go sec" data-a="rt">Repost</button><button class="go" data-a="liked" ' + (S.lClick && S.rClick ? '' : 'disabled') + '>Done</button>';
@@ -762,11 +779,10 @@ function scene() {}
   const busy = (b, on, label) => { if (!b) return; b.disabled = on; if (label) b.textContent = label; };
   async function act(a, btn) {
     if (a === 'x') {
-      const u = ($('wlU').value || '').trim().replace(/^@/, '').replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, '').split(/[/?#]/)[0];
-      if (!/^[A-Za-z0-9_]{1,15}$/.test(u)) return msg('x', ERR.bad_user);
-      busy(btn, true, 'Checking…'); let r; try { r = await verify('user', u); } catch (e) { r = { ok: false, err: 'net' }; } busy(btn, false, 'Connect');
-      if (!r.ok) return msg('x', ERR[r.err] || r.err || ERR.net);
-      Object.assign(S, { x: 1, u, name: r.name, av: r.avatar }); save(); return render();
+      busy(btn, true, 'Opening X…');
+      try { const c = await sb(); const { error } = await c.auth.signInWithOAuth({ provider: 'x', options: { redirectTo: location.origin + '/?wl=1' } }); if (error) throw error; }
+      catch (e) { busy(btn, false, 'Connect X'); msg('x', 'Could not open X sign-in: ' + ((e && e.message) || e)); }
+      return;
     }
     if (a === 'follow') { open('https://x.com/intent/follow?screen_name=' + HANDLE); setTimeout(() => { S.fClick = 1; save(); render(); }, 3000); return; }
     if (a === 'followed') { S.follow = 1; save(); return render(); }
@@ -794,10 +810,10 @@ function scene() {}
     if (r.ok) { S.joined = 1; S.n = r.n || ''; S.f = Math.random() < .5 ? 'farmer_m' : 'farmer_f'; save(); return render(); }
     busy(btn, false, 'JOIN EARLY ACCESS');
     if (r.step === 'quote' || r.step === 'reply') { delete S[r.step]; save(); render(); } else if (['link_used', 'bad_link'].includes(r.err)) { delete S.quote; delete S.reply; save(); render(); }
-    if (['no_user', 'user_used', 'bad_user'].includes(r.err)) { STEPS.forEach(s => delete S[s.k]); save(); render(); }
+    if (['no_user', 'user_used', 'bad_user', 'not_connected'].includes(r.err)) { delete S.x; save(); render(); }
     msg('join', '✗ ' + (ERR[r.err] || r.err || ERR.net).replace('{u}', S.u || ''));
   }
-  async function show() { $('wlOv').classList.add('on'); document.body.style.overflow = 'hidden'; $('wlBody').innerHTML = '<p class="wl-soon">Loading…</p>'; try { INFO = await rpc('pvy_wl_info'); } catch (e) {} render(); }
+  async function show() { $('wlOv').classList.add('on'); document.body.style.overflow = 'hidden'; $('wlBody').innerHTML = '<p class="wl-soon">Loading…</p>'; if (S.x || /[?&](wl|code)=/.test(location.search)) { const s = await session(); if (!s) delete S.x; save(); } try { INFO = await rpc('pvy_wl_info'); } catch (e) {} render(); }
   function hide() { $('wlOv').classList.remove('on'); document.body.style.overflow = ''; }
   document.addEventListener('click', e => {
     if (e.target.closest('#wlOpen, [data-wl-open]')) { e.preventDefault(); return show(); }
@@ -807,7 +823,9 @@ function scene() {}
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); if (e.key === 'Enter' && e.target.id === 'wlU') act('x', document.querySelector('[data-a="x"]')); });
   rpc('pvy_wl_info').then(i => { INFO = i; const c = document.querySelector('#wlOpen .cnt'); if (c && i.count) c.textContent = i.count + ' joined'; }).catch(() => {});
-  if (location.hash === '#whitelist') show();
+  if (location.hash === '#whitelist' || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
+  // X girişi hatayla döndüyse göster
+  if (/error_description=/.test(location.search + location.hash)) { const m = decodeURIComponent((location.search + location.hash).match(/error_description=([^&]*)/)[1].replace(/\+/g, ' ')); show().then(() => msg('x', 'X sign-in failed: ' + m)); }
 })();
 </script>
 </body>
