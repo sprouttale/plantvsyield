@@ -801,7 +801,9 @@ function scene() {}
   }
   const msg = (k, txt, ok) => { const m = $('m_' + k); if (m) { m.textContent = txt; m.className = 'msg ' + (ok ? 'ok' : 'err'); } };
   const busy = (b, on, label) => { if (!b) return; b.disabled = on; if (label) b.textContent = label; };
+  const fresh = async () => { try { const i = await rpc('pvy_wl_info'); if (i && i.post) INFO = i; } catch (e) {} };
   async function act(a, btn) {
+    if (['likeit', 'rt', 'doquote', 'doreply', 'quote', 'reply'].includes(a)) await fresh();
     if (a === 'x') {
       busy(btn, true, 'Opening X…');
       try { const c = await sb(); const { error } = await c.auth.signInWithOAuth({ provider: 'x', options: { redirectTo: location.origin + '/?wl=1' } }); if (error) throw error; }
