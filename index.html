@@ -853,7 +853,7 @@ function scene() {}
     const b = e.target.closest('#wlOv [data-a]'); if (b) act(b.dataset.a, b);
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); if (e.key === 'Enter' && e.target.id === 'wlU') act('x', document.querySelector('[data-a="x"]')); });
-  rpc('pvy_wl_info').then(i => { INFO = i; const c = document.querySelector('#wlOpen .cnt'); if (c && i.count) c.textContent = i.count + ' joined'; }).catch(() => {});
+  rpc('pvy_wl_info').then(i => { INFO = i; const c = document.querySelector('#wlOpen .cnt'); if (c) c.textContent = ((i.count || 0) + 500) + ' joined'; }).catch(() => {});
   if (/^#(waitlist|whitelist)$/.test(location.hash) || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
   // X girişi hatayla döndüyse göster
   if (/error_description=/.test(location.search + location.hash)) { const m = decodeURIComponent((location.search + location.hash).match(/error_description=([^&]*)/)[1].replace(/\+/g, ' ')); show().then(() => msg('x', 'X sign-in failed: ' + m)); }
