@@ -715,7 +715,7 @@ function scene() {}
   const sb = async () => {
     if (SB) return SB;
     if (!window.supabase) await new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js'; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
-    SB = window.supabase.createClient('https://rbfcjqpkdketyagczmms.supabase.co', KEY, { auth: { flowType: 'pkce', persistSession: true, detectSessionInUrl: true, storageKey: 'pvy_sb_auth' } });
+    SB = window.supabase.createClient('https://rbfcjqpkdketyagczmms.supabase.co', KEY, { auth: { flowType: 'implicit', persistSession: true, detectSessionInUrl: true, storageKey: 'pvy_sb_auth' } });
     return SB;
   };
   const rpc = (f, b) => fetch(API + f, { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json', apikey: KEY }, TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}), body: JSON.stringify(b || {}) }).then(r => r.json());
@@ -733,9 +733,9 @@ function scene() {}
   const ERR = {
     bad_user: 'That doesn’t look like an X username.', no_user: 'We couldn’t find that X account. Check the spelling and try again.', user_used: 'This X account is already on the waitlist.',
     no_post: 'The waitlist post isn’t live yet. Check back soon!', bad_link: 'Paste the full link of your post (x.com/…/status/…).', link_used: 'This link was already used.',
-    not_found: 'We couldn’t open that post. Make sure it’s public, wait a few seconds and try again.', not_yours: 'This post isn’t from @{u}. Post it from the account you connected.',
+    not_found: 'We couldn’t open that post yet. New posts can take ~30 seconds to show up, and your account must be public (not protected). Wait a moment and press Verify again.', not_yours: 'This post isn’t from @{u}. Post it from the account you connected.',
     not_quote: 'This post doesn’t quote our waitlist post. Use the Quote button and try again.', not_reply: 'This isn’t a comment on our waitlist post. Use the Comment button and try again.',
-    bad_wallet: 'Connect a valid wallet first.', not_connected: 'Your X session expired. Connect X again.', busy: 'X is slow right now — please try again in a moment.', dup: 'This wallet or X account is already registered.', net: 'Network error — please try again.'
+    bad_wallet: 'Connect a valid wallet first.', not_connected: 'Your X session expired. Connect X again.', busy: 'X is slow right now — please try again in a moment.', dup: 'This wallet or X account is already registered.', net: 'Couldn’t reach the checker. If you use an ad blocker or Brave Shields, turn it off for this site and try again.'
   };
   let S = {}; try { S = JSON.parse(localStorage.getItem('pvy_wl') || '{}'); } catch (e) {}
   const save = () => { try { localStorage.setItem('pvy_wl', JSON.stringify(S)); } catch (e) {} };
@@ -766,6 +766,12 @@ function scene() {}
   }
   const tid = u => ((u || '').match(/(?:x|twitter)\.com\/[A-Za-z0-9_]+\/status(?:es)?\/(\d{1,25})/) || [])[1];
   async function verify(kind, u, url) {
+    const r = await verifyLocal(kind, u, url);
+    // tarayıcıdan ulaşılamadıysa (reklam engelleyici vb.) sunucu üzerinden dene
+    if (!r.ok && (r.err === 'net' || r.err === 'not_found') && kind !== 'user') { try { const s = await rpc('pvy_wl_check', { p_kind: kind, p_user: u, p_url: url }); if (s && (s.ok || !['busy', 'not_found'].includes(s.err))) return s; } catch (e) {} }
+    return r;
+  }
+  async function verifyLocal(kind, u, url) {
     if (kind === 'user') { const j = await fx(u); if (!j) return { ok: false, err: 'net' }; if (!j.user) return { ok: false, err: 'no_user' }; return { ok: true, name: j.user.name, avatar: j.user.avatar_url }; }
     const id = tid(url); if (!id) return { ok: false, err: 'bad_link' };
     const j = await fx('status/' + id); if (!j) return { ok: false, err: 'net' }; const tw = j.tweet; if (!tw) return { ok: false, err: 'not_found' };
@@ -844,7 +850,7 @@ function scene() {}
     if (['no_user', 'user_used', 'bad_user', 'not_connected'].includes(r.err)) { delete S.x; save(); render(); }
     msg('join', '✗ ' + (ERR[r.err] || r.err || ERR.net).replace('{u}', S.u || ''));
   }
-  async function show() { window.pvyTrack && pvyTrack('wl_open'); $('wlOv').classList.add('on'); document.body.style.overflow = 'hidden'; $('wlBody').innerHTML = '<p class="wl-soon">Loading…</p>'; if (S.x || /[?&](wl|code)=/.test(location.search)) { const s = await session(); if (!s) delete S.x; save(); } try { INFO = await rpc('pvy_wl_info'); } catch (e) {} render(); }
+  async function show() { window.pvyTrack && pvyTrack('wl_open'); $('wlOv').classList.add('on'); document.body.style.overflow = 'hidden'; $('wlBody').innerHTML = '<p class="wl-soon">Loading…</p>'; if (S.x || /[?&](wl|code)=/.test(location.search) || /access_token=/.test(location.hash)) { const s = await session(); if (!s) delete S.x; save(); } try { INFO = await rpc('pvy_wl_info'); } catch (e) {} render(); }
   function hide() { $('wlOv').classList.remove('on'); document.body.style.overflow = ''; }
   document.addEventListener('click', e => {
     if (e.target.closest('#wlOpen, [data-wl-open]')) { e.preventDefault(); return show(); }
