@@ -189,7 +189,7 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
       <svg viewBox="0 0 35 33" aria-hidden="true"><path fill="#e17726" d="M32.96 1 19.6 10.94l2.47-5.85z"/><path fill="#e27625" d="m2.04 1 13.24 10.03-2.35-5.94zM28.15 23.53l-3.55 5.44 7.6 2.09 2.18-7.41zM.63 23.65l2.17 7.41 7.59-2.09-3.55-5.44z"/><path fill="#e27625" d="m9.97 14.4-2.12 3.2 7.55.34-.25-8.13zM25.03 14.4l-5.24-4.68-.17 8.22 7.55-.34zM10.39 28.97l4.55-2.2-3.92-3.06zM20.06 26.77l4.54 2.2-.62-5.26z"/><path fill="#d5bfb2" d="m24.6 28.97-4.54-2.2.37 2.95-.04 1.25zM10.39 28.97l4.22 2-.03-1.25.36-2.95z"/><path fill="#233447" d="m14.68 21.75-3.77-1.1 2.66-1.22zM20.32 21.75l1.11-2.32 2.67 1.22z"/><path fill="#cc6228" d="m10.39 28.97.65-5.44-4.2.12zM23.96 23.53l.64 5.44 3.55-5.32zM27.15 17.6l-7.55.34.7 3.81 1.12-2.32 2.67 1.22zM10.91 20.65l2.66-1.22 1.11 2.32.7-3.81-7.55-.34z"/><path fill="#e27525" d="m7.85 17.6 3.16 6.17-.1-3.12zM24.1 20.65l-.12 3.12 3.17-6.17zM15.4 17.94l-.7 3.81.89 4.57.2-6.02zM19.6 17.94l-.37 2.35.18 6.03.89-4.57z"/></svg>
       <span id="btnTxt"></span><span class="spin"></span>
     </button>
-    <button id="wlOpen" type="button">🌱 Join the Whitelist <span class="cnt">NEW</span></button>
+    <button id="wlOpen" type="button">🌱 Join the Waitlist <span class="cnt">NEW</span></button>
     <p class="note" data-i="note"></p>
     <div class="status" id="status" role="status" aria-live="polite"></div>
     <div class="who" id="who"></div>
@@ -684,10 +684,10 @@ function scene() {}
 .wl-soon{text-align:center;padding:26px 10px;color:#c8cff0}
 @media(max-width:520px){.wl{padding:18px 14px}.st{padding:12px}.wl-hd h2{font-size:21px}}
 </style>
-<div class="wl-ov" id="wlOv" role="dialog" aria-modal="true" aria-label="Whitelist">
+<div class="wl-ov" id="wlOv" role="dialog" aria-modal="true" aria-label="Waitlist">
  <div class="wl">
   <button class="wl-x" id="wlClose" aria-label="Close">×</button>
-  <div class="wl-hd"><img src="assets/favicon.png" alt=""><h2>JOIN THE WHITELIST</h2></div>
+  <div class="wl-hd"><img src="assets/favicon.png" alt=""><h2>JOIN THE WAITLIST</h2></div>
   <p class="wl-sub">Complete every step to lock your early-access spot. Quote and comment links are verified automatically.</p>
   <div id="wlBody"></div>
  </div>
@@ -715,10 +715,10 @@ function scene() {}
   }
   const $ = id => document.getElementById(id), esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const ERR = {
-    bad_user: 'That doesn’t look like an X username.', no_user: 'We couldn’t find that X account. Check the spelling and try again.', user_used: 'This X account is already on the whitelist.',
-    no_post: 'The whitelist post isn’t live yet. Check back soon!', bad_link: 'Paste the full link of your post (x.com/…/status/…).', link_used: 'This link was already used.',
+    bad_user: 'That doesn’t look like an X username.', no_user: 'We couldn’t find that X account. Check the spelling and try again.', user_used: 'This X account is already on the waitlist.',
+    no_post: 'The waitlist post isn’t live yet. Check back soon!', bad_link: 'Paste the full link of your post (x.com/…/status/…).', link_used: 'This link was already used.',
     not_found: 'We couldn’t open that post. Make sure it’s public, wait a few seconds and try again.', not_yours: 'This post isn’t from @{u}. Post it from the account you connected.',
-    not_quote: 'This post doesn’t quote our whitelist post. Use the Quote button and try again.', not_reply: 'This isn’t a comment on our whitelist post. Use the Comment button and try again.',
+    not_quote: 'This post doesn’t quote our waitlist post. Use the Quote button and try again.', not_reply: 'This isn’t a comment on our waitlist post. Use the Comment button and try again.',
     bad_wallet: 'Connect a valid wallet first.', not_connected: 'Your X session expired. Connect X again.', busy: 'X is slow right now — please try again in a moment.', dup: 'This wallet or X account is already registered.', net: 'Network error — please try again.'
   };
   let S = {}; try { S = JSON.parse(localStorage.getItem('pvy_wl') || '{}'); } catch (e) {}
@@ -731,7 +731,7 @@ function scene() {}
   const STEPS = [
     { k: 'x', t: 'Connect X', d: 'Sign in with X. We only read your username and picture.' },
     { k: 'follow', t: 'Follow @' + HANDLE, d: 'Opens our profile on X.' },
-    { k: 'like', t: 'Like & Repost the post', d: 'Opens the whitelist post on X.' },
+    { k: 'like', t: 'Like & Repost the post', d: 'Opens the waitlist post on X.' },
     { k: 'quote', t: 'Quote the post', d: 'Quote it on X, then paste the link of your quote here.' },
     { k: 'reply', t: 'Comment on the post', d: 'Reply to the post on X, then paste the link of your comment here.' },
     { k: 'wallet', t: 'Your wallet address', d: 'Robinhood Chain (0x…). Connect with MetaMask.' }
@@ -771,7 +771,7 @@ function scene() {}
   function render() {
     const body = $('wlBody');
     if (S.joined) { body.innerHTML = '<div class="wl-done"><img class="f" src="assets/' + (S.f || 'farmer_m') + '.webp" alt=""><h3>YOU’RE ON THE LIST!</h3><p>@' + esc(S.u) + ' · ' + short(S.wallet || '0x0000000000') + '</p><p style="color:#8f98bf">' + (S.n ? 'Farmer #' + S.n + ' · ' : '') + 'See you at launch. 🌱</p></div>'; return; }
-    if (!INFO.post) { body.innerHTML = '<div class="wl-soon"><h3 style="font:900 24px Impact,Arial Black,sans-serif;letter-spacing:2px;color:#ffd23f">WHITELIST OPENS SOON</h3><p>Follow <a href="https://x.com/' + HANDLE + '" target="_blank" rel="noopener" style="color:#ffd23f">@' + HANDLE + '</a> so you don’t miss it.</p></div>'; return; }
+    if (!INFO.post) { body.innerHTML = '<div class="wl-soon"><h3 style="font:900 24px Impact,Arial Black,sans-serif;letter-spacing:2px;color:#ffd23f">WAITLIST OPENS SOON</h3><p>Follow <a href="https://x.com/' + HANDLE + '" target="_blank" rel="noopener" style="color:#ffd23f">@' + HANDLE + '</a> so you don’t miss it.</p></div>'; return; }
     const c = cur();
     body.innerHTML = STEPS.map((s, i) => stepHTML(s, i, c)).join('') + '<button id="wlJoin" ' + (c === -1 ? '' : 'disabled') + '>JOIN EARLY ACCESS</button><div class="msg" id="m_join" style="text-align:center;margin-top:10px;font-weight:700"></div>';
   }
@@ -789,7 +789,7 @@ function scene() {}
     if (a === 'likeit') { open('https://x.com/intent/like?tweet_id=' + INFO.post); setTimeout(() => { S.lClick = 1; save(); render(); }, 2500); return; }
     if (a === 'rt') { open('https://x.com/intent/retweet?tweet_id=' + INFO.post); setTimeout(() => { S.rClick = 1; save(); render(); }, 2500); return; }
     if (a === 'liked') { S.like = 1; save(); return render(); }
-    if (a === 'doquote') return open('https://x.com/intent/post?text=' + encodeURIComponent('Just joined the @' + HANDLE + ' whitelist 🌱🧟 Who’s farming with me?') + '&url=' + encodeURIComponent(postUrl()));
+    if (a === 'doquote') return open('https://x.com/intent/post?text=' + encodeURIComponent('Just joined the @' + HANDLE + ' waitlist 🌱🧟 Who’s farming with me?') + '&url=' + encodeURIComponent(postUrl()));
     if (a === 'doreply') return open('https://x.com/intent/post?in_reply_to=' + INFO.post + '&text=' + encodeURIComponent('Ready to farm 🌱'));
     if (a === 'quote' || a === 'reply') {
       const v = ($(a === 'quote' ? 'wlQ' : 'wlR').value || '').trim(); if (!v) return msg(a, ERR.bad_link);
@@ -823,7 +823,7 @@ function scene() {}
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); if (e.key === 'Enter' && e.target.id === 'wlU') act('x', document.querySelector('[data-a="x"]')); });
   rpc('pvy_wl_info').then(i => { INFO = i; const c = document.querySelector('#wlOpen .cnt'); if (c && i.count) c.textContent = i.count + ' joined'; }).catch(() => {});
-  if (location.hash === '#whitelist' || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
+  if (/^#(waitlist|whitelist)$/.test(location.hash) || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
   // X girişi hatayla döndüyse göster
   if (/error_description=/.test(location.search + location.hash)) { const m = decodeURIComponent((location.search + location.hash).match(/error_description=([^&]*)/)[1].replace(/\+/g, ' ')); show().then(() => msg('x', 'X sign-in failed: ' + m)); }
 })();

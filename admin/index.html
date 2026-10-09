@@ -47,8 +47,8 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <div class="grid"><div>
 <div class="box"><h2>Oyuncular <span class="c" id="pc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th>Son görülme</th><th class="num">Giriş</th><th class="num">Coin</th><th class="num">Kazanılan</th><th class="num">Dalga</th><th class="num">Bag</th><th class="num">Banka</th><th class="num">Havuz payı</th><th>NFT</th><th>Cihaz</th></tr></thead><tbody id="pl"></tbody></table></div></div>
 <div class="box hidden" id="det"></div>
-<div class="box"><h2>🌱 Whitelist başvuruları <span class="c" id="wlc"></span></h2>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="wlPost" placeholder="Whitelist postunun linki (https://x.com/PlantVsYield/status/…)" style="flex:1;min-width:260px"><button id="wlSet">Kaydet</button></div>
+<div class="box"><h2>🌱 Waitlist başvuruları <span class="c" id="wlc"></span></h2>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="wlPost" placeholder="Waitlist postunun linki (https://x.com/PlantVsYield/status/…)" style="flex:1;min-width:260px"><button id="wlSet">Kaydet</button></div>
 <p class="mut" id="wlPostNow" style="margin:0 0 10px;font-size:13px"></p>
 <div class="tw"><table><thead><tr><th>Tarih</th><th>X hesabı</th><th>Cüzdan</th><th>Alıntı</th><th>Yorum</th><th>Durum</th><th></th></tr></thead><tbody id="wlList"></tbody></table></div></div>
 </div><div>
@@ -89,7 +89,7 @@ async function wl(post, remove) {
   const r = await fetch(API.replace('pvy_admin', 'pvy_wl_admin'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_post: post == null ? null : post, p_remove: remove || null }) });
   if (!r.ok) return; const W = await r.json();
   $('wlc').textContent = W.list.length + ' kişi';
-  $('wlPostNow').innerHTML = W.post ? 'Şu anki post: <a target="_blank" rel="noopener" style="color:#ffd23f" href="https://x.com/PlantVsYield/status/' + esc(W.post) + '">x.com/PlantVsYield/status/' + esc(W.post) + '</a>' : '<span class="r">Post ayarlanmadı: sitede “Whitelist opens soon” görünüyor.</span>';
+  $('wlPostNow').innerHTML = W.post ? 'Şu anki post: <a target="_blank" rel="noopener" style="color:#ffd23f" href="https://x.com/PlantVsYield/status/' + esc(W.post) + '">x.com/PlantVsYield/status/' + esc(W.post) + '</a>' : '<span class="r">Post ayarlanmadı: sitede “Waitlist opens soon” görünüyor.</span>';
   const tw = (u, id) => '<a target="_blank" rel="noopener" style="color:#5fb4ff" href="https://x.com/' + esc(u) + '/status/' + esc(id) + '">aç ↗</a>';
   $('wlList').innerHTML = W.list.map(x => '<tr><td>' + hm(x.ts) + '</td><td>' + (x.avatar ? '<img src="' + esc(x.avatar) + '" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:6px">' : '') + '<a target="_blank" rel="noopener" href="https://x.com/' + esc(x.x_user) + '">@' + esc(x.x_user) + '</a></td><td class="mono">' + short(x.wallet) + ' <button class="sm" data-copy="' + esc(x.wallet) + '">kopyala</button></td><td>' + tw(x.x_user, x.quote_id) + '</td><td>' + tw(x.x_user, x.reply_id) + '</td><td>' + ({ ok: '<span class="g">✔ doğrulandı</span>', pending: '<span class="y">⏳ beklemede</span>', rejected: '<span class="r">✗ reddedildi</span>' }[x.status] || esc(x.status)) + (x.status !== 'ok' ? ' <button class="sm" data-wlre="' + esc(x.wallet) + '">tekrar kontrol</button>' : '') + '</td><td><button class="bn sm" data-wlrm="' + esc(x.wallet) + '">Sil</button></td></tr>').join('') || '<tr><td colspan="7" class="mut">Henüz başvuru yok.</td></tr>';
 }
