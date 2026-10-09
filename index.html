@@ -750,9 +750,12 @@ function scene() {}
     { k: 'like', t: 'Like & Repost the post', d: 'Opens the waitlist post on X.' },
     { k: 'quote', t: 'Quote the post', d: 'Quote it on X, then paste the link of your quote here.' },
     { k: 'reply', t: 'Comment on the post', d: 'Reply to the post on X, then paste the link of your comment here.' },
-    { k: 'wallet', t: 'Your wallet address', d: 'Robinhood Chain (0x…). Connect with MetaMask.' }
+    { k: 'wallet', t: 'Your wallet address', d: 'Robinhood Chain (0x…). Connect any wallet, or paste your address.' }
   ];
   const cur = () => STEPS.findIndex(s => !S[s.k]);
+  // tarayıcıdaki tüm cüzdanlar (EIP-6963: MetaMask, Rabby, Coinbase, OKX, Phantom, Trust…)
+  const walletList = () => { try { return (typeof WALLETS !== 'undefined' && WALLETS.size) ? [...WALLETS.values()] : (typeof legacyList === 'function' ? legacyList() : []); } catch (e) { return []; } };
+  addEventListener('eip6963:announceProvider', () => { if ($('wlOv') && $('wlOv').classList.contains('on') && cur() === STEPS.length - 1) setTimeout(render, 50); });
   // tarayıcıdan doğrudan kontrol (hızlı); son başvuruda sunucu tekrar doğrular
   async function fx(path) {
     for (let i = 0; i < 3; i++) {
@@ -781,7 +784,12 @@ function scene() {}
     if (s.k === 'like') row = '<button class="go sec" data-a="likeit">Like</button><button class="go sec" data-a="rt">Repost</button><button class="go" data-a="liked" ' + (S.lClick && S.rClick ? '' : 'disabled') + '>Done</button>';
     if (s.k === 'quote') row = '<button class="go sec" data-a="doquote">Quote on X</button></div><div class="row"><input id="wlQ" placeholder="https://x.com/you/status/…" value="' + esc(S.qUrl || '') + '"><button class="go" data-a="quote">Verify</button>';
     if (s.k === 'reply') row = '<button class="go sec" data-a="doreply">Comment on X</button></div><div class="row"><input id="wlR" placeholder="https://x.com/you/status/…" value="' + esc(S.rUrl || '') + '"><button class="go" data-a="reply">Verify</button>';
-    if (s.k === 'wallet') { row = '<button class="go" data-a="wallet">Connect MetaMask</button>'; if (S.wallet) extra = '<div class="xu">🦊 ' + short(S.wallet) + '</div>'; }
+    if (s.k === 'wallet') {
+      const ws = walletList();
+      row = (ws.length ? ws.map(w => '<button class="go sec" data-a="w" data-w="' + esc(w.info.uuid) + '" style="display:flex;align-items:center;gap:8px">' + (w.info.icon ? '<img src="' + esc(w.info.icon) + '" alt="" style="width:20px;height:20px;border-radius:5px">' : '👛') + esc(w.info.name) + '</button>').join('')
+        : '<span style="color:#8f98bf;font-size:13px;align-self:center">No browser wallet detected.</span>') +
+        '</div><div class="row" style="align-items:center"><span style="color:#8f98bf;font-size:12.5px;width:100%">Mobile or other wallet? Paste your address:</span><input id="wlW" placeholder="0x…" autocomplete="off"><button class="go" data-a="wpaste">Save</button>';
+      if (S.wallet) extra = '<div class="xu">👛 ' + short(S.wallet) + '</div>'; }
     return '<div class="st ' + st + '" data-k="' + s.k + '"><div class="n">' + (i + 1) + '</div><div class="b"><h3>' + esc(s.t) + '</h3><p>' + esc(s.d) + '</p>' + extra + '<div class="row">' + row + '</div><div class="msg" id="m_' + s.k + '"></div></div></div>';
   }
   function render() {
@@ -813,11 +821,16 @@ function scene() {}
       if (!r.ok) return msg(a, '✗ ' + (ERR[r.err] || r.err || ERR.net).replace('{u}', S.u) + ' Try again.');
       S[a] = 1; S[a === 'quote' ? 'qUrl' : 'rUrl'] = v; save(); return render();
     }
-    if (a === 'wallet') {
-      let eth = null; try { eth = typeof getProvider === 'function' ? await getProvider() : window.ethereum; } catch (e) { eth = window.ethereum; }
-      if (!eth) { msg('wallet', 'MetaMask not found. Install it and try again.'); window.open('https://metamask.io/download/', '_blank', 'noopener'); return; }
-      try { busy(btn, true, 'Connecting…'); const [acc] = await eth.request({ method: 'eth_requestAccounts' }); S.wallet = acc.toLowerCase(); save(); render(); }
-      catch (e) { busy(btn, false, 'Connect MetaMask'); msg('wallet', e && e.code === 4001 ? 'Connection rejected. Try again.' : 'Could not connect: ' + ((e && e.message) || e)); }
+    if (a === 'w') {
+      const w = walletList().find(x => x.info.uuid === btn.dataset.w); if (!w) return;
+      const label = btn.innerHTML;
+      try { btn.disabled = true; btn.textContent = 'Connecting…'; const [acc] = await w.provider.request({ method: 'eth_requestAccounts' }); S.wallet = String(acc).toLowerCase(); save(); render(); }
+      catch (e) { btn.disabled = false; btn.innerHTML = label; msg('wallet', e && e.code === 4001 ? 'Connection rejected. Try again.' : 'Could not connect: ' + ((e && e.message) || e)); }
+    }
+    if (a === 'wpaste') {
+      const v = ($('wlW').value || '').trim();
+      if (!/^0x[0-9a-fA-F]{40}$/.test(v)) return msg('wallet', 'That isn’t a valid wallet address (0x + 40 characters).');
+      S.wallet = v.toLowerCase(); save(); render();
     }
   }
   async function join(btn) {
