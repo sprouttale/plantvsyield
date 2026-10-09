@@ -794,7 +794,7 @@ function scene() {}
   }
   function render() {
     const body = $('wlBody');
-    if (S.joined) { body.innerHTML = '<div class="wl-done"><img class="f" src="assets/' + (S.f || 'farmer_m') + '.webp" alt=""><h3>YOU’RE ON THE LIST!</h3><p>@' + esc(S.u) + ' · ' + short(S.wallet || '0x0000000000') + '</p><p style="color:#8f98bf">' + (S.n ? 'Farmer #' + S.n + ' · ' : '') + 'See you at launch. 🌱</p></div>'; return; }
+    if (S.joined) { body.innerHTML = '<div class="wl-done"><img class="f" src="assets/zz10.webp" alt="" style="transform:scaleX(-1)"><h3>YOU’RE ON THE LIST!</h3><p>@' + esc(S.u) + ' · ' + short(S.wallet || '0x0000000000') + '</p><p style="color:#8f98bf">' + (S.n ? 'Farmer #' + S.n + ' · ' : '') + 'See you at launch. 🌱</p></div>'; return; }
     if (!INFO.post) { body.innerHTML = '<div class="wl-soon"><h3 style="font:900 24px Impact,Arial Black,sans-serif;letter-spacing:2px;color:#ffd23f">WAITLIST OPENS SOON</h3><p>Follow <a href="https://x.com/' + HANDLE + '" target="_blank" rel="noopener" style="color:#ffd23f">@' + HANDLE + '</a> so you don’t miss it.</p></div>'; return; }
     const c = cur();
     body.innerHTML = STEPS.map((s, i) => stepHTML(s, i, c)).join('') + '<button id="wlJoin" ' + (c === -1 ? '' : 'disabled') + '>JOIN EARLY ACCESS</button><div class="msg" id="m_join" style="text-align:center;margin-top:10px;font-weight:700"></div>';
