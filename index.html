@@ -8,6 +8,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" content="Plant vs. Yield — plant, farm $COIN and survive the zombie market. Closed beta on Robinhood Chain.">
 <script>if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) location.replace('https://' + location.host + location.pathname + location.search);</script>
+<script>if(!/[?&]play=1/.test(location.search))document.documentElement.classList.add('wlonly');</script>
 <style>
   :root{--bg:#070912;--panel:#141829;--line:#2a3152;--gold:#ffd23f;--green:#3ddc84;--red:#ff4d6a;--purple:#b46bff;--cyan:#3ff0ff;--orange:#ff9f43;--txt:#e8ecff;--mut:#97a0c6}
   *{box-sizing:border-box}
@@ -162,6 +163,10 @@
 html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cg%20transform%3D%22translate(16%2016)%22%20stroke%3D%22%23c9c9d6%22%20stroke-width%3D%221%22%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(0)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(45)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(90)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(135)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(180)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(225)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(270)%22%2F%3E%3Cellipse%20rx%3D%223.6%22%20ry%3D%227.5%22%20cy%3D%22-8%22%20fill%3D%22%23fff%22%20transform%3D%22rotate(315)%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%225%22%20fill%3D%22%23ffc928%22%20stroke%3D%22%23c98a00%22%20stroke-width%3D%221.2%22%2F%3E%3C%2Fsvg%3E") 16 16,auto}
 #musBtn{position:fixed;top:78px;left:14px;z-index:30;width:44px;height:44px;border-radius:50%;border:1px solid rgba(120,140,220,.35);background:rgba(10,14,32,.7);backdrop-filter:blur(8px);color:#ffd23f;font-size:20px;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 #musBtn:hover{background:rgba(30,36,70,.85)}
+
+.wlonly #connectBtn,.wlonly .note,.wlonly #status,.wlonly #who,.wlonly #codeBox{display:none!important}
+.wlonly #wlOpen{font-size:20px;padding:17px 40px;color:#2a1300;border:0;background:linear-gradient(180deg,#ffe27a,#ffc21f 55%,#f0a000);box-shadow:0 5px 0 #9a5d00,0 12px 30px rgba(255,190,40,.35);margin-top:18px}
+.wlonly #wlOpen .cnt{background:#2a1300;color:#ffd23f}
 </style>
 </head>
 <body>
@@ -635,7 +640,8 @@ function scene() {}
   applyLang(); scene();
   $('connectBtn').addEventListener('click', connect);
   $('copyBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('codeTxt').value); $('copyBtn').textContent = t('copied'); setTimeout(() => $('copyBtn').textContent = t('copy'), 1500); } catch (e) { $('codeTxt').select(); } });
-  $('startTop').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 300); });
+  $('startTop').addEventListener('click', e => { e.preventDefault(); if (document.documentElement.classList.contains('wlonly')) { document.getElementById('wlOpen').click(); return; } window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 300); });
+  if (document.documentElement.classList.contains('wlonly')) { const s = $('startTop'); s.lastChild && s.lastChild.nodeType === 3 ? s.lastChild.textContent = ' Join Waitlist' : s.insertAdjacentText('beforeend', ''); const sp = s.querySelector('[data-i]'); if (sp) { sp.removeAttribute('data-i'); sp.textContent = 'Join Waitlist'; } }
   document.querySelector('.cta a').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(connect, 400); });
 })();
 </script>
