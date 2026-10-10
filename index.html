@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" content="Plant vs. Yield — plant, farm $COIN and survive the zombie market. Closed beta on Robinhood Chain.">
 <script>if (location.protocol === 'http:' && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) location.replace('https://' + location.host + location.pathname + location.search);</script>
-<script>if(!/[?&]play=1/.test(location.search))document.documentElement.classList.add('wlonly');</script>
+<script>window.PVY_PUBLIC_AT=Date.parse('2026-10-10T23:36:00Z');if(!/[?&]play=1/.test(location.search)&&Date.now()<PVY_PUBLIC_AT)document.documentElement.classList.add('wlonly');</script>
 <style>
   :root{--bg:#070912;--panel:#141829;--line:#2a3152;--gold:#ffd23f;--green:#3ddc84;--red:#ff4d6a;--purple:#b46bff;--cyan:#3ff0ff;--orange:#ff9f43;--txt:#e8ecff;--mut:#97a0c6}
   *{box-sizing:border-box}
@@ -288,7 +288,7 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 
 <script>
 
-const CHAIN = null;
+const CHAIN = {"chainId":"0x1237","chainName":"Robinhood Chain","nativeCurrency":{"name":"Ether","symbol":"ETH","decimals":18},"rpcUrls":["https://rpc.mainnet.chain.robinhood.com"],"blockExplorerUrls":["https://robinhoodchain.blockscout.com"]};
 const ALLOW = ["0a8d506720c7dab6ff20bd6b05ce6c70312b32e272bebb8e0bf4fb41db37c130","03782e8c7703a3176d59fba8d8f1c7cf421c0096f1db45ab91ae891bb6f734eb"];
 const ahash = async a => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pvy:' + a)))].map(b => b.toString(16).padStart(2, '0')).join('');
 const SIGN_MSG = a => 'Plant vs. Yield access key\n\nWallet: ' + a.toLowerCase() + '\n\nThis signature is not a transaction and costs no fees.';
@@ -609,10 +609,11 @@ function showEnroll(addr, keyRaw) { $('codeBox').style.display = 'block'; $('cod
 async function openGame(addr, keyRaw) {
   setStatus('st_loading');
   const keys = await (await fetch('keys.json', { cache: 'no-store' })).json();
-  const ents = [].concat(keys[await ahash(addr)] || []); if (!ents.length) throw new Error('nokey');
-  const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']);
+  const ents = [].concat(keys[await ahash(addr)] || []);
   let cek = null;
-  for (const ent of ents) { try { cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k)); break; } catch (e) {} }
+  if (ents.length) { const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']);
+    for (const ent of ents) { try { cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k)); break; } catch (e) {} } }
+  if (!cek && keys['*'] && Date.now() >= window.PVY_PUBLIC_AT) cek = b64d(keys['*'].raw);
   if (!cek) throw new Error('nokey');
   const ck = await crypto.subtle.importKey('raw', cek, 'AES-GCM', false, ['decrypt']);
   const enc = new Uint8Array(await (await fetch('game.enc', { cache: 'no-store' })).arrayBuffer());
@@ -632,7 +633,7 @@ async function connect() {
     const addr = acc.toLowerCase();
     $('who').style.display = 'block'; $('who').innerHTML = '<span data-i="who">' + t('who') + '</span> <b>' + short(acc) + '</b>';
     busy(true, 'btn_network'); await ensureChain(eth);
-    if (!ALLOW.includes(await ahash(addr))) { busy(false, 'btn_other'); setStatus('st_denied', 'err'); return; }
+    if (Date.now() < window.PVY_PUBLIC_AT && !ALLOW.includes(await ahash(addr))) { busy(false, 'btn_other'); setStatus('st_denied', 'err'); return; }
     try { const r = await fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_status', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: JSON.stringify({ p_wallet: addr }) }); const j = await r.json(); if (j && j.banned) { busy(false, 'btn_other'); setStatus('st_banned', 'err', j.reason ? ' (' + j.reason + ')' : ''); return; } } catch (e) {}
     busy(true, 'btn_sign'); setStatus('st_signhint');
     const sig = await eth.request({ method: 'personal_sign', params: [SIGN_MSG(addr), acc] });
@@ -908,7 +909,7 @@ function scene() {}
       const GEND = Date.parse('2026-10-10T23:36:00Z');
       const gt = () => { const s = Math.max(0, Math.floor((GEND - Date.now()) / 1000));
         document.getElementById('gH').textContent = p(Math.floor(s / 3600)); document.getElementById('gM').textContent = p(Math.floor(s % 3600 / 60)); document.getElementById('gS').textContent = p(s % 60);
-        if (!s) { document.getElementById('gcdL').textContent = 'GAME IS OPEN'; document.getElementById('gcdT').style.display = 'none'; return true; } };
+        if (!s) { document.getElementById('gcdL').textContent = 'GAME IS OPEN'; const tt = document.getElementById('gcdT'); tt.style.display = 'block'; tt.innerHTML = '<button type="button" class="cd-buy" id="gPlay" style="border:0;cursor:pointer;margin:6px 0 4px">▶ PLAY NOW</button>'; document.getElementById('gPlay').onclick = () => { document.documentElement.classList.remove('wlonly'); const cb = document.getElementById('connectBtn'); if (cb) cb.click(); }; document.documentElement.classList.remove('wlonly'); return true; } };
       if (!gt()) { const gi = setInterval(() => { if (gt()) clearInterval(gi); }, 1000); }
       return true;
     }
