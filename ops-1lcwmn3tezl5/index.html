@@ -52,6 +52,7 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <div class="grid"><div>
 <div class="box"><h2>Oyuncular <span class="c" id="pc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th>Son görülme</th><th class="num">Giriş</th><th class="num">Coin</th><th class="num">Kazanılan</th><th class="num">Dalga</th><th class="num">Bag</th><th class="num">Banka</th><th class="num">Havuz payı</th><th>NFT</th><th>Cihaz</th></tr></thead><tbody id="pl"></tbody></table></div></div>
 <div class="box hidden" id="det"></div>
+<div class="box"><h2>🏦 Havuz hazine payları <span class="c">oyunda "🏦 ad" etiketiyle herkese açık görünür</span></h2><p class="mut" style="margin:0 0 10px;font-size:13px">Katkı miktarı, günlük havuzdaki payı belirler (oyuncuların Bag yatırımlarıyla aynı birim). Oyuncular bu payların ekibe/hazineye ait olduğunu görür.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="hsLabel" placeholder="Ad (örn. Treasury)" style="width:180px"><input id="hsDep" type="number" min="0" step="any" placeholder="Katkı" style="width:140px"><button id="hsAdd">+ Ekle</button></div><div class="tw" style="max-height:260px"><table><thead><tr><th>Ad</th><th class="num">Katkı</th><th>Durum</th><th></th></tr></thead><tbody id="hsList"></tbody></table></div></div>
 <div class="box"><h2>💰 PVY ödemeleri <span class="c" id="payc"></span></h2><div class="stats" id="paystats" style="margin-bottom:10px"></div><div class="tw" style="max-height:320px"><table><thead><tr><th>Tarih</th><th>Cüzdan</th><th>Ürün</th><th class="num">PVY</th><th class="num">$</th><th>İşlem</th></tr></thead><tbody id="payList"></tbody></table></div></div>
 <div class="box"><h2>🌱 Waitlist başvuruları <span class="c" id="wlc"></span></h2>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="wlPost" placeholder="Waitlist postunun linki (https://x.com/PlantVsYield/status/…)" style="flex:1;min-width:260px"><button id="wlSet">Kaydet</button></div>
@@ -90,9 +91,21 @@ async function setBan(w, on) {
 async function load() {
   const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_hours: +$('hrs').value }) });
   if (!r.ok) throw new Error(r.status === 400 || r.status === 401 ? 'unauthorized' : 'HTTP ' + r.status);
-  D = await r.json(); render(); wl(); site(); pays();
+  D = await r.json(); render(); wl(); site(); pays(); house();
 }
 const PNAME = { pass: 'Premium Pass', speed: '2x Hız', mint: 'NFT Mint', box_whale: 'Whale Box', box_crystal: 'Crystal Box', box_silver: 'Silver Box', box_common: 'Common Box' };
+async function house(action, id, label, dep) {
+  const r = await fetch(API.replace('pvy_admin', 'pvy_house_admin'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_action: action || 'list', p_id: id || null, p_label: label == null ? null : label, p_deposit: dep == null ? null : dep }) });
+  if (!r.ok) return; const L = (await r.json()).list;
+  if (document.activeElement && document.activeElement.closest && document.activeElement.closest('#hsList')) return;
+  $('hsList').innerHTML = L.map(h => '<tr><td><input data-hl="' + h.id + '" value="' + esc(h.label) + '" style="width:160px"></td><td class="num"><input data-hd="' + h.id + '" type="number" min="0" step="any" value="' + h.deposit + '" style="width:120px;text-align:right"></td><td>' + (h.active ? '<span class="g">açık</span>' : '<span class="mut">kapalı</span>') + '</td><td><button class="sm" data-hsave="' + h.id + '">Kaydet</button> <button class="sm" data-htog="' + h.id + '">' + (h.active ? 'Kapat' : 'Aç') + '</button> <button class="bn sm" data-hdel="' + h.id + '">Sil</button></td></tr>').join('') || '<tr><td colspan="4" class="mut">Henüz hazine payı yok.</td></tr>';
+}
+document.addEventListener('click', e => {
+  const s = e.target.closest('[data-hsave],[data-htog],[data-hdel]'); if (s) { const id = +(s.dataset.hsave || s.dataset.htog || s.dataset.hdel);
+    if (s.dataset.hsave) house('update', id, document.querySelector('[data-hl="' + id + '"]').value, +document.querySelector('[data-hd="' + id + '"]').value);
+    else if (s.dataset.htog) house('toggle', id); else if (confirm('Silinsin mi?')) house('delete', id); return; }
+  if (e.target.id === 'hsAdd') { const l = $('hsLabel').value.trim(), d = +$('hsDep').value; if (!l || !(d >= 0)) return alert('Ad ve katkı gir.'); house('add', null, l, d).then(() => { $('hsLabel').value = ''; $('hsDep').value = ''; }); }
+});
 async function pays() {
   const r = await fetch(API.replace('pvy_admin', 'pvy_orders_admin'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok }) });
   if (!r.ok) return; const P = await r.json();
