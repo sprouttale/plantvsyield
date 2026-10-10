@@ -17,7 +17,7 @@
   a{color:inherit}
   img{display:block}
 
-  /* ---------- top bar (pill) ---------- */
+  
   .top{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:20;width:min(1340px,calc(100% - 28px));display:flex;align-items:center;gap:22px;padding:8px 10px 8px 18px;border-radius:999px;background:rgba(10,14,32,.62);backdrop-filter:blur(8px);border:1px solid rgba(120,140,220,.22);box-shadow:0 10px 30px rgba(0,0,0,.35)}
   .brand img{height:44px;width:auto;display:block}
   .nav{display:flex;gap:30px;margin:0 auto}
@@ -32,7 +32,7 @@
   .startbtn:hover{filter:brightness(1.07)}
   .startbtn svg{width:18px;height:18px}
 
-  /* ---------- hero ---------- */
+  
   .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:92px 20px 0;overflow:hidden;background:#05163b url(assets/bg_full.webp) center 58%/cover no-repeat}
   .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 48% 42% at 50% 46%,rgba(8,12,34,.45),transparent 75%),linear-gradient(180deg,rgba(6,9,24,.35),transparent 18%,transparent 70%,rgba(6,9,20,.85) 100%);pointer-events:none}
   .sky{position:absolute;left:0;right:0;top:0;height:62%;pointer-events:none;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)}
@@ -81,7 +81,7 @@
   .code button{margin-top:6px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:5px 10px;cursor:pointer;font:700 12px "Segoe UI",sans-serif}
   .note{margin:12px 0 0;font-size:13px;color:#d3d9f5;text-shadow:0 1px 6px rgba(0,0,0,.9)}
 
-  /* ---------- feature strip ---------- */
+  
   .feats{position:relative;z-index:6;margin:auto 0 22px;padding-top:40px;width:min(1540px,calc(100% - 28px));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
   .feat{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:rgba(8,12,28,.9);backdrop-filter:blur(8px);border:1px solid rgba(120,140,220,.22);box-shadow:0 10px 24px rgba(0,0,0,.35)}
   .feat img{width:70px;height:70px;flex-shrink:0}
@@ -90,7 +90,7 @@
   .feat span{display:block;color:#c3cbea;font-size:14px;line-height:1.35}
   @media (max-width:1100px){.feats{grid-template-columns:repeat(3,minmax(0,1fr))}.nav{gap:18px}}
 
-  /* ---------- sections ---------- */
+  
   section.sec{position:relative;padding:80px 20px;max-width:1120px;margin:0 auto}
   .sec h2{font:900 36px/1.1 Impact,"Arial Black",sans-serif;letter-spacing:.5px;margin:0 0 8px;text-align:center;background:linear-gradient(180deg,#fff6c2,#ffd23f);-webkit-background-clip:text;background-clip:text;color:transparent}
   .sec .lead{color:var(--mut);text-align:center;margin:0 auto 36px;max-width:620px}
@@ -268,12 +268,13 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 <footer data-i="footer"></footer>
 
 <script>
-/* ===== Settings (filled at build) ===== */
+
 const CHAIN = null;
-const ALLOW = ["0xadc8f313c7205d4def2545460037b3e4260e383f","0x89ce61c89f78274eb8d85ff9a455f6331765bdf9"];
+const ALLOW = ["0a8d506720c7dab6ff20bd6b05ce6c70312b32e272bebb8e0bf4fb41db37c130","03782e8c7703a3176d59fba8d8f1c7cf421c0096f1db45ab91ae891bb6f734eb"];
+const ahash = async a => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pvy:' + a)))].map(b => b.toString(16).padStart(2, '0')).join('');
 const SIGN_MSG = a => 'Plant vs. Yield access key\n\nWallet: ' + a.toLowerCase() + '\n\nThis signature is not a transaction and costs no fees.';
 
-/* ===== i18n ===== */
+
 const LANGS = { en: 'English', es: 'Español', pt: 'Português', fr: 'Français', de: 'Deutsch', ru: 'Русский', zh: '中文', ja: '日本語', tr: 'Türkçe' };
 const I = {
 en:{nav_how:"How to Play",nav_econ:"Economy",nav_faq:"FAQ",tagline:"Plant. Farm $COIN. Survive the zombie market.",sub:"A tower-defense yield game where your garden is your portfolio. Build a money machine, hold the line against zombie traders — and don't get rugged.",chip_beta:"Closed Beta",
@@ -537,7 +538,7 @@ function applyLang() {
 }
 function setLang(l) { if (!I[l]) return; lang = l; try { localStorage.setItem('pvy_lang', l); } catch (e) {} applyLang(); }
 
-/* ===== helpers ===== */
+
 const $ = id => document.getElementById(id);
 let stKey = null, stExtra = '';
 const setStatus = (k, c, extra) => { stKey = k; stExtra = extra || ''; const s = $('status'); s.textContent = k ? t(k) + stExtra : ''; s.className = 'status ' + (c || ''); };
@@ -547,9 +548,9 @@ const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const b64e = u => btoa(String.fromCharCode(...new Uint8Array(u)));
 const short = a => a.slice(0, 6) + '…' + a.slice(-4);
 
-/* ===== wallet + unlock ===== */
-// Birden fazla cüzdan eklentisi (Coinbase, Rabby, Phantom...) window.ethereum'u ele geçirebilir.
-// EIP-6963 ile hepsini listeleyip MetaMask'ı seçiyoruz; yoksa kullanıcıya seçtiriyoruz.
+
+
+
 const WALLETS = new Map();
 addEventListener('eip6963:announceProvider', e => { const d = e.detail; if (d && d.info && d.provider) WALLETS.set(d.info.uuid || d.info.rdns, d); });
 dispatchEvent(new Event('eip6963:requestProvider'));
@@ -589,7 +590,7 @@ function showEnroll(addr, keyRaw) { $('codeBox').style.display = 'block'; $('cod
 async function openGame(addr, keyRaw) {
   setStatus('st_loading');
   const keys = await (await fetch('keys.json', { cache: 'no-store' })).json();
-  const ents = [].concat(keys[addr] || []); if (!ents.length) throw new Error('nokey');
+  const ents = [].concat(keys[await ahash(addr)] || []); if (!ents.length) throw new Error('nokey');
   const kek = await crypto.subtle.importKey('raw', keyRaw, 'AES-GCM', false, ['decrypt']);
   let cek = null;
   for (const ent of ents) { try { cek = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64d(ent.iv) }, kek, b64d(ent.k)); break; } catch (e) {} }
@@ -612,7 +613,7 @@ async function connect() {
     const addr = acc.toLowerCase();
     $('who').style.display = 'block'; $('who').innerHTML = '<span data-i="who">' + t('who') + '</span> <b>' + short(acc) + '</b>';
     busy(true, 'btn_network'); await ensureChain(eth);
-    if (!ALLOW.includes(addr)) { busy(false, 'btn_other'); setStatus('st_denied', 'err'); return; }
+    if (!ALLOW.includes(await ahash(addr))) { busy(false, 'btn_other'); setStatus('st_denied', 'err'); return; }
     try { const r = await fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_status', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: JSON.stringify({ p_wallet: addr }) }); const j = await r.json(); if (j && j.banned) { busy(false, 'btn_other'); setStatus('st_banned', 'err', j.reason ? ' (' + j.reason + ')' : ''); return; } } catch (e) {}
     busy(true, 'btn_sign'); setStatus('st_signhint');
     const sig = await eth.request({ method: 'personal_sign', params: [SIGN_MSG(addr), acc] });
@@ -628,10 +629,10 @@ async function connect() {
   }
 }
 
-/* ===== scene: background is a real in-game capture (assets/board.webp) ===== */
+
 function scene() {}
 
-/* ===== init ===== */
+
 (function init() {
   const sel = $('lang');
   for (const [k, v] of Object.entries(LANGS)) { const o = document.createElement('option'); o.value = k; o.textContent = v; sel.appendChild(o); }
@@ -691,7 +692,7 @@ function scene() {}
 @media(max-width:520px){.wl{padding:18px 14px}.st{padding:12px}.wl-hd h2{font-size:21px}}
 </style>
 <script>
-// site ziyaret sayacı (admin paneli için)
+
 (function () {
   let vid = ''; try { vid = localStorage.getItem('pvy_vid') || ''; if (!vid) { vid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('pvy_vid', vid); } } catch (e) { vid = Math.random().toString(36).slice(2) + Date.now().toString(36); }
   const send = ev => { try { fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_visit', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: JSON.stringify({ p_vid: vid, p_ev: ev, p_ref: document.referrer || null, p_lang: navigator.language || null, p_ua: navigator.userAgent }) }).catch(() => {}); } catch (e) {} };
@@ -719,7 +720,7 @@ function scene() {}
     return SB;
   };
   const rpc = (f, b) => fetch(API + f, { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json', apikey: KEY }, TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}), body: JSON.stringify(b || {}) }).then(r => r.json());
-  // X girişinden dönen oturumu oku
+
   async function session() {
     try {
       const c = await sb(); const { data } = await c.auth.getSession(); const s = data && data.session; if (!s) return null;
@@ -753,14 +754,14 @@ function scene() {}
     { k: 'wallet', t: 'Your wallet address', d: 'Robinhood Chain (0x…). Connect any wallet, or paste your address.' }
   ];
   const cur = () => STEPS.findIndex(s => !S[s.k]);
-  // cihaz izi: aynı cihazdan açılan alt hesapları işaretlemek için (kişisel veri içermez, sadece özet)
+
   const fp = () => { try { const c = document.createElement('canvas'), x = c.getContext('2d'); x.textBaseline = 'top'; x.font = '14px Arial'; x.fillText('PvY🌱🧟', 2, 2);
     const s = [navigator.userAgent.replace(/[d.]+/g, ''), navigator.language, screen.width + 'x' + screen.height + 'x' + screen.colorDepth, Intl.DateTimeFormat().resolvedOptions().timeZone, navigator.hardwareConcurrency, c.toDataURL().slice(-60)].join('|');
     let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + s.length.toString(36); } catch (e) { return null; } };
-  // tarayıcıdaki tüm cüzdanlar (EIP-6963: MetaMask, Rabby, Coinbase, OKX, Phantom, Trust…)
+
   const walletList = () => { try { return (typeof WALLETS !== 'undefined' && WALLETS.size) ? [...WALLETS.values()] : (typeof legacyList === 'function' ? legacyList() : []); } catch (e) { return []; } };
   addEventListener('eip6963:announceProvider', () => { if ($('wlOv') && $('wlOv').classList.contains('on') && cur() === STEPS.length - 1) setTimeout(render, 50); });
-  // tarayıcıdan doğrudan kontrol (hızlı); son başvuruda sunucu tekrar doğrular
+
   async function fx(path) {
     for (let i = 0; i < 3; i++) {
       try { const r = await fetch('https://api.fxtwitter.com/' + path); if (r.ok) { const j = await r.json(); if (j.user || j.tweet) return j; } if (r.status === 404 && i === 2) return { missing: true }; } catch (e) {}
@@ -771,7 +772,7 @@ function scene() {}
   const tid = u => ((u || '').match(/(?:x|twitter)\.com\/[A-Za-z0-9_]+\/status(?:es)?\/(\d{1,25})/) || [])[1];
   async function verify(kind, u, url) {
     const r = await verifyLocal(kind, u, url);
-    // tarayıcıdan ulaşılamadıysa (reklam engelleyici vb.) sunucu üzerinden dene
+
     if (!r.ok && (r.err === 'net' || r.err === 'not_found') && kind !== 'user') { try { const s = await rpc('pvy_wl_check', { p_kind: kind, p_user: u, p_url: url }); if (s && (s.ok || !['busy', 'not_found'].includes(s.err))) return s; } catch (e) {} }
     return r;
   }
@@ -865,7 +866,7 @@ function scene() {}
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); if (e.key === 'Enter' && e.target.id === 'wlU') act('x', document.querySelector('[data-a="x"]')); });
   rpc('pvy_wl_info').then(i => { INFO = i; const c = document.querySelector('#wlOpen .cnt');  }).catch(() => {});
   if (/^#(waitlist|whitelist)$/.test(location.hash) || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
-  // X girişi hatayla döndüyse göster
+
   if (/error_description=/.test(location.search + location.hash)) { const m = decodeURIComponent((location.search + location.hash).match(/error_description=([^&]*)/)[1].replace(/\+/g, ' ')); show().then(() => msg('x', 'X sign-in failed: ' + m)); }
 })();
 </script>

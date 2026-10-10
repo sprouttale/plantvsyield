@@ -138,7 +138,7 @@ function alerts() {
   for (const [w, list] of Object.entries(by)) {
     const sids = {};
     for (const s of list) (sids[s.sid] = sids[s.sid] || []).push(s);
-    // aynı anda birden fazla oturum
+
     const ranges = Object.entries(sids).map(([k, v]) => [k, Date.parse(v[0].ts), Date.parse(v[v.length - 1].ts)]);
     for (let i = 0; i < ranges.length; i++) for (let j = i + 1; j < ranges.length; j++) {
       const a = ranges[i], b = ranges[j];
@@ -154,7 +154,7 @@ function alerts() {
       if (b.wave - a.wave > 3) out.push({ lv: 'w', w, t: v[i].ts, m: 'Dalga atlaması: ' + a.wave + ' → ' + b.wave, d: dt.toFixed(0) + ' sn içinde.' });
     }
   }
-  // çok hızlı tıklama
+
   const cl = {};
   for (const e of D.events) if (e.type === 'click') { const k = e.wallet + '|' + Math.floor(Date.parse(e.ts) / 20000); cl[k] = (cl[k] || 0) + 1; }
   for (const [k, n] of Object.entries(cl)) if (n >= 45) { const [w, b] = k.split('|'); out.push({ lv: 'w', w, t: new Date(b * 20000).toISOString(), m: '20 saniyede ' + n + ' tıklama', d: 'Otomatik tıklama (bot) olabilir.' }); }
