@@ -631,6 +631,7 @@ async function connect() {
     busy(true, 'btn_connecting'); setStatus(null); $('codeBox').style.display = 'none';
     const [acc] = await eth.request({ method: 'eth_requestAccounts' });
     const addr = acc.toLowerCase();
+    window.PVY_ETH = eth;
     $('who').style.display = 'block'; $('who').innerHTML = '<span data-i="who">' + t('who') + '</span> <b>' + short(acc) + '</b>';
     busy(true, 'btn_network'); await ensureChain(eth);
     if (Date.now() < window.PVY_PUBLIC_AT && !ALLOW.includes(await ahash(addr))) { busy(false, 'btn_other'); setStatus('st_denied', 'err'); return; }
