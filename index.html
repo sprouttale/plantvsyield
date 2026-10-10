@@ -167,6 +167,18 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 .wlonly #connectBtn,.wlonly .note,.wlonly #status,.wlonly #who,.wlonly #codeBox{display:none!important}
 .wlonly #wlOpen{font-size:20px;padding:17px 40px;color:#2a1300;border:0;background:linear-gradient(180deg,#ffe27a,#ffc21f 55%,#f0a000);box-shadow:0 5px 0 #9a5d00,0 12px 30px rgba(255,190,40,.35);margin-top:18px}
 .wlonly #wlOpen .cnt{background:#2a1300;color:#ffd23f}
+
+#pvyCd{width:min(560px,100%);margin:20px auto 0;text-align:center;padding:18px 20px 16px;border-radius:20px;background:rgba(10,14,32,.72);border:2px solid #ffd23f;box-shadow:0 0 34px rgba(255,210,63,.3),inset 0 0 22px rgba(255,210,63,.1);backdrop-filter:blur(8px)}
+#pvyCd .cd-l{font:900 20px Impact,"Arial Black",sans-serif;letter-spacing:4px;color:#ffe9a8}
+#pvyCd .cd-t{display:flex;justify-content:center;align-items:flex-start;gap:10px;margin:8px 0 4px}
+#pvyCd span{display:flex;flex-direction:column;align-items:center;min-width:92px}
+#pvyCd b{font:900 64px/1 Impact,"Arial Black",sans-serif;letter-spacing:2px;background:linear-gradient(180deg,#fff6c2,#ffd23f 55%,#e08a00);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #2a1600)}
+#pvyCd small{font:800 11px "Segoe UI",sans-serif;letter-spacing:3px;color:#97a0c6;margin-top:6px}
+#pvyCd i{font:900 52px/1.1 Impact,sans-serif;color:#ffd23f;font-style:normal}
+#pvyCd .cd-s{font:600 13px "Segoe UI",sans-serif;letter-spacing:2px;color:#97a0c6}
+#pvyCd.live .cd-l{color:#3ddc84;font-size:30px}
+.wlonly #wlOpen{display:none!important}
+@media(max-width:520px){#pvyCd span{min-width:64px}#pvyCd b{font-size:42px}#pvyCd i{font-size:34px}#pvyCd .cd-l{font-size:16px}}
 </style>
 </head>
 <body>
@@ -194,6 +206,7 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
       <svg viewBox="0 0 35 33" aria-hidden="true"><path fill="#e17726" d="M32.96 1 19.6 10.94l2.47-5.85z"/><path fill="#e27625" d="m2.04 1 13.24 10.03-2.35-5.94zM28.15 23.53l-3.55 5.44 7.6 2.09 2.18-7.41zM.63 23.65l2.17 7.41 7.59-2.09-3.55-5.44z"/><path fill="#e27625" d="m9.97 14.4-2.12 3.2 7.55.34-.25-8.13zM25.03 14.4l-5.24-4.68-.17 8.22 7.55-.34zM10.39 28.97l4.55-2.2-3.92-3.06zM20.06 26.77l4.54 2.2-.62-5.26z"/><path fill="#d5bfb2" d="m24.6 28.97-4.54-2.2.37 2.95-.04 1.25zM10.39 28.97l4.22 2-.03-1.25.36-2.95z"/><path fill="#233447" d="m14.68 21.75-3.77-1.1 2.66-1.22zM20.32 21.75l1.11-2.32 2.67 1.22z"/><path fill="#cc6228" d="m10.39 28.97.65-5.44-4.2.12zM23.96 23.53l.64 5.44 3.55-5.32zM27.15 17.6l-7.55.34.7 3.81 1.12-2.32 2.67 1.22zM10.91 20.65l2.66-1.22 1.11 2.32.7-3.81-7.55-.34z"/><path fill="#e27525" d="m7.85 17.6 3.16 6.17-.1-3.12zM24.1 20.65l-.12 3.12 3.17-6.17zM15.4 17.94l-.7 3.81.89 4.57.2-6.02zM19.6 17.94l-.37 2.35.18 6.03.89-4.57z"/></svg>
       <span id="btnTxt"></span><span class="spin"></span>
     </button>
+    <div id="pvyCd" aria-live="polite"><div class="cd-l">$PVY FAIR LAUNCH IN</div><div class="cd-t"><span><b id="cdH">03</b><small>HOURS</small></span><i>:</i><span><b id="cdM">00</b><small>MINUTES</small></span><i>:</i><span><b id="cdS">00</b><small>SECONDS</small></span></div><div class="cd-s">on Pons · Robinhood Chain</div></div>
     <button id="wlOpen" type="button">🌱 Join the Waitlist</button>
     <p class="note" data-i="note"></p>
     <div class="status" id="status" role="status" aria-live="polite"></div>
@@ -868,6 +881,22 @@ function scene() {}
   if (/^#(waitlist|whitelist)$/.test(location.hash) || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
 
   if (/error_description=/.test(location.search + location.hash)) { const m = decodeURIComponent((location.search + location.hash).match(/error_description=([^&]*)/)[1].replace(/\+/g, ' ')); show().then(() => msg('x', 'X sign-in failed: ' + m)); }
+})();
+</script>
+<script>
+(function () {
+  const END = Date.parse('2026-10-10T23:36:00Z'), p = n => String(n).padStart(2, '0');
+  const box = document.getElementById('pvyCd'); if (!box) return;
+  const tick = () => {
+    const s = Math.max(0, Math.floor((END - Date.now()) / 1000));
+    document.getElementById('cdH').textContent = p(Math.floor(s / 3600));
+    document.getElementById('cdM').textContent = p(Math.floor(s % 3600 / 60));
+    document.getElementById('cdS').textContent = p(s % 60);
+    if (!s) { box.classList.add('live'); box.querySelector('.cd-l').textContent = '$PVY IS LIVE'; box.querySelector('.cd-t').style.display = 'none'; return true; }
+  };
+  if (!tick()) { const iv = setInterval(() => { if (tick()) clearInterval(iv); }, 1000); }
+  const st = document.getElementById('startTop');
+  if (st && document.documentElement.classList.contains('wlonly')) { const sp = st.querySelector('span'); if (sp) sp.textContent = 'PVY Launch'; st.onclick = null; st.addEventListener('click', e => { e.preventDefault(); e.stopImmediatePropagation(); box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, true); }
 })();
 </script>
 </body>
