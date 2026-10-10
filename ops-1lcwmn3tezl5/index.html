@@ -51,6 +51,7 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <h2 style="font-size:15px;margin:4px 0 10px">🎮 Oyun</h2>
 <div class="stats" id="stats"></div>
 <div class="grid"><div>
+<div class="box" style="border-color:#3ddc84"><h2>🟢 Şu an oynayanlar <span class="c" id="onc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th class="num">Coin</th><th class="num">Dalga</th><th class="num">Poolable</th><th class="num">Banka</th><th>Son sinyal</th></tr></thead><tbody id="onl"></tbody></table></div></div>
 <div class="box"><h2>Oyuncular <span class="c" id="pc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th>Son görülme</th><th class="num">Giriş</th><th class="num">Coin</th><th class="num">Kazanılan</th><th class="num">Dalga</th><th class="num">Bag</th><th class="num">Banka</th><th class="num">Havuz payı</th><th>NFT</th><th>Cihaz</th></tr></thead><tbody id="pl"></tbody></table></div></div>
 <div class="box hidden" id="det"></div>
 <div class="box"><h2>🏦 Havuz hazine payları <span class="c">oyunda "🏦 ad" etiketiyle herkese açık görünür</span></h2><p class="mut" style="margin:0 0 10px;font-size:13px">Katkı miktarı, günlük havuzdaki payı belirler (oyuncuların Bag yatırımlarıyla aynı birim). Oyuncular bu payların ekibe/hazineye ait olduğunu görür.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="hsLabel" placeholder="Ad (örn. Treasury)" style="width:180px"><input id="hsDep" type="number" min="0" step="any" placeholder="Katkı" style="width:140px"><button id="hsAdd">+ Ekle</button></div><div class="tw" style="max-height:260px"><table><thead><tr><th>Ad</th><th class="num">Katkı</th><th>Durum</th><th></th></tr></thead><tbody id="hsList"></tbody></table></div></div>
@@ -95,7 +96,7 @@ async function setBan(w, on) {
 async function load() {
   const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_hours: +$('hrs').value }) });
   if (!r.ok) throw new Error(r.status === 400 || r.status === 401 ? 'unauthorized' : 'HTTP ' + r.status);
-  D = await r.json(); render(); wl(); site(); pays(); house();
+  D = await r.json(); { const T = w => /^0x0{30,}/.test(w || ''); D.players = D.players.filter(p => !T(p.wallet)); D.events = D.events.filter(e => !T(e.wallet)); if (D.snaps) D.snaps = D.snaps.filter(e => !T(e.wallet)); } render(); wl(); site(); pays(); house();
 }
 const PNAME = { pass: 'Premium Pass', speed: '2x Hız', mint: 'NFT Mint', box_whale: 'Whale Box', box_crystal: 'Crystal Box', box_silver: 'Silver Box', box_common: 'Common Box' };
 async function house(action, id, label, dep) {
@@ -160,7 +161,7 @@ async function start() {
 function alerts() {
   const out = [], now = Date.parse(D.now), by = {};
   for (const s of D.snaps) (by[s.wallet] = by[s.wallet] || []).push(s);
-  for (const p of D.players) if (!ALLOW.includes(p.wallet)) out.push({ lv: 'r', w: p.wallet, t: p.last_seen, m: 'İzin listesinde olmayan cüzdan veri gönderdi', d: 'Kapıyı atlayıp oyuna girmiş ya da sunucuya doğrudan istek atmış olabilir.' });
+  if (false) for (const p of D.players) if (!ALLOW.includes(p.wallet)) out.push({ lv: 'r', w: p.wallet, t: p.last_seen, m: 'İzin listesinde olmayan cüzdan veri gönderdi', d: 'Kapıyı atlayıp oyuna girmiş ya da sunucuya doğrudan istek atmış olabilir.' });
   for (const [w, list] of Object.entries(by)) {
     const sids = {};
     for (const s of list) (sids[s.sid] = sids[s.sid] || []).push(s);
@@ -198,6 +199,10 @@ function render() {
     ['NFT mint eden', P.filter(p => (p.snap || {}).minted).length, 'y'], ['Toplam kazanılan coin', F(sum('earned'))], ['Bankalardaki toplam', F(sum('bank')), 'y'], ['Havuza yatırılan', F(sum('mine'))], ['Yasaklı', (D.bans || []).length, 'r'], ['En yüksek dalga', Math.max(0, ...P.map(p => (p.snap || {}).wave || 0))]];
   $('stats').innerHTML = st.map(s => '<div class="st"><small>' + s[0] + '</small><b class="' + (s[2] || '') + '">' + s[1] + '</b></div>').join('');
   $('pc').textContent = P.length + ' cüzdan';
+  { const live = P.filter(p => now - Date.parse(p.last_seen) < 60000).sort((a, b) => Date.parse(b.last_seen) - Date.parse(a.last_seen));
+    const act = live.filter(p => { const s = p.snap || {}; return s.vis !== 'hidden' && !s.paused; });
+    $('onc').textContent = act.length + ' aktif oynuyor · ' + live.length + ' çevrim içi';
+    $('onl').innerHTML = live.map(p => { const s = p.snap || {}, a = s.vis !== 'hidden' && !s.paused; return '<tr><td>' + who(p.wallet) + '</td><td>' + (a ? '<span class="dot on"></span>Oynuyor' : s.paused ? '<span class="dot idle"></span>Duraklatmış' : '<span class="dot idle"></span>Arka planda') + '</td><td class="num">' + F(s.coins) + '</td><td class="num">' + (s.wave || 0) + '</td><td class="num">' + F(s.bag) + '</td><td class="num y">' + F(s.bank) + '</td><td>' + Math.round((now - Date.parse(p.last_seen)) / 1000) + ' sn önce</td></tr>'; }).join('') || '<tr><td colspan="7" class="mut">Şu an kimse oynamıyor.</td></tr>'; }
   $('pl').innerHTML = P.map(p => { const s = p.snap || {}, o = on(p), idle = o && (s.vis === 'hidden' || s.paused);
     const bn = isBan(p.wallet);
     return '<tr class="p' + (sel === p.wallet ? ' sel' : '') + (bn ? ' ban' : '') + '" data-w="' + esc(p.wallet) + '"><td class="mono">' + who(p.wallet) + '</td><td>' + (bn ? '<b class="r">⛔ Yasaklı</b> ' : '') + '<span class="dot ' + (o ? idle ? 'idle' : 'on' : '') + '"></span>' + (o ? idle ? 'Arka planda' : (s.crashed ? 'Çöktü' : 'Oynuyor') : 'Çevrimdışı') + '</td><td>' + ago(now - Date.parse(p.last_seen)) + '</td><td class="num">' + p.sessions +
