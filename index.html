@@ -187,7 +187,7 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 #wlOpen,#wlOv{display:none!important}
 @media(max-width:520px){#pvyCd span{min-width:64px}#pvyCd b{font-size:42px}#pvyCd i{font-size:34px}#pvyCd .cd-l{font-size:16px}}
 .chip.beta{display:none!important}#connectBtn>svg{display:none}#connectBtn{justify-content:center;font-size:24px;letter-spacing:1px}#pvyCd{display:none!important}
-#pvyCA{max-width:640px;margin:26px auto 0;padding:18px 18px 14px;border:2px solid rgba(77,255,154,.55);border-radius:18px;background:rgba(8,14,32,.82);text-align:center}
+#pvyCA{max-width:640px;margin:14px auto 0;padding:18px 18px 14px;border:2px solid rgba(77,255,154,.55);border-radius:18px;background:rgba(8,14,32,.82);text-align:center}
 #pvyCA h3{margin:0 0 4px;font:900 22px Impact,Arial Black,sans-serif;letter-spacing:2px;color:#4dff9a}#pvyCA .s{color:#97a0c6;font-size:12.5px;letter-spacing:1px;margin-bottom:10px}
 #pvyCA .ca{display:flex;align-items:center;gap:10px;background:#0e1330;border:1px solid #2c3566;border-radius:12px;padding:8px 10px;margin-bottom:10px}#pvyCA .ca span{color:#ffd23f;font-weight:900}#pvyCA code{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:13px}
 #pvyCA button,#pvyCA a{background:#ffd23f;color:#2a1300;border:0;border-radius:10px;font-weight:900;padding:8px 14px;cursor:pointer;text-decoration:none;display:inline-block}#pvyCA .w{color:#8f98bf;font-size:11px;margin-top:10px}
@@ -221,6 +221,12 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
     <div id="pvyCd" aria-live="polite"><div class="cd-l">$PVY FAIR LAUNCH IN</div><div class="cd-t"><span><b id="cdH">03</b><small>HOURS</small></span><i>:</i><span><b id="cdM">00</b><small>MINUTES</small></span><i>:</i><span><b id="cdS">00</b><small>SECONDS</small></span></div><div class="cd-s">on Pons · Robinhood Chain</div></div>
     <button id="wlOpen" type="button">🌱 Join the Waitlist</button>
     <p class="note" data-i="note"></p>
+<div id="pvyCA"><h3>$PVY IS LIVE</h3><div class="s">Fair launch on Pons · Robinhood Chain</div>
+<div class="ca"><span>CA</span><code>0xa200c25465aba883da6df4152263913f15cfc7bd</code><button type="button" id="caCopy2">Copy</button></div>
+<a href="https://ponsfamily.com/launchpad/0xa200c25465aba883da6df4152263913f15cfc7bd" target="_blank" rel="noopener">View $PVY on Pons ↗</a>
+<div class="w">Only trust this address. We will never DM you or ask for your seed phrase.</div></div>
+<script>document.getElementById('caCopy2').onclick = e => { navigator.clipboard.writeText('0xa200c25465aba883da6df4152263913f15cfc7bd'); e.target.textContent = 'Copied ✓'; setTimeout(() => e.target.textContent = 'Copy', 1500); };</script>
+
     <div class="status" id="status" role="status" aria-live="polite"></div>
     <div class="who" id="who"></div>
     <div class="code" id="codeBox">
@@ -239,11 +245,6 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
   </div>
 </section>
 
-<div id="pvyCA"><h3>$PVY IS LIVE</h3><div class="s">Fair launch on Pons · Robinhood Chain</div>
-<div class="ca"><span>CA</span><code>0xa200c25465aba883da6df4152263913f15cfc7bd</code><button type="button" id="caCopy2">Copy</button></div>
-<a href="https://ponsfamily.com/launchpad/0xa200c25465aba883da6df4152263913f15cfc7bd" target="_blank" rel="noopener">View $PVY on Pons ↗</a>
-<div class="w">Only trust this address. We will never DM you or ask for your seed phrase.</div></div>
-<script>document.getElementById('caCopy2').onclick = e => { navigator.clipboard.writeText('0xa200c25465aba883da6df4152263913f15cfc7bd'); e.target.textContent = 'Copied ✓'; setTimeout(() => e.target.textContent = 'Copy', 1500); };</script>
 <section class="sec" id="how">
   <h2 data-i="how_title"></h2>
   <p class="lead" data-i="how_lead"></p>
