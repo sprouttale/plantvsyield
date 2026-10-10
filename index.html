@@ -177,6 +177,7 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 #pvyCd i{font:900 52px/1.1 Impact,sans-serif;color:#ffd23f;font-style:normal}
 #pvyCd .cd-s{font:600 13px "Segoe UI",sans-serif;letter-spacing:2px;color:#97a0c6}
 #pvyCd.live .cd-l{color:#3ddc84;font-size:34px}
+#pvyCd.live .gcd .cd-l{color:#ffe9a8;font-size:22px}
 #pvyCd .ca{display:flex;align-items:center;gap:8px;background:#0b0f20;border:1px solid #2d3560;border-radius:12px;padding:8px 8px 8px 12px;margin:0 auto 12px;max-width:100%}
 #pvyCd .ca span{font:800 12px "Segoe UI",sans-serif;color:#ffd23f;letter-spacing:2px}
 #pvyCd .ca code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 14px Consolas,monospace;color:#e8ecff;text-align:left}
@@ -899,11 +900,16 @@ function scene() {}
     document.getElementById('cdS').textContent = p(s % 60);
     if (!s) {
       box.classList.add('live');
-      box.innerHTML = '<div class="cd-l">$PVY IS LIVE</div><div class="cd-s" style="margin:6px 0 10px">Fair launch on Pons · Robinhood Chain</div>' +
+      box.innerHTML = '<div class="gcd"><div class="cd-l" id="gcdL">GAME OPENS IN</div><div class="cd-t" id="gcdT"><span><b id="gH">00</b><small>HOURS</small></span><i>:</i><span><b id="gM">00</b><small>MINUTES</small></span><i>:</i><span><b id="gS">00</b><small>SECONDS</small></span></div></div><div class="cd-l" style="font-size:24px;margin-top:10px">$PVY IS LIVE</div><div class="cd-s" style="margin:6px 0 10px">Fair launch on Pons · Robinhood Chain</div>' +
         '<div class="ca"><span>CA</span><code id="caTxt">0xa200c25465aba883da6df4152263913f15cfc7bd</code><button type="button" id="caCopy">Copy</button></div>' +
         '<a class="cd-buy" href="https://ponsfamily.com/launchpad/0xa200c25465aba883da6df4152263913f15cfc7bd" target="_blank" rel="noopener">View $PVY on Pons ↗</a>' +
         '<div class="cd-s" style="margin-top:10px;font-size:11.5px">Only trust this address. We will never DM you or ask for your seed phrase.</div>';
       document.getElementById('caCopy').onclick = e => { navigator.clipboard.writeText('0xa200c25465aba883da6df4152263913f15cfc7bd'); e.target.textContent = 'Copied ✓'; setTimeout(() => e.target.textContent = 'Copy', 1500); };
+      const GEND = Date.parse('2026-10-10T23:36:00Z');
+      const gt = () => { const s = Math.max(0, Math.floor((GEND - Date.now()) / 1000));
+        document.getElementById('gH').textContent = p(Math.floor(s / 3600)); document.getElementById('gM').textContent = p(Math.floor(s % 3600 / 60)); document.getElementById('gS').textContent = p(s % 60);
+        if (!s) { document.getElementById('gcdL').textContent = 'GAME IS OPEN'; document.getElementById('gcdT').style.display = 'none'; return true; } };
+      if (!gt()) { const gi = setInterval(() => { if (gt()) clearInterval(gi); }, 1000); }
       return true;
     }
   };
