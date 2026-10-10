@@ -591,10 +591,10 @@ async function getProvider() {
   if (!WALLETS.size) { dispatchEvent(new Event('eip6963:requestProvider')); await new Promise(r => setTimeout(r, 350)); }
   const list = WALLETS.size ? [...WALLETS.values()] : legacyList();
   if (!list.length) return null;
-  const mm = list.find(w => /^io\.metamask/.test(w.info.rdns || ''));
-  if (mm) return mm.provider;
-  if (list.length === 1) return list[0].provider;
-  return pickFrom(list);
+  const p = list.length === 1 ? list[0].provider : await pickFrom(list);
+  if (!p) return false;
+  try { const it = list.find(w => w.provider === p); sessionStorage.setItem('pvy_rdns', (it && it.info.rdns) || ''); } catch (e) {}
+  return p;
 }
 async function ensureChain(eth) {
   if (!CHAIN) return;
@@ -635,6 +635,7 @@ async function openGame(addr, keyRaw) {
 }
 async function connect() {
   const eth = await getProvider();
+  if (eth === false) return;
   if (!eth) { setStatus('st_nomm', 'err'); window.open('https://metamask.io/download/', '_blank', 'noopener'); return; }
   try {
     busy(true, 'btn_connecting'); setStatus(null); $('codeBox').style.display = 'none';
