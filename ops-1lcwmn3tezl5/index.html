@@ -53,7 +53,8 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <div class="box"><h2>Oyuncular <span class="c" id="pc"></span></h2><div class="tw"><table><thead><tr><th>Cüzdan</th><th>Durum</th><th>Son görülme</th><th class="num">Giriş</th><th class="num">Coin</th><th class="num">Kazanılan</th><th class="num">Dalga</th><th class="num">Bag</th><th class="num">Banka</th><th class="num">Havuz payı</th><th>NFT</th><th>Cihaz</th></tr></thead><tbody id="pl"></tbody></table></div></div>
 <div class="box hidden" id="det"></div>
 <div class="box"><h2>🏦 Havuz hazine payları <span class="c">oyunda "🏦 ad" etiketiyle herkese açık görünür</span></h2><p class="mut" style="margin:0 0 10px;font-size:13px">Katkı miktarı, günlük havuzdaki payı belirler (oyuncuların Bag yatırımlarıyla aynı birim). Oyuncular bu payların ekibe/hazineye ait olduğunu görür.</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="hsLabel" placeholder="Ad (örn. Treasury)" style="width:180px"><input id="hsDep" type="number" min="0" step="any" placeholder="Katkı" style="width:140px"><button id="hsAdd">+ Ekle</button></div><div class="tw" style="max-height:260px"><table><thead><tr><th>Ad</th><th class="num">Katkı</th><th>Durum</th><th></th></tr></thead><tbody id="hsList"></tbody></table></div></div>
-<div class="box"><h2>💸 Çekim talepleri <span class="c" id="wdc"></span></h2><p class="mut" style="margin:0 0 8px">Oyuncu "Withdraw" deyince buraya düşer. 1 banka coini = 0,01$. PVY'yi hazineden elle gönder, sonra "Ödendi" işaretle (işaret bu tarayıcıda saklanır).</p><div class="tw"><table><thead><tr><th>Zaman</th><th>Cüzdan</th><th>Coin</th><th>Dolar</th><th>Durum</th><th></th></tr></thead><tbody id="wdt"></tbody></table></div></div>
+<div class="box"><h2>🏊 Havuz yatırımları <span class="c" id="poolc">bugün kim ne kadar koydu</span></h2><div class="tw"><table><thead><tr><th>#</th><th>Cüzdan</th><th class="num">Havuza koyduğu (bugün)</th><th class="num">Pay</th><th class="num">Çanta</th><th class="num">Banka</th><th>Son yatırma</th></tr></thead><tbody id="poolt"></tbody></table></div></div>
+<div class="box"><h2>💸 Çekim talepleri <span class="c" id="wdc"></span></h2><p class="mut" style="margin:0 0 8px">Oyuncu "Withdraw" deyince buraya düşer. 1 banka coini = 0,01$. PVY'yi hazineden elle gönder, sonra "Ödendi" işaretle. İşaretler sunucuda saklanır, tüm adminler görür.</p><div class="tw"><table><thead><tr><th>Zaman</th><th>Cüzdan</th><th>Coin</th><th>Dolar</th><th>Durum</th><th></th></tr></thead><tbody id="wdt"></tbody></table></div></div>
 <div class="box"><h2>💰 PVY ödemeleri <span class="c" id="payc"></span></h2><div class="stats" id="paystats" style="margin-bottom:10px"></div><div class="tw" style="max-height:320px"><table><thead><tr><th>Tarih</th><th>Cüzdan</th><th>Ürün</th><th class="num">PVY</th><th class="num">$</th><th>İşlem</th></tr></thead><tbody id="payList"></tbody></table></div></div>
 <div class="box"><h2>🌱 Waitlist başvuruları <span class="c" id="wlc"></span></h2>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><input id="wlPost" placeholder="Waitlist postunun linki (https://x.com/PlantVsYield/status/…)" style="flex:1;min-width:260px"><button id="wlSet">Kaydet</button></div>
@@ -184,6 +185,9 @@ function alerts() {
   return out.sort((a, b) => Date.parse(b.t) - Date.parse(a.t));
 }
 
+let WD = {};
+async function wdCall(k, s) { const r = await fetch(API.replace('pvy_admin', 'pvy_wd_admin'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_token: tok, p_key: k || null, p_status: s || null }) }); const j = await r.json(); if (!r.ok) throw new Error(j.message || r.status); return j; }
+setInterval(async () => { if (!tok) return; try { WD = await wdCall(); } catch (x) {} }, 15000);
 function render() {
   const now = Date.parse(D.now), P = D.players;
   const on = p => now - Date.parse(p.last_seen) < 60000, act = p => now - Date.parse(p.last_seen) < 86400000;
@@ -198,17 +202,21 @@ function render() {
       '</td><td class="num">' + F(s.coins) + '</td><td class="num">' + F(s.earned) + '</td><td class="num">' + (s.wave || 0) + '</td><td class="num">' + F(s.bag) + '</td><td class="num y">' + F(s.bank) + '</td><td class="num">' + F(s.mine) + '</td><td>' + (s.minted ? ({ m: '👦 Erkek', f: '👧 Kız' }[(s.nft || '').split(':')[0]] || '✔') : '—') + '</td><td>' + dev(p.ua) + '</td></tr>'; }).join('') || '<tr><td colspan="12" class="mut">Henüz kimse girmedi.</td></tr>';
   const A = alerts(); $('ac').textContent = A.length ? A.length + ' uyarı' : 'temiz';
   $('al').innerHTML = A.slice(0, 40).map(a => '<div class="al ' + (a.lv === 'w' ? 'w' : '') + '"><div><b>' + esc(a.m) + '</b><br><span class="mono">' + who(a.w) + '</span> · <small>' + hm(a.t) + '</small><br><small>' + esc(a.d) + '</small><br>' + (isBan(a.w) ? '<small class="r">⛔ yasaklandı</small>' : '<button class="bn sm" data-ban="' + esc(a.w) + '">⛔ Yasakla</button>') + '</div></div>').join('') || '<p class="g">Şüpheli bir şey yok ✔</p>';
-  { let st = {}; try { st = JSON.parse(localStorage.getItem('pvy_wd') || '{}'); } catch (x) {}
+  { const Pp = D.players.filter(p => +(p.snap || {}).mine > 0).sort((a, b) => b.snap.mine - a.snap.mine), tot = Pp.reduce((s, p) => s + +p.snap.mine, 0);
+    const lastDep = w => { const e = D.events.find(x => x.wallet === w && x.type === 'pool_deposit'); return e ? hm(e.ts) + ' (+' + F((e.data || {}).amount) + ')' : '—'; };
+    $('poolc').textContent = Pp.length + ' oyuncu · toplam ' + F(tot);
+    $('poolt').innerHTML = Pp.map((p, i) => '<tr><td>' + (i + 1) + '</td><td class="mono">' + who(p.wallet) + '</td><td class="num y">' + F(p.snap.mine) + '</td><td class="num">%' + (tot ? (p.snap.mine / tot * 100).toFixed(1) : 0) + '</td><td class="num">' + F(p.snap.bag) + '</td><td class="num">' + F(p.snap.bank) + '</td><td>' + lastDep(p.wallet) + '</td></tr>').join('') || '<tr><td colspan="7" class="mut">Bugün havuza yatıran yok.</td></tr>'; }
+  { const st = WD;
     const W = D.events.filter(e => e.type === 'withdraw_request'), key = e => e.wallet + '|' + e.ts;
     $('wdc').textContent = W.filter(e => !st[key(e)]).length + ' bekleyen / ' + W.length;
     $('wdt').innerHTML = W.map(e => { const d = e.data || {}, k = key(e), s = st[k]; return '<tr><td>' + hm(e.ts) + '</td><td class="mono">' + esc(e.wallet) + ' <button class="btn" data-cp="' + esc(e.wallet) + '">Kopyala</button></td><td>' + esc(d.amount) + '</td><td><b>$' + esc(d.usd) + '</b></td><td>' + (s === 'paid' ? '✅ Ödendi' : s === 'rej' ? '❌ Reddedildi' : '⏳ Bekliyor') + '</td><td>' + (s ? '<button class="btn" data-wd="' + esc(k) + '" data-s="">Geri al</button>' : '<button class="btn" data-wd="' + esc(k) + '" data-s="paid">Ödendi</button> <button class="btn" data-wd="' + esc(k) + '" data-s="rej">Reddet</button>') + '</td></tr>'; }).join('') || '<tr><td colspan="6" class="mut">Talep yok.</td></tr>';
-    $('wdt').querySelectorAll('[data-wd]').forEach(b => b.onclick = () => { if (b.dataset.s) st[b.dataset.wd] = b.dataset.s; else delete st[b.dataset.wd]; localStorage.setItem('pvy_wd', JSON.stringify(st)); render(); });
+    $('wdt').querySelectorAll('[data-wd]').forEach(b => b.onclick = async () => { b.disabled = true; try { WD = await wdCall(b.dataset.wd, b.dataset.s); } catch (x) { alert('Kaydedilemedi: ' + x.message); } render(); });
     $('wdt').querySelectorAll('[data-cp]').forEach(b => b.onclick = () => navigator.clipboard.writeText(b.dataset.cp)); }
   $('fd').innerHTML = D.events.slice(0, 250).map(feedRow).join('') || '<p class="mut">Olay yok.</p>';
   $('upd').textContent = 'Güncellendi ' + new Date().toLocaleTimeString('tr-TR') + ' · 15 sn\'de bir yenilenir';
   if (sel) detail(sel);
 }
-const LBL = { withdraw_request: '💸 Çekim talebi', session_start: 'Oyuna girdi', session_end: 'Çıktı', wave: 'Dalga', crash: 'Market çöktü', run_reset: 'Yeni tur', click: 'Tıkladı', banned: '⛔ Yasaklandı', unbanned: 'Yasak kalktı' };
+const LBL = { pool_deposit: '🏊 Havuza koydu', withdraw_request: '💸 Çekim talebi', session_start: 'Oyuna girdi', session_end: 'Çıktı', wave: 'Dalga', crash: 'Market çöktü', run_reset: 'Yeni tur', click: 'Tıkladı', banned: '⛔ Yasaklandı', unbanned: 'Yasak kalktı' };
 function evText(e) { const d = e.data || {};
   if (e.type === 'wave') return 'Dalga ' + d.wave + "'e ulaştı";
   if (e.type === 'crash') return 'Çöktü (dalga ' + d.wave + ', coin ' + F(d.coins) + ')';
