@@ -735,7 +735,7 @@ function scene() {}
     no_post: 'The waitlist post isn’t live yet. Check back soon!', bad_link: 'Paste the full link of your post (x.com/…/status/…).', link_used: 'This link was already used.',
     not_found: 'We couldn’t open that post yet. New posts can take ~30 seconds to show up, and your account must be public (not protected). Wait a moment and press Verify again.', not_yours: 'This post isn’t from @{u}. Post it from the account you connected.',
     not_quote: 'This post doesn’t quote our waitlist post. Use the Quote button and try again.', not_reply: 'This isn’t a comment on our waitlist post. Use the Comment button and try again.',
-    bad_wallet: 'Connect a valid wallet first.', not_connected: 'Your X session expired. Connect X again.', busy: 'X is slow right now — please try again in a moment.', dup: 'This wallet or X account is already registered.', net: 'Couldn’t reach the checker. If you use an ad blocker or Brave Shields, turn it off for this site and try again.'
+    bad_wallet: 'Connect a valid wallet first.', x_too_new: 'Your X account is too new. Accounts must be at least 30 days old to join.', x_few_followers: 'Your X account needs at least 5 followers to join.', not_connected: 'Your X session expired. Connect X again.', busy: 'X is slow right now — please try again in a moment.', dup: 'This wallet or X account is already registered.', net: 'Couldn’t reach the checker. If you use an ad blocker or Brave Shields, turn it off for this site and try again.'
   };
   let S = {}; try { S = JSON.parse(localStorage.getItem('pvy_wl') || '{}'); } catch (e) {}
   const save = () => { try { localStorage.setItem('pvy_wl', JSON.stringify(S)); } catch (e) {} };
@@ -753,6 +753,10 @@ function scene() {}
     { k: 'wallet', t: 'Your wallet address', d: 'Robinhood Chain (0x…). Connect any wallet, or paste your address.' }
   ];
   const cur = () => STEPS.findIndex(s => !S[s.k]);
+  // cihaz izi: aynı cihazdan açılan alt hesapları işaretlemek için (kişisel veri içermez, sadece özet)
+  const fp = () => { try { const c = document.createElement('canvas'), x = c.getContext('2d'); x.textBaseline = 'top'; x.font = '14px Arial'; x.fillText('PvY🌱🧟', 2, 2);
+    const s = [navigator.userAgent.replace(/[d.]+/g, ''), navigator.language, screen.width + 'x' + screen.height + 'x' + screen.colorDepth, Intl.DateTimeFormat().resolvedOptions().timeZone, navigator.hardwareConcurrency, c.toDataURL().slice(-60)].join('|');
+    let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + s.length.toString(36); } catch (e) { return null; } };
   // tarayıcıdaki tüm cüzdanlar (EIP-6963: MetaMask, Rabby, Coinbase, OKX, Phantom, Trust…)
   const walletList = () => { try { return (typeof WALLETS !== 'undefined' && WALLETS.size) ? [...WALLETS.values()] : (typeof legacyList === 'function' ? legacyList() : []); } catch (e) { return []; } };
   addEventListener('eip6963:announceProvider', () => { if ($('wlOv') && $('wlOv').classList.contains('on') && cur() === STEPS.length - 1) setTimeout(render, 50); });
@@ -843,7 +847,7 @@ function scene() {}
   }
   async function join(btn) {
     busy(btn, true, 'VERIFYING…');
-    let r; try { r = await rpc('pvy_wl_submit', { p_user: S.u, p_quote: S.qUrl, p_reply: S.rUrl, p_wallet: S.wallet, p_name: S.name || null, p_avatar: S.av || null }); } catch (e) { r = { ok: false, err: 'net' }; }
+    let r; try { r = await rpc('pvy_wl_submit', { p_user: S.u, p_quote: S.qUrl, p_reply: S.rUrl, p_wallet: S.wallet, p_name: S.name || null, p_avatar: S.av || null, p_fp: fp() }); } catch (e) { r = { ok: false, err: 'net' }; }
     if (r.ok) { window.pvyTrack && pvyTrack('joined'); S.joined = 1; S.n = r.n || ''; S.f = Math.random() < .5 ? 'farmer_m' : 'farmer_f'; save(); return render(); }
     busy(btn, false, 'JOIN EARLY ACCESS');
     if (r.step === 'quote' || r.step === 'reply') { delete S[r.step]; save(); render(); } else if (['link_used', 'bad_link'].includes(r.err)) { delete S.quote; delete S.reply; save(); render(); }

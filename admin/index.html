@@ -37,7 +37,7 @@ svg.spark{width:100%;height:120px;display:block}
 .bn{background:#3a1018;border-color:#ff5d6c;color:#ffb3bb}.bn:hover{background:#5a1824}.ub{background:#10301e;border-color:#3ddc84;color:#9ff0c2}.sm{padding:3px 9px;font-size:12px;margin-top:5px}
 tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 </style></head><body>
-<div id="login"><img src="../assets/logo.webp" alt=""><h2>Admin Paneli</h2><input id="tok" type="password" placeholder="Admin anahtarı" autocomplete="off"><button id="go">Giriş</button><p id="err"></p></div>
+<div id="login"><img src="../assets/logo.webp" alt=""><h2>Admin Paneli</h2><input id="tok" type="password" placeholder="Admin anahtarı" autocomplete="off"><input id="otp" inputmode="numeric" maxlength="6" placeholder="Google Authenticator kodu (6 hane)" autocomplete="one-time-code" style="width:100%;margin:0 0 10px;padding:11px;letter-spacing:4px;text-align:center"><button id="go">Giriş</button><p id="err"></p></div>
 <div id="app" class="hidden">
 <header><img src="../assets/logo.webp" alt=""><h1>Admin</h1><span class="pill" id="upd">—</span><span class="sp"></span>
 <select id="hrs"><option value="1">Son 1 saat</option><option value="6">Son 6 saat</option><option value="24" selected>Son 24 saat</option><option value="72">Son 3 gün</option><option value="168">Son 7 gün</option></select>
@@ -112,8 +112,10 @@ async function wl(post, remove) {
   if (!r.ok) return; const W = await r.json(); window.WL = W;
   $('wlc').textContent = W.list.length + ' kişi';
   $('wlPostNow').innerHTML = W.post ? 'Şu anki post: <a target="_blank" rel="noopener" style="color:#ffd23f" href="https://x.com/PlantVsYield/status/' + esc(W.post) + '">x.com/PlantVsYield/status/' + esc(W.post) + '</a>' : '<span class="r">Post ayarlanmadı: sitede “Waitlist opens soon” görünüyor.</span>';
+  const ipc = {}, fpc = {}; W.list.forEach(x => { if (x.ip) ipc[x.ip] = (ipc[x.ip] || 0) + 1; if (x.fp) fpc[x.fp] = (fpc[x.fp] || 0) + 1; });
+  const flags = x => [x.fp && fpc[x.fp] > 1 ? '⚠ aynı cihaz' : '', x.ip && ipc[x.ip] > 1 ? '⚠ aynı IP' : '', x.x_followers != null && x.x_followers < 20 ? x.x_followers + ' takipçi' : ''].filter(Boolean).join(' · ');
   const tw = (u, id) => '<a target="_blank" rel="noopener" style="color:#5fb4ff" href="https://x.com/' + esc(u) + '/status/' + esc(id) + '">aç ↗</a>';
-  $('wlList').innerHTML = W.list.map(x => '<tr><td>' + hm(x.ts) + '</td><td>' + (x.avatar ? '<img src="' + esc(x.avatar) + '" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:6px">' : '') + '<a target="_blank" rel="noopener" href="https://x.com/' + esc(x.x_user) + '">@' + esc(x.x_user) + '</a></td><td class="mono">' + short(x.wallet) + ' <button class="sm" data-copy="' + esc(x.wallet) + '">kopyala</button></td><td>' + tw(x.x_user, x.quote_id) + '</td><td>' + tw(x.x_user, x.reply_id) + '</td><td>' + ({ ok: '<span class="g">✔ doğrulandı</span>', pending: '<span class="y">⏳ beklemede</span>', rejected: '<span class="r">✗ reddedildi</span>' }[x.status] || esc(x.status)) + (x.status !== 'ok' ? ' <button class="sm" data-wlre="' + esc(x.wallet) + '">tekrar kontrol</button>' : '') + '</td><td>' + (x.reward_claimed ? '<span class="g">✔ alındı</span>' : '<span class="mut">bekliyor</span>') + '</td><td><button class="bn sm" data-wlrm="' + esc(x.wallet) + '">Sil</button></td></tr>').join('') || '<tr><td colspan="8" class="mut">Henüz başvuru yok.</td></tr>';
+  $('wlList').innerHTML = W.list.map(x => '<tr><td>' + hm(x.ts) + '</td><td>' + (x.avatar ? '<img src="' + esc(x.avatar) + '" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:6px">' : '') + '<a target="_blank" rel="noopener" href="https://x.com/' + esc(x.x_user) + '">@' + esc(x.x_user) + '</a>' + (flags(x) ? '<br><small class="r">' + flags(x) + '</small>' : '') + '</td><td class="mono">' + short(x.wallet) + ' <button class="sm" data-copy="' + esc(x.wallet) + '">kopyala</button></td><td>' + tw(x.x_user, x.quote_id) + '</td><td>' + tw(x.x_user, x.reply_id) + '</td><td>' + ({ ok: '<span class="g">✔ doğrulandı</span>', pending: '<span class="y">⏳ beklemede</span>', rejected: '<span class="r">✗ reddedildi</span>' }[x.status] || esc(x.status)) + (x.status !== 'ok' ? ' <button class="sm" data-wlre="' + esc(x.wallet) + '">tekrar kontrol</button>' : '') + '</td><td>' + (x.reward_claimed ? '<span class="g">✔ alındı</span>' : '<span class="mut">bekliyor</span>') + '</td><td><button class="bn sm" data-wlrm="' + esc(x.wallet) + '">Sil</button></td></tr>').join('') || '<tr><td colspan="8" class="mut">Henüz başvuru yok.</td></tr>';
 }
 document.addEventListener('click', e => {
   if (e.target.id === 'wlCopyAll') { const L = (window.WL && WL.list || []).filter(x => x.status !== 'rejected').map(x => x.wallet); navigator.clipboard.writeText(L.join('\n')); e.target.textContent = '✔ ' + L.length + ' cüzdan kopyalandı'; return; }
@@ -206,7 +208,15 @@ function detail(w) {
 }
 $('pl').addEventListener('click', e => { const tr = e.target.closest('tr[data-w]'); if (!tr) return; sel = tr.dataset.w; render(); $('det').scrollIntoView({ behavior: 'smooth' }); });
 document.addEventListener('click', e => { const b = e.target.closest('[data-ban],[data-unban]'); if (!b) return; e.stopPropagation(); if (b.dataset.ban) setBan(b.dataset.ban, true); else setBan(b.dataset.unban, false); }, true);
-$('go').onclick = () => { tok = $('tok').value.trim(); start(); };
+$('go').onclick = async () => {
+  $('err').textContent = '';
+  try {
+    const r = await fetch(API.replace('pvy_admin', 'pvy_admin_login'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ p_key: $('tok').value.trim(), p_otp: $('otp').value.trim() }) }).then(x => x.json());
+    if (!r.ok) { $('err').textContent = r.err === 'otp' ? 'Authenticator kodu yanlış ya da süresi geçti.' : 'Anahtar yanlış.'; return; }
+    tok = r.session; $('tok').value = ''; $('otp').value = ''; start();
+  } catch (e) { $('err').textContent = 'Bağlanılamadı.'; }
+};
+$('otp').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
 $('tok').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
 $('ref').onclick = () => load().catch(e => alert(e.message));
 $('hrs').onchange = () => load().catch(() => {});
