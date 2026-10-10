@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plant vs. Yield Docs</title><link rel="icon" href="assets/favicon.png">
+<meta name="description" content="Plant vs. Yield documentation: how to play, plants, zombies, economy, Mystery Boxes, Farmer NFT and the waitlist.">
+<style>
+:root{--bg:#070912;--panel:#121729;--line:#262f52;--gold:#ffd23f;--green:#3ddc84;--red:#ff5d6c;--txt:#dfe4fb;--mut:#949dc4}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.75 "Segoe UI",system-ui,-apple-system,sans-serif}
+a{color:var(--gold)}
+header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:16px;padding:10px 22px;background:rgba(7,9,18,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header img{height:38px}header .sp{flex:1}
+header .tag{font:800 13px "Segoe UI",sans-serif;letter-spacing:3px;color:var(--mut)}
+.cta{text-decoration:none;font:800 14px "Segoe UI",sans-serif;color:#2a1300;padding:9px 18px;border-radius:999px;background:linear-gradient(180deg,#ffe27a,#ffc21f 55%,#f0a000);box-shadow:0 3px 0 #9a5d00}
+.wrap{display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;max-width:1180px;margin:0 auto;padding:30px 22px 80px}
+nav.side{position:sticky;top:80px;align-self:start;max-height:calc(100vh - 100px);overflow:auto}
+nav.side a{display:block;text-decoration:none;color:var(--mut);padding:6px 12px;border-radius:8px;font-size:14.5px;font-weight:600}
+nav.side a:hover{color:#fff;background:var(--panel)}
+nav.side b{display:block;margin:16px 12px 4px;font-size:11px;letter-spacing:2px;color:#6f78a3}
+main h1{font:900 46px Impact,"Arial Black",sans-serif;letter-spacing:1px;margin:0 0 6px;background:linear-gradient(180deg,#fff6c2,#ffd23f 55%,#e08a00);-webkit-background-clip:text;background-clip:text;color:transparent}
+main h2{font:900 28px Impact,"Arial Black",sans-serif;letter-spacing:1px;color:#fff;margin:56px 0 10px;padding-top:10px;border-top:1px solid var(--line)}
+main h3{font-size:18px;color:#fff;margin:26px 0 6px}
+.lead{font-size:18px;color:#c8cff0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:14px 0}
+.note{border-left:4px solid var(--gold);background:rgba(255,210,63,.06);padding:12px 16px;border-radius:0 12px 12px 0;margin:16px 0}
+.warn{border-left-color:var(--red);background:rgba(255,93,108,.07)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:14px 0}
+.grid .card{margin:0;display:flex;gap:12px;align-items:center}
+.grid img{width:64px;height:64px;object-fit:contain;flex-shrink:0}
+.grid b{display:block;color:#fff}.grid small{color:var(--mut);line-height:1.4;display:block}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:600}
+.flow{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:18px 0}
+.flow div{text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 18px;min-width:150px}
+.flow img{height:64px;margin:0 auto 6px;display:block}.flow span{font:900 26px Impact,sans-serif;color:var(--gold)}
+ol li,ul li{margin:4px 0}
+footer{text-align:center;color:var(--mut);font-size:14px;padding:30px;border-top:1px solid var(--line)}
+@media(max-width:860px){.wrap{grid-template-columns:1fr;gap:0}nav.side{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}nav.side b{width:100%;margin:8px 0 0}main h1{font-size:36px}header .tag{display:none}}
+</style></head><body>
+<header><a href="/"><img src="assets/logo.webp" alt="Plant vs. Yield"></a><span class="tag">DOCS</span><span class="sp"></span><a class="cta" href="/#waitlist">🌱 Join Waitlist</a></header>
+<div class="wrap">
+<nav class="side">
+ <b>GETTING STARTED</b><a href="#intro">What is Plant vs. Yield?</a><a href="#waitlist">Waitlist &amp; Silver Box</a><a href="#start">How to start</a>
+ <b>GAMEPLAY</b><a href="#garden">Your garden</a><a href="#plants">Plants</a><a href="#zombies">Zombies &amp; waves</a><a href="#boss">Whale Boss</a><a href="#rent">Rent</a><a href="#upgrades">Upgrades &amp; RUG</a><a href="#crash">Market crash &amp; Rebirth</a>
+ <b>ECONOMY</b><a href="#coin">$COIN</a><a href="#bag">Bag → Pool → Bank</a><a href="#boxes">Mystery Boxes</a><a href="#seeds">Seeds &amp; merging</a><a href="#nft">Farmer NFT</a><a href="#pass">Premium Pass</a>
+ <b>MORE</b><a href="#fair">Fair play</a><a href="#security">Wallet safety</a><a href="#faq">FAQ</a>
+</nav>
+<main>
+<h1 id="intro">Plant vs. Yield Docs</h1>
+<p class="lead">Plant vs. Yield is a tower-defense yield game. Your garden is your portfolio: plant crops that mint <b>$COIN</b>, defend your lanes against waves of zombie traders, and grow your share of the daily reward pool. Don't get rugged.</p>
+<div class="note">🧪 The game is in <b>closed beta</b>. Numbers and features on this page can still change before launch.</div>
+
+<h2 id="waitlist">Waitlist &amp; Silver Box</h2>
+<p>The waitlist gives you early access and a launch reward. It takes about 2 minutes on <a href="/#waitlist">plantvsyield.xyz</a>:</p>
+<ol><li><b>Connect X</b>: sign in with X. We only read your username and picture.</li><li><b>Follow</b> <a href="https://x.com/PlantVsYield" target="_blank" rel="noopener">@PlantVsYield</a>.</li><li><b>Like &amp; Repost</b> the waitlist post.</li><li><b>Quote</b> the waitlist post, then paste the link of your quote.</li><li><b>Comment</b> on the waitlist post, then paste the link of your comment.</li><li><b>Add your wallet</b>: connect any browser wallet or paste your Robinhood Chain address (0x…).</li></ol>
+<p>Quote and comment links are checked automatically: they must be public posts from the X account you connected.</p>
+<div class="flow"><div><img src="assets/chest_silver.webp" alt=""><b>FREE Silver Box</b><br><small style="color:var(--mut)">for every waitlist member</small></div></div>
+<p>Every approved waitlist wallet receives a <b>Silver Box</b> the first time it logs into the game. One box per wallet.</p>
+
+<h2 id="start">How to start</h2>
+<ol><li>Open the site and connect your wallet.</li><li>Sign the access message. It is <b>not a transaction</b> and costs no gas.</li><li>Press <b>Start</b> and place your first plants.</li></ol>
+
+<h2 id="garden">Your garden</h2>
+<p>The battlefield is a grid of lanes. Zombies walk in from the right; you place plants on the open tiles to stop them. The first waves only use the middle lanes, and new lanes open as the waves climb, so plan ahead and cover every row before it's too late.</p>
+<p><b>Synergy:</b> every plant you own boosts your total income by 4%. A bigger garden earns faster, but it is also more to defend.</p>
+
+<h2 id="plants">Plants</h2>
+<p>Buy plants from the Market with $COIN. They fall into a few roles:</p>
+<div class="grid">
+ <div class="card"><img src="assets/n_solar.webp" alt=""><div><b>Producers</b><small>Mint $COIN every second. The engine of your garden.</small></div></div>
+ <div class="card"><img src="assets/q_sundew.webp" alt=""><div><b>Shooters</b><small>Attack zombies in their lane from a distance.</small></div></div>
+ <div class="card"><img src="assets/q_almond.webp" alt=""><div><b>Walls</b><small>Tough plants that hold zombies back while shooters work.</small></div></div>
+ <div class="card"><img src="assets/q_timeloop.webp" alt=""><div><b>Specials</b><small>Freeze, slow, explode, heal and more. Rare seeds unlock the strongest ones.</small></div></div>
+</div>
+<p>Plants have five rarities: <b>Common, Uncommon, Rare, Epic and Legendary</b>.</p>
+
+<h2 id="zombies">Zombies &amp; waves</h2>
+<p>Zombie traders march in waves, and every wave is bigger and tougher than the last. Each type has its own trick: some are fast, some are armored, and some steal your money.</p>
+<div class="grid">
+ <div class="card"><img src="assets/zz0.webp" alt=""><div><b>Retail Investor</b><small>The classic. Slow but there are many of them.</small></div></div>
+ <div class="card"><img src="assets/zz7.webp" alt=""><div><b>Scam Pirate</b><small>Watch your coins.</small></div></div>
+ <div class="card"><img src="assets/zz3.webp" alt=""><div><b>Bagholder</b><small>Holds on longer than you'd think.</small></div></div>
+ <div class="card"><img src="assets/zz14.webp" alt=""><div><b>Tax Inspector</b><small>Always comes for his share.</small></div></div>
+</div>
+<p><b>Don't leak:</b> if 10 zombies slip past your defense, the market collapses and 10% of your Bag burns.</p>
+
+<h2 id="boss">Whale Boss</h2>
+<div class="grid"><div class="card"><img src="assets/zz10.webp" alt=""><div><b>SEC Commissioner (Whale Boss)</b><small>Arrives every 10th wave. While he is on the field, income stops.</small></div></div></div>
+<p>If the Whale Boss reaches the left edge: <b>MARKET CRASH</b>, and your run is over.</p>
+
+<h2 id="rent">Rent</h2>
+<p>Garden rent is due every 5 minutes. Miss it and your income drops by 80% while zombies move 50% faster, until you pay.</p>
+
+<h2 id="upgrades">Upgrades &amp; RUG</h2>
+<p>Select a plant to level it up for more yield and more power. High-level upgrades carry a risk: an upgrade can <b>RUG</b> and destroy the plant. The higher you push, the bigger the risk.</p>
+
+<h2 id="crash">Market crash &amp; Rebirth</h2>
+<p>A crash isn't the end. The $COIN you spent during the run turns into <b>Golden Fertilizer</b>, an income multiplier for the rest of the day. Golden Fertilizer resets daily.</p>
+
+<h2 id="coin">$COIN</h2>
+<p>$COIN is the in-game currency. You earn it from producer plants and spend it on plants, upgrades, rent, Mystery Boxes and garden plots.</p>
+<div class="note warn">⚠️ In-game $COIN is a game currency. It is not an investment, and nothing in these docs is financial advice.</div>
+
+<h2 id="bag">Bag → Daily Pool → Bank</h2>
+<div class="flow"><div><img src="assets/i_coin.webp" alt=""><b>Bag</b></div><span>➜</span><div><img src="assets/ic_gem.svg" alt=""><b>Daily Pool</b></div><span>➜</span><div><img src="assets/mint_chest.webp" alt=""><b>Bank</b></div></div>
+<ul>
+ <li><b>Bag:</b> a share of every $COIN you earn drops into your Bag. Premium Pass boosts can raise this rate for a while.</li>
+ <li><b>Daily Pool:</b> deposit your Bag into the daily reward pool. When the day ends, the reward is split by everyone's share. The payout happens every day at <b>00:00 UTC</b>.</li>
+ <li><b>Bank:</b> your pool share lands in your Bank. Withdraw it, or convert it back into in-game $COIN.</li>
+</ul>
+<p>The pool page shows a live ranking of every wallet's share.</p>
+
+<h2 id="boxes">Mystery Boxes</h2>
+<p>Mystery Boxes drop seeds. Higher tiers give better rarity odds:</p>
+<table><tr><th></th><th>Box</th><th>What to expect</th></tr>
+<tr><td><img src="assets/chest_common.webp" alt="" style="height:44px"></td><td><b>Common Box</b></td><td>Mostly common seeds, a small chance of something rare.</td></tr>
+<tr><td><img src="assets/chest_silver.webp" alt="" style="height:44px"></td><td><b>Silver Box</b></td><td>Starts at Uncommon, with real Rare and Epic chances. <span style="color:var(--gold)">Waitlist reward.</span></td></tr>
+<tr><td><img src="assets/chest_crystal.webp" alt="" style="height:44px"></td><td><b>Crystal Box</b></td><td>Starts at Rare, with multiple seeds.</td></tr>
+<tr><td><img src="assets/chest_whale.webp" alt="" style="height:44px"></td><td><b>Whale Box</b></td><td>The strongest box: Epic and Legendary seeds.</td></tr></table>
+
+<h2 id="seeds">Seeds &amp; merging</h2>
+<p>Plant seeds in your Garden for daily Bank income, or <b>merge 3 seeds of the same rarity</b> for a chance to roll a rarer one. Unlocking extra garden plots costs $COIN, and every plot you open makes the next one more expensive.</p>
+
+<h2 id="nft">Farmer NFT</h2>
+<p>Mint your Farmer and pick a boy or a girl. Your Farmer joins the daily pool with you.</p>
+<ul><li>Your Farmer starts with <b>100 durability</b>.</li><li>Every zombie that leaks past your defense costs 1 durability.</li><li>At 0 durability the game stops until you repair it.</li></ul>
+
+<h2 id="pass">Premium Pass</h2>
+<p>Defeat zombies to earn XP and unlock rewards level by level: boxes, seeds, and temporary $COIN and Bag-rate boosts.</p>
+
+<h2 id="fair">Fair play</h2>
+<p>Cheating, botting, exploiting bugs, multi-accounting or fake waitlist entries are not allowed. Wallets that break the rules can be suspended and lose their rewards. Full rules: <a href="/terms.html">Terms of Service</a>.</p>
+
+<h2 id="security">Wallet safety</h2>
+<div class="note warn">🔐 We will <b>never</b> DM you first and <b>never</b> ask for your seed phrase or private key. Logging in only asks you to sign a message, which is not a transaction. The only official links are <b>plantvsyield.xyz</b> and <a href="https://x.com/PlantVsYield" target="_blank" rel="noopener">@PlantVsYield</a>.</div>
+
+<h2 id="faq">FAQ</h2>
+<h3>When does the game launch?</h3><p>Soon. Follow <a href="https://x.com/PlantVsYield" target="_blank" rel="noopener">@PlantVsYield</a> and turn on notifications.</p>
+<h3>Which network does it use?</h3><p>Robinhood Chain.</p>
+<h3>Does connecting my wallet cost anything?</h3><p>No. Signing the login message is free and is not a transaction.</p>
+<h3>My quote or comment link isn't accepted. Why?</h3><p>Make sure you quoted or replied to the <b>current</b> waitlist post, from the same X account you connected, and that your account is public. New posts can take around 30 seconds to show up, so wait a moment and press Verify again.</p>
+<h3>When do I get my Silver Box?</h3><p>Automatically, the first time your waitlist wallet logs into the game.</p>
+<h3>Can I use more than one wallet?</h3><p>No. One X account and one wallet per player.</p>
+</main></div>
+<footer>© 2026 Plant vs. Yield · <a href="/">Home</a> · <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> · <a href="https://x.com/PlantVsYield" target="_blank" rel="noopener">X</a></footer>
+</body></html>
