@@ -42,7 +42,7 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <div id="app" class="hidden">
 <header><img src="../assets/logo.webp" alt=""><h1>Admin</h1><span class="pill" id="upd">—</span><span class="sp"></span>
 <select id="hrs"><option value="1">Son 1 saat</option><option value="6">Son 6 saat</option><option value="24" selected>Son 24 saat</option><option value="72">Son 3 gün</option><option value="168">Son 7 gün</option></select>
-<a href="../?play=1" target="_blank" rel="noopener" style="text-decoration:none"><button style="background:#ffd23f;color:#2a1300;border:0;font-weight:800">🎮 Oyuna gir</button></a>
+<a href="../?play=1" target="_blank" rel="noopener" style="text-decoration:none"><button style="background:#ffd23f;color:#2a1300;border:0;font-weight:800">🎮 Oyuna gir</button></a> <button id="maintBtn" style="background:#ff9f43;color:#1a0b00;border:0;font-weight:800">🛠️ Bakım: …</button>
 <button id="ref">Yenile</button><button id="out">Çıkış</button></header>
 <main>
 <div class="box"><h2>🌐 Site &amp; Waitlist <span class="c">plantvsyield.xyz ziyaretçileri</span></h2>
@@ -259,4 +259,10 @@ $('ref').onclick = () => load().catch(e => alert(e.message));
 $('hrs').onchange = () => load().catch(() => {});
 $('out').onclick = () => { try { localStorage.removeItem('pvy_admin_tok'); } catch (e) {} location.reload(); };
 
+
+async function maintCall(on) { const r = await fetch(API.replace('pvy_admin', on === undefined ? 'pvy_maint_get' : 'pvy_maint_set'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify(on === undefined ? {} : { p_token: tok, p_on: on }) }); const j = await r.json(); if (!r.ok) throw new Error(j.message || r.status); return j; }
+let MAINT = null;
+function maintShow() { const b = $('maintBtn'); if (!b || !MAINT) return; b.textContent = MAINT.on ? '✅ Bakımı bitir (oyunu aç)' : '🛠️ Oyunu bakıma al'; b.style.background = MAINT.on ? '#3ddc84' : '#ff9f43'; }
+setInterval(async () => { try { MAINT = await maintCall(); maintShow(); } catch (e) {} }, 10000); setTimeout(async () => { try { MAINT = await maintCall(); maintShow(); } catch (e) {} }, 300);
+document.addEventListener('click', async e => { if (e.target.id !== 'maintBtn' || !MAINT) return; const on = !MAINT.on; if (on && !confirm('Oyun bakıma alınsın mı? Oyunculara 30 saniyelik uyarı gösterilir, sonra oyun durur.')) return; try { MAINT = await maintCall(on); maintShow(); alert(on ? 'Bakım başladı: oyuncular 30 sn uyarı görüyor.' : 'Bakım bitti: oyun açıldı.'); } catch (x) { alert('Hata: ' + x.message); } });
 </script></body></html>

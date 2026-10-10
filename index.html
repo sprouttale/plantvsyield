@@ -931,5 +931,50 @@ function scene() {}
   if (st && document.documentElement.classList.contains('wlonly')) { const sp = st.querySelector('span'); if (sp) sp.textContent = 'Buy $PVY'; st.onclick = null; st.addEventListener('click', e => { e.preventDefault(); e.stopImmediatePropagation(); window.open('https://ponsfamily.com/launchpad/0xa200c25465aba883da6df4152263913f15cfc7bd', '_blank', 'noopener'); }, true); }
 })();
 </script>
+<style>
+#pvyMaintBar{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:100001;background:linear-gradient(90deg,#ff9f43,#ff6b3d);color:#1a0b00;font-weight:900;border-radius:14px;padding:12px 20px;box-shadow:0 8px 30px rgba(0,0,0,.5);font-size:16px;text-align:center;max-width:calc(100vw - 32px)}
+#pvyMaintOv{position:fixed;inset:0;z-index:100002;background:rgba(5,8,22,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+#pvyMaintOv .box{background:#141a3a;border:2px solid #ff9f43;border-radius:18px;padding:28px 24px;max-width:440px;text-align:center;color:#fff}
+#pvyMaintOv h2{margin:0 0 10px;color:#ff9f43;font:900 26px Impact,Arial Black,sans-serif;letter-spacing:1px}
+#pvyMaintOv p{color:#dfe4ff;line-height:1.5;margin:0}
+</style>
+<script id="pvy-maint">
+
+(function () {
+  const TX = {
+    en: ['⚠️ Server maintenance in {s}s – please stop playing. Your progress is saved.', 'Under maintenance', 'The server is under maintenance. Your progress is saved. Please check back soon.'],
+    tr: ['⚠️ Sunucu {s} saniye sonra bakıma girecek – lütfen oyunu durdurun. İlerlemeniz kaydedildi.', 'Bakımdayız', 'Sunucu şu an bakımda. İlerlemeniz kaydedildi. Lütfen birazdan tekrar gelin.'],
+    es: ['⚠️ Mantenimiento del servidor en {s}s – deja de jugar. Tu progreso está guardado.', 'En mantenimiento', 'El servidor está en mantenimiento. Tu progreso está guardado. Vuelve pronto.'],
+    pt: ['⚠️ Manutenção do servidor em {s}s – pare de jogar. Seu progresso está salvo.', 'Em manutenção', 'O servidor está em manutenção. Seu progresso está salvo. Volte em breve.'],
+    fr: ['⚠️ Maintenance du serveur dans {s} s – arrête de jouer. Ta progression est sauvegardée.', 'En maintenance', 'Le serveur est en maintenance. Ta progression est sauvegardée. Reviens bientôt.'],
+    de: ['⚠️ Serverwartung in {s} s – bitte hör auf zu spielen. Dein Fortschritt ist gespeichert.', 'Wartungsarbeiten', 'Der Server wird gewartet. Dein Fortschritt ist gespeichert. Schau bald wieder vorbei.'],
+    ru: ['⚠️ Техобслуживание сервера через {s} с – пожалуйста, остановите игру. Прогресс сохранён.', 'Техобслуживание', 'Сервер на техобслуживании. Прогресс сохранён. Загляните чуть позже.'],
+    zh: ['⚠️ 服务器将在 {s} 秒后维护——请停止游戏。你的进度已保存。', '维护中', '服务器正在维护。你的进度已保存，请稍后再来。'],
+    ja: ['⚠️ {s}秒後にサーバーメンテナンス – プレイを中断してください。進行状況は保存されています。', 'メンテナンス中', 'サーバーはメンテナンス中です。進行状況は保存されています。しばらくしてからお戻りください。']
+  };
+  const L = () => { const l = window.PVY_I18N ? PVY_I18N.lang : 'en'; return TX[l] || TX.en; };
+  let M = { on: false, at: 0 }, off = 0, wasRunning = false;
+  const el = (id, html) => { let e = document.getElementById(id); if (!e) { e = document.createElement('div'); e.id = id; e.dataset.notr = '1'; document.body.appendChild(e); } if (e.dataset.h !== html) { e.innerHTML = html; e.dataset.h = html; } return e; };
+  const rm = id => { const e = document.getElementById(id); if (e) e.remove(); };
+  function tick() {
+    const g = window.game;
+    if (!M.on) { rm('pvyMaintBar'); if (document.getElementById('pvyMaintOv')) { rm('pvyMaintOv'); if (wasRunning && g) g.paused = false; wasRunning = false; } return; }
+    const left = Math.ceil((M.at - (Date.now() + off)) / 1000), t = L();
+    if (left > 0) { el('pvyMaintBar', t[0].replace('{s}', left)); return; }
+    rm('pvyMaintBar');
+    if (!document.getElementById('pvyMaintOv')) { if (g) { wasRunning = !g.paused; g.paused = true; } try { window.dispatchEvent(new Event('pagehide')); } catch (e) {} }
+    el('pvyMaintOv', '<div class="box"><h2>🛠️ ' + t[1] + '</h2><p>' + t[2] + '</p></div>');
+    if (g && !g.paused) g.paused = true;
+  }
+  async function poll() {
+    try {
+      const r = await fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_maint_get', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: '{}' }).then(x => x.json());
+      if (r && typeof r.on === 'boolean') { off = Date.parse(r.now) - Date.now() || 0; M = { on: r.on, at: Date.parse(r.at) || 0 }; }
+    } catch (e) {}
+  }
+  poll(); setInterval(poll, 8000); setInterval(tick, 500);
+})();
+</script>
+
 </body>
 </html>
