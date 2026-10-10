@@ -184,6 +184,7 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 #pvyCd .ca button{border:0;border-radius:9px;padding:7px 14px;font:800 13px "Segoe UI",sans-serif;color:#2a1300;background:#ffd23f;cursor:pointer}
 #pvyCd .cd-buy{display:inline-block;text-decoration:none;font:900 18px Impact,"Arial Black",sans-serif;letter-spacing:2px;color:#2a1300;padding:12px 28px;border-radius:14px;background:linear-gradient(180deg,#ffe27a,#ffc21f 55%,#f0a000);box-shadow:0 4px 0 #9a5d00}
 .wlonly #wlOpen{display:none!important}
+#wlOpen,#wlOv{display:none!important}
 @media(max-width:520px){#pvyCd span{min-width:64px}#pvyCd b{font-size:42px}#pvyCd i{font-size:34px}#pvyCd .cd-l{font-size:16px}}
 </style>
 </head>
@@ -895,7 +896,7 @@ function scene() {}
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); if (e.key === 'Enter' && e.target.id === 'wlU') act('x', document.querySelector('[data-a="x"]')); });
   rpc('pvy_wl_info').then(i => { INFO = i; const c = document.querySelector('#wlOpen .cnt');  }).catch(() => {});
-  if (/^#(waitlist|whitelist)$/.test(location.hash) || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
+  if (false && /^#(waitlist|whitelist)$/.test(location.hash) || /[?&](wl|code)=/.test(location.search)) { show().then(() => { if (/[?&](wl|code)=/.test(location.search)) history.replaceState(null, '', location.pathname); }); }
 
   if (/error_description=/.test(location.search + location.hash)) { const m = decodeURIComponent((location.search + location.hash).match(/error_description=([^&]*)/)[1].replace(/\+/g, ' ')); show().then(() => msg('x', 'X sign-in failed: ' + m)); }
 })();
