@@ -176,7 +176,12 @@ html,body,a,button,select,input{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D
 #pvyCd small{font:800 11px "Segoe UI",sans-serif;letter-spacing:3px;color:#97a0c6;margin-top:6px}
 #pvyCd i{font:900 52px/1.1 Impact,sans-serif;color:#ffd23f;font-style:normal}
 #pvyCd .cd-s{font:600 13px "Segoe UI",sans-serif;letter-spacing:2px;color:#97a0c6}
-#pvyCd.live .cd-l{color:#3ddc84;font-size:30px}
+#pvyCd.live .cd-l{color:#3ddc84;font-size:34px}
+#pvyCd .ca{display:flex;align-items:center;gap:8px;background:#0b0f20;border:1px solid #2d3560;border-radius:12px;padding:8px 8px 8px 12px;margin:0 auto 12px;max-width:100%}
+#pvyCd .ca span{font:800 12px "Segoe UI",sans-serif;color:#ffd23f;letter-spacing:2px}
+#pvyCd .ca code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 14px Consolas,monospace;color:#e8ecff;text-align:left}
+#pvyCd .ca button{border:0;border-radius:9px;padding:7px 14px;font:800 13px "Segoe UI",sans-serif;color:#2a1300;background:#ffd23f;cursor:pointer}
+#pvyCd .cd-buy{display:inline-block;text-decoration:none;font:900 18px Impact,"Arial Black",sans-serif;letter-spacing:2px;color:#2a1300;padding:12px 28px;border-radius:14px;background:linear-gradient(180deg,#ffe27a,#ffc21f 55%,#f0a000);box-shadow:0 4px 0 #9a5d00}
 .wlonly #wlOpen{display:none!important}
 @media(max-width:520px){#pvyCd span{min-width:64px}#pvyCd b{font-size:42px}#pvyCd i{font-size:34px}#pvyCd .cd-l{font-size:16px}}
 </style>
@@ -885,18 +890,26 @@ function scene() {}
 </script>
 <script>
 (function () {
-  const END = Date.parse('2026-10-10T23:36:00Z'), p = n => String(n).padStart(2, '0');
+  const END = 0, p = n => String(n).padStart(2, '0');
   const box = document.getElementById('pvyCd'); if (!box) return;
   const tick = () => {
     const s = Math.max(0, Math.floor((END - Date.now()) / 1000));
     document.getElementById('cdH').textContent = p(Math.floor(s / 3600));
     document.getElementById('cdM').textContent = p(Math.floor(s % 3600 / 60));
     document.getElementById('cdS').textContent = p(s % 60);
-    if (!s) { box.classList.add('live'); box.querySelector('.cd-l').textContent = '$PVY IS LIVE'; box.querySelector('.cd-t').style.display = 'none'; return true; }
+    if (!s) {
+      box.classList.add('live');
+      box.innerHTML = '<div class="cd-l">$PVY IS LIVE</div><div class="cd-s" style="margin:6px 0 10px">Fair launch on Pons · Robinhood Chain</div>' +
+        '<div class="ca"><span>CA</span><code id="caTxt">0xa200c25465aba883da6df4152263913f15cfc7bd</code><button type="button" id="caCopy">Copy</button></div>' +
+        '<a class="cd-buy" href="https://ponsfamily.com/launchpad/0xa200c25465aba883da6df4152263913f15cfc7bd" target="_blank" rel="noopener">View $PVY on Pons ↗</a>' +
+        '<div class="cd-s" style="margin-top:10px;font-size:11.5px">Only trust this address. We will never DM you or ask for your seed phrase.</div>';
+      document.getElementById('caCopy').onclick = e => { navigator.clipboard.writeText('0xa200c25465aba883da6df4152263913f15cfc7bd'); e.target.textContent = 'Copied ✓'; setTimeout(() => e.target.textContent = 'Copy', 1500); };
+      return true;
+    }
   };
   if (!tick()) { const iv = setInterval(() => { if (tick()) clearInterval(iv); }, 1000); }
   const st = document.getElementById('startTop');
-  if (st && document.documentElement.classList.contains('wlonly')) { const sp = st.querySelector('span'); if (sp) sp.textContent = 'PVY Launch'; st.onclick = null; st.addEventListener('click', e => { e.preventDefault(); e.stopImmediatePropagation(); box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, true); }
+  if (st && document.documentElement.classList.contains('wlonly')) { const sp = st.querySelector('span'); if (sp) sp.textContent = 'Buy $PVY'; st.onclick = null; st.addEventListener('click', e => { e.preventDefault(); e.stopImmediatePropagation(); window.open('https://ponsfamily.com/launchpad/0xa200c25465aba883da6df4152263913f15cfc7bd', '_blank', 'noopener'); }, true); }
 })();
 </script>
 </body>
