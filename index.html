@@ -621,6 +621,14 @@ async function openGame(addr, keyRaw) {
   const html = new TextDecoder().decode(plain);
   try { sessionStorage.setItem('pvy_wallet', addr); localStorage.setItem('pvy_lang', lang); } catch (e) {}
   window.PVY_WALLET = addr;
+  try {
+    const pf = sessionStorage.getItem('pvy_proof');
+    if (pf) { const r = await fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_load', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: JSON.stringify({ p_wallet: addr, p_proof: pf }) }).then(x => x.json());
+      const mine = localStorage.getItem('pvy_owner'), localAt = mine === addr ? localStorage.getItem('pvy_save_at') || '' : '';
+      if (r && r.ok && r.save && (!localAt || r.at > localAt)) { for (const k in r.save) if (/^pvy_[a-z_]+$/.test(k) && typeof r.save[k] === 'string') localStorage.setItem(k, r.save[k]); localStorage.setItem('pvy_save_at', r.at); }
+      else if (mine && mine !== addr) { ['pvy_garden', 'pvy_seeds', 'pvy_char', 'pvy_meta', 'pvy_rugs', 'pvy_pool', 'pvy_save_at'].forEach(k => localStorage.removeItem(k)); }
+      localStorage.setItem('pvy_owner', addr); }
+  } catch (e) {}
   try { window.PVY_LAND_MUSIC && (PVY_LAND_MUSIC.pause(), PVY_LAND_MUSIC.src = ""); } catch (e) {}
   document.open(); document.write(html); document.close();
 }
@@ -639,6 +647,7 @@ async function connect() {
     busy(true, 'btn_sign'); setStatus('st_signhint');
     const sig = await eth.request({ method: 'personal_sign', params: [SIGN_MSG(addr), acc] });
     const keyRaw = await crypto.subtle.digest('SHA-256', hex2buf(sig));
+    try { const pf = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('pvy-proof|' + sig.toLowerCase())))].map(x => x.toString(16).padStart(2, '0')).join(''); sessionStorage.setItem('pvy_proof', pf); } catch (e) {}
     try { await openGame(addr, keyRaw); }
     catch (e) {
       if (e.message === 'nokey') { busy(false, 'btn_connect'); setStatus(null); showEnroll(addr, keyRaw); return; }
