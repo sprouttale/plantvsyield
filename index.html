@@ -746,7 +746,7 @@ function scene() {}
   const send = ev => { try { fetch('https://rbfcjqpkdketyagczmms.supabase.co/rest/v1/rpc/pvy_visit', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', apikey: 'sb_publishable_ysut6eIPimuX8bM3UXc0bA_nm69VC-A' }, body: JSON.stringify({ p_vid: vid, p_ev: ev, p_ref: document.referrer || null, p_lang: navigator.language || null, p_ua: navigator.userAgent }) }).catch(() => {}); } catch (e) {} };
   window.pvyTrack = send;
   send(/[?&](wl|code)=/.test(location.search) ? 'ping' : 'view');
-  setInterval(() => { if (document.visibilityState === 'visible') send('ping'); }, 30000);
+  setInterval(() => send('ping'), 30000);
 })();
 </script>
 <div class="wl-ov" id="wlOv" role="dialog" aria-modal="true" aria-label="Waitlist">
