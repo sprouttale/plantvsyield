@@ -45,7 +45,7 @@ tr.ban td{opacity:.55}tr.ban td:first-child,tr.ban td:nth-child(2){opacity:1}
 <a href="../?play=1" target="_blank" rel="noopener" style="text-decoration:none"><button style="background:#ffd23f;color:#2a1300;border:0;font-weight:800">🎮 Oyuna gir</button></a> <button id="maintBtn" style="background:#ff9f43;color:#1a0b00;border:0;font-weight:800">🛠️ Bakım: …</button>
 <button id="ref">Yenile</button><button id="out">Çıkış</button></header>
 <main>
-<div class="box"><h2>🌐 Site &amp; Waitlist <span class="c">plantvsyield.xyz ziyaretçileri</span></h2>
+<div class="box"><h2>🌐 Site &amp; Oyuncular <span class="c">plantvsyield.xyz ziyaretçileri</span></h2>
 <div class="stats" id="sstats" style="margin-bottom:12px"></div>
 <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px" id="sgrid"><div><small class="mut">Son 14 gün — <span style="color:#5fb4ff">■ ziyaretçi</span> <span style="color:#3ddc84">■ waitlist katılımı</span></small><div id="schart"></div></div><div><small class="mut">Nereden geldiler</small><div id="srefs" style="margin-top:6px"></div></div></div></div>
 <h2 style="font-size:15px;margin:4px 0 10px">🎮 Oyun</h2>
@@ -123,7 +123,7 @@ async function site() {
   if (!r.ok) return; const S = await r.json();
   const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
   const st = [['Sitede şu an', S.online, 'g'], ['Bugün gelen', S.today], ['Toplam ziyaretçi', S.total], ['Toplam sayfa açılışı', S.views],
-    ['Waitlist penceresini açan', S.wl_open], ['X bağlayan', S.x_conn], ['Waitlist\'e katılan', S.joined, 'y'], ['Bugün katılan', S.joined_today, 'y'], ['Katılım oranı', pct(S.joined, S.total), 'g']];
+    ...(() => { const P = (D && D.players) || [], n = Date.now(), d0 = new Date(); d0.setHours(0, 0, 0, 0); const fs = p => Date.parse(p.first_seen || p.created || p.last_seen); return [['🎮 Oyuna giren (toplam)', P.length, 'y'], ['Bugün ilk kez giren', P.filter(p => fs(p) >= +d0).length, 'y'], ['Şu an oyunda', P.filter(p => n - Date.parse(p.last_seen) < 60000).length, 'g'], ['Ziyaretçiden oyuna geçen', pct(P.length, S.total), 'g'], ['Waitlist\'e katılan', S.joined]]; })()];
   $('sstats').innerHTML = st.map(s => '<div class="st"><small>' + s[0] + '</small><b class="' + (s[2] || '') + '">' + s[1] + '</b></div>').join('');
   const mx = Math.max(1, ...S.days.map(d => d.v)), bw = 600 / S.days.length;
   $('schart').innerHTML = '<svg viewBox="0 0 600 150" style="width:100%;height:150px;display:block">' + S.days.map((d, i) => {
