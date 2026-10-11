@@ -161,7 +161,6 @@ async function start() {
 function alerts() {
   const out = [], now = Date.parse(D.now), by = {};
   for (const s of D.snaps) (by[s.wallet] = by[s.wallet] || []).push(s);
-  if (false) for (const p of D.players) if (!ALLOW.includes(p.wallet)) out.push({ lv: 'r', w: p.wallet, t: p.last_seen, m: 'İzin listesinde olmayan cüzdan veri gönderdi', d: 'Kapıyı atlayıp oyuna girmiş ya da sunucuya doğrudan istek atmış olabilir.' });
   for (const [w, list] of Object.entries(by)) {
     const sids = {};
     for (const s of list) (sids[s.sid] = sids[s.sid] || []).push(s);
